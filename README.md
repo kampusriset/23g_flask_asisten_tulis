@@ -1,5 +1,5 @@
 # 23g_flask_asisten_tulis
-<h1 align="center">23g_flask_asisten_tulis</h1>
+
 <p align="center">
   Sistem Asisten Penulisan Berbasis Flask
 </p>
