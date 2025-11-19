@@ -81,38 +81,29 @@ python app.py
 
 ---
 
-🚀 Roadmap Pengembangan
+---
 
+## 🚀 Roadmap Pengembangan
 Fitur-fitur yang direncanakan untuk versi selanjutnya:
+- ✨ **Mode Penulisan Akademik** (otomatis menyesuaikan gaya ilmiah)
+- 📚 **Template Dokumen** (makalah, laporan, esai, proposal)
+- 🔊 **Text-to-Speech** untuk membaca hasil tulisan
+- 🧠 **Penyimpanan Riwayat AI** agar pengguna bisa melihat versi sebelumnya
+- 🛡️ **Authentication + Multi User**
 
-✨ Mode Penulisan Akademik (otomatis menyesuaikan gaya ilmiah)
+---
 
-📚 Template Dokumen (makalah, laporan, esai, proposal)
+## 🤝 Kontribusi
 
-🔊 Text-to-Speech untuk membaca hasil tulisan
+Terima kasih atas kontribusi semua pihak atas project ini
+ Kami sangat menghargai issue dan PR/masukkan ❤️
 
-🧠 Penyimpanan Riwayat AI agar pengguna bisa melihat versi sebelumnya
+---
 
-🛡️ Authentication + Multi User
+## 📄 Lisensi
+Proyek ini menggunakan **MIT License**, sehingga bebas digunakan, dimodifikasi, dan dikembangkan ulang.
 
-🤝 Kontribusi
 
-Kontribusi sangat terbuka!
-Jika ingin menambahkan fitur atau perbaikan:
-
-Fork repository
-
-Buat branch baru
-
-Commit perubahan
-
-Ajukan pull request
-
-Kami sangat menghargai issue dan PR dari komunitas ❤️
-
-📄 Lisensi
-
-Proyek ini menggunakan lisensi MIT License, sehingga bebas digunakan, dimodifikasi, dan dikembangkan ulang.
 
 ## Image
 ```bash
