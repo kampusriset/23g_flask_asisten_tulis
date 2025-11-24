@@ -2,3 +2,4 @@ requests
 python-dotenv
 google-generative-ai
 flask
+psycopg2-binary
