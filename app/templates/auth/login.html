@@ -1,0 +1,46 @@
+{% extends "base/navbar.html" %}
+{% block content %}
+
+<!-- Bootstrap CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+
+    <div class="card p-4 shadow-lg"
+        style="width: 100%; max-width: 400px; backdrop-filter: blur(12px); background: rgba(255,255,255,0.15); border-radius: 18px; border: 1px solid rgba(255,255,255,0.25); color: white;">
+
+        <h2 class="text-center mb-4 fw-bold">Login</h2>
+
+        <form action="/login" method="POST">
+
+            <!-- Username -->
+            <div class="mb-3">
+                <label class="form-label text-white">Username atau Email</label>
+                <input type="text" name="identifier" class="form-control" placeholder="Masukkan username atau email"
+                    required
+                    style="background: rgba(255,255,255,0.2); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.4);">
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label class="form-label text-white">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="Masukkan password" required
+                    style="background: rgba(255,255,255,0.2); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.4);">
+            </div>
+
+            <button type="submit" class="btn btn-light w-100 fw-bold rounded-pill">Login</button>
+
+            <p class="text-center mt-3 mb-0 text-white">
+                Belum punya akun?
+                <a href="/register" class="text-white fw-bold text-decoration-underline">Register</a>
+            </p>
+
+        </form>
+
+    </div>
+</div>
+
+<!-- Optional Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base/sidebar.html" %}
+{% block content %}
+
+<h2 style="margin-top: 30px;">Dashboard</h2>
+
+<div style="
+        margin-top: 20px; 
+        padding: 20px; 
+        border-radius: 8px; 
+        border: 1px solid #ddd;
+        background: #f8f8f8;
+        max-width: 600px;
+    ">
+    <p>Halo, <strong>{{ user.username }}</strong> 👋</p>
+    <p>Selamat datang di dashboard.</p>
+</div>
+
+{% endblock %}

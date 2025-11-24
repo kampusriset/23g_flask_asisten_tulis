@@ -1,0 +1,72 @@
+<div class="d-flex align-items-center mb-3 px-3">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="me-2 rounded" style="height: 35px;">
+</div>
+
+<h6 class="text-uppercase text-secondary mt-3 px-3">Menu</h6>
+<ul class="nav flex-column mb-3">
+    <li class="nav-item">
+        <a href="/dashboard" class="nav-link text-light {% if request.path == '/dashboard' %}active{% endif %}">🏠
+            Beranda</a>
+    </li>
+    <li class="nav-item">
+        <a href="/not-available" class="nav-link text-light">📅 Rapat</a>
+    </li>
+    <li class="nav-item">
+        <a href="/not-available" class="nav-link text-light">🤖 AI</a>
+    </li>
+    <li class="nav-item">
+        <a href="/not-available" class="nav-link text-light">📥 Kotak Masuk</a>
+    </li>
+</ul>
+
+<h6 class="text-uppercase text-secondary mt-3 px-3">Privat</h6>
+<ul class="nav flex-column mb-3">
+    <li class="nav-item">
+        <a href="/not-available" class="nav-link text-light">🙋‍♂️ Profile</a>
+    </li>
+    <li class="nav-item">
+        <a href="/not-available" class="nav-link text-light">➕ Tambah Baru</a>
+    </li>
+</ul>
+
+<h6 class="text-uppercase text-secondary mt-3 px-3">Team Workspace</h6>
+<ul class="nav flex-column mb-3">
+    <li class="nav-item">
+        <a href="/not-available" class="nav-link text-light">🏢 HQ Ruang Kerja</a>
+    </li>
+    <li class="nav-item">
+        <a href="/not-available" class="nav-link text-light">🔧 Proyek</a>
+    </li>
+    <li class="nav-item">
+        <a href="/not-available" class="nav-link text-light">➕ Tambahin Proyek</a>
+    </li>
+</ul>
+
+<h6 class="text-uppercase text-secondary mt-3 px-3">Aplikasi</h6>
+<ul class="nav flex-column mb-3">
+    <li class="nav-item">
+        <a href="/not-available" class="nav-link text-light">✉️ Mail</a>
+    </li>
+    <li class="nav-item">
+        <a href="/not-available" class="nav-link text-light">📆 Calendar</a>
+    </li>
+    <li class="nav-item">
+        <a href="/not-available" class="nav-link text-light">💻 Desktop</a>
+    </li>
+</ul>
+
+<h6 class="text-uppercase text-secondary mt-3 px-3">Lainnya</h6>
+<ul class="nav flex-column mb-3">
+    <li class="nav-item">
+        <a href="/not-available" class="nav-link text-light">⚙️ Pengaturan</a>
+    </li>
+    <li class="nav-item">
+        <a href="/not-available" class="nav-link text-light">🛒 Marketplace</a>
+    </li>
+    <li class="nav-item">
+        <a href="/not-available" class="nav-link text-light">🗑️ Sampah</a>
+    </li>
+    <li class="nav-item">
+        <a href="/logout" class="nav-link text-light">🚪 Logout</a>
+    </li>
+</ul>
