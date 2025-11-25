@@ -48,31 +48,31 @@ def register():
 # --------------------------
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
+    if session.get("user_id"):
+        return redirect(url_for("dashboard_bp.dashboard"))
+
     if request.method == "POST":
-        identifier = request.form.get("identifier")  # <-- sinkron dengan form HTML
+        identifier = request.form.get("identifier")
         password = request.form.get("password")
 
-        # CARI USER BY USERNAME ATAU EMAIL
         user = User.query.filter(
             (User.username == identifier) | (User.email == identifier)
         ).first()
 
-        # USER TIDAK ADA
         if not user:
             flash("Username atau email tidak ditemukan!", "error")
             return redirect(url_for("auth_bp.login"))
 
-        # PASSWORD SALAH
         if not user.check_password(password):
             flash("Password salah, coba lagi!", "error")
             return redirect(url_for("auth_bp.login"))
 
-        # LOGIN BERHASIL
         session["user_id"] = user.id
         flash("Login berhasil! Selamat datang!", "success")
         return redirect(url_for("dashboard_bp.dashboard"))
 
     return render_template("auth/login.html", title="Login")
+
 
 
 
