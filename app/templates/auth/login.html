@@ -18,6 +18,15 @@
         style="width: 100%; max-width: 400px; backdrop-filter: blur(12px); background: rgba(255,255,255,0.15); border-radius: 18px; border: 1px solid rgba(255,255,255,0.25); color: white;">
 
         <h2 class="text-center mb-4 fw-bold">Login</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} mt-2">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
         <form action="/login" method="POST">
 
