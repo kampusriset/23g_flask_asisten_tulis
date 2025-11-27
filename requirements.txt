@@ -1,4 +1,7 @@
 requests
 python-dotenv
-google-generative-ai
+google-generativeai
 flask
+psycopg2-binary
+Flask_SQLAlchemy
+Werkzeug
