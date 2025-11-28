@@ -33,6 +33,7 @@
 - **Flask (Python)**
 - **Gemini API**
 - **Jinja2**
+- **DB PostgreSQL**
 
 ---
 
