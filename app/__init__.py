@@ -1,8 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, session
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
-from flask import redirect, session
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -19,18 +18,27 @@ def create_app():
     # Register blueprint
     from app.controllers.user import auth_bp
     from app.controllers.dashboard import dashboard_bp
+    from app.controllers.notes import notes_bp
+    from app.models.notes import Note
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
+    app.register_blueprint(notes_bp)
 
-    # HOME ROUTE → render template
+    @app.context_processor
+    def inject_notes():
+        if session.get("user_id"):
+            notes = Note.query.filter_by(
+                user_id=session["user_id"]
+            ).order_by(Note.updated_at.desc()).all()
+            return dict(notes=notes)
+        return dict(notes=[])
+
+    # HOME ROUTE
     @app.route("/")
     def home():
-        # cek session, kalau user udah login redirect ke dashboard
         if session.get('user_id'):
             return redirect("/dashboard")
-
-        # kalau belum login, tampilkan landing page
         return render_template("home/landingpage.html")
 
     return app

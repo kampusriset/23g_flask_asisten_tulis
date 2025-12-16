@@ -25,13 +25,18 @@
     <li class="nav-item">
         <a href="/not-available" class="nav-link text-light"><i class="fi fi-rr-user"></i> Profile</a>
     </li>
+
     <li class="nav-item">
-        <a href="/not-available" class="nav-link text-light"> <i class="fi fi-rr-book-bookmark"></i> Catatan</a>
+        <a href="{{ url_for('notes_bp.new_note') }}" class="nav-link text-light">
+            <i class="fi fi-rr-plus-small"></i> Tambah catatan baru
+        </a>
     </li>
-    <li class="nav-item">
-        <a href="/not-available" class="nav-link text-light"> <i class="fi fi-rr-plus-small"></i> Tambah catatan
-            baru</a>
-    </li>
+
+
+    <!-- LIST CATATAN DINAMIS -->
+    {% include "base/sidebar_notes.html" %}
+
+
 </ul>
 
 

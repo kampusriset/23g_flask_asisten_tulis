@@ -1,0 +1,40 @@
+{% extends "base/sidebar.html" %}
+
+{% block sidebar %}
+<ul class="list-group list-group-flush">
+    <a href="{{ url_for('notes_bp.edit', note_id=note.id) }}" class="list-group-item active">
+        ✏️ {{ note.title or "Catatan Baru" }}
+    </a>
+</ul>
+{% endblock %}
+
+{% block content %}
+
+<!-- FORM SIMPAN -->
+<form method="POST">
+    <div class="mb-3">
+        <input type="text" name="title" class="form-control form-control-lg" placeholder="Judul catatan..."
+            value="{{ note.title }}">
+    </div>
+
+    <div class="mb-3">
+        <textarea name="content" class="form-control" rows="12"
+            placeholder="Tulis catatan di sini...">{{ note.content }}</textarea>
+    </div>
+
+    <button class="btn btn-success">
+        💾 Simpan
+    </button>
+</form>
+
+<hr>
+
+<!-- FORM HAPUS -->
+<form method="POST" action="{{ url_for('notes_bp.delete', note_id=note.id) }}"
+    onsubmit="return confirm('Yakin hapus catatan ini, Bang?')">
+    <button class="btn btn-danger">
+        🗑 Hapus
+    </button>
+</form>
+
+{% endblock %}
