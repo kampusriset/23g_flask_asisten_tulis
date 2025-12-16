@@ -74,18 +74,16 @@ def edit(note_id):
 # --------------------------
 # TAMBAH CATATAN BARU
 # --------------------------
-@notes_bp.route("/new", methods=["POST"])
+@notes_bp.route("/new")
 def new_note():
     check = require_login()
     if check:
         return check
 
     user_id = session["user_id"]
-
     note = Note(user_id=user_id, title="", content="")
     db.session.add(note)
     db.session.commit()
-
     return redirect(url_for("notes_bp.edit", note_id=note.id))
 
 
