@@ -19,8 +19,10 @@ def create_app():
     from app.controllers.user import auth_bp
     from app.controllers.dashboard import dashboard_bp
     from app.controllers.notes import notes_bp
+    from app.controllers.gemini import gemini_bp
     from app.models.notes import Note
-
+    
+    app.register_blueprint(gemini_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(notes_bp)
@@ -40,5 +42,4 @@ def create_app():
         if session.get('user_id'):
             return redirect("/dashboard")
         return render_template("home/landingpage.html")
-
     return app

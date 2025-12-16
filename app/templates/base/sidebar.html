@@ -75,6 +75,7 @@
         <div class="input-group p-2 border-top">
             <input type="text" class="form-control" placeholder="Tulis pesan..." id="chat-input">
             <button class="btn btn-primary" id="chat-send">Kirim</button>
+            <button class="btn btn-danger ms-2" id="chat-clear">Hapus Riwayat</button>
         </div>
     </div>
 
@@ -84,23 +85,85 @@
         const chatBody = document.getElementById('chat-body');
         const chatInput = document.getElementById('chat-input');
         const chatSend = document.getElementById('chat-send');
+        const chatClear = document.getElementById('chat-clear');
+        async function clearChatHistory() {
+            if (!confirm('Yakin ingin menghapus semua riwayat chat?')) return;
+            try {
+                const res = await fetch('/api/ai-chat-history', { method: 'DELETE' });
+                if (res.ok) {
+                    chatBody.innerHTML = '<div><em>Riwayat chat berhasil dihapus.</em></div>';
+                } else {
+                    chatBody.innerHTML = '<div><em>Gagal menghapus riwayat chat.</em></div>';
+                }
+            } catch (e) {
+                chatBody.innerHTML = '<div><em>Gagal menghapus riwayat chat.</em></div>';
+            }
+        }
+    chatClear.addEventListener('click', clearChatHistory);
+
+        async function loadChatHistory() {
+            try {
+                const res = await fetch('/api/ai-chat-history');
+                const data = await res.json();
+                chatBody.innerHTML = '';
+                if (data.history && data.history.length > 0) {
+                    data.history.forEach(item => {
+                        const userMsg = document.createElement('div');
+                        userMsg.innerHTML = `<strong>Kamu:</strong> ${item.user_input}`;
+                        chatBody.appendChild(userMsg);
+                        const aiMsg = document.createElement('div');
+                        aiMsg.innerHTML = `<strong>AI:</strong> ${item.ai_output}`;
+                        chatBody.appendChild(aiMsg);
+                    });
+                } else {
+                    chatBody.innerHTML = '<div><em>Halo! Ada yang bisa dibantu?</em></div>';
+                }
+                chatBody.scrollTop = chatBody.scrollHeight;
+            } catch (e) {
+                chatBody.innerHTML = '<div><em>Gagal memuat riwayat chat.</em></div>';
+            }
+        }
 
         bubble.addEventListener('click', () => {
             popup.classList.toggle('d-none');
+            if (!popup.classList.contains('d-none')) {
+                loadChatHistory();
+            }
         });
 
-        chatSend.addEventListener('click', () => {
+        async function sendMessageToAI(msg) {
+            try {
+                const response = await fetch('/api/ai-chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg })
+                });
+                const data = await response.json();
+                if (data.reply) return data.reply;
+                if (data.error) return 'Error: ' + data.error;
+                return 'AI tidak merespon.';
+            } catch (err) {
+                return 'Gagal menghubungi AI.';
+            }
+        }
+
+        chatSend.addEventListener('click', async () => {
             const msg = chatInput.value.trim();
             if (msg) {
                 const userMsg = document.createElement('div');
                 userMsg.innerHTML = `<strong>Kamu:</strong> ${msg}`;
                 chatBody.appendChild(userMsg);
 
-                const botMsg = document.createElement('div');
-                botMsg.innerHTML = `<strong>AI:</strong> Maaf, saya cuma demo :)`;
-                chatBody.appendChild(botMsg);
-
                 chatInput.value = '';
+                chatBody.scrollTop = chatBody.scrollHeight;
+
+                const botMsg = document.createElement('div');
+                botMsg.innerHTML = `<strong>AI:</strong> <em>Mengetik...</em>`;
+                chatBody.appendChild(botMsg);
+                chatBody.scrollTop = chatBody.scrollHeight;
+
+                const aiReply = await sendMessageToAI(msg);
+                botMsg.innerHTML = `<strong>AI:</strong> ${aiReply}`;
                 chatBody.scrollTop = chatBody.scrollHeight;
             }
         });
