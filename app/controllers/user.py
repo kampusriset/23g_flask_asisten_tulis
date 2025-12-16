@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from .models import User
-from . import db
+from app.models.auth import User
+from .. import db
 
 auth_bp = Blueprint('auth_bp', __name__)
 
@@ -72,8 +72,6 @@ def login():
         return redirect(url_for("dashboard_bp.dashboard"))
 
     return render_template("auth/login.html", title="Login")
-
-
 
 
 # --------------------------

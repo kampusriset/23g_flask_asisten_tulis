@@ -1,9 +1,11 @@
 from flask import Flask, render_template
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from flask import redirect, session
 
 db = SQLAlchemy()
+migrate = Migrate()
 
 
 def create_app():
@@ -12,10 +14,11 @@ def create_app():
 
     # Init DB
     db.init_app(app)
+    migrate.init_app(app, db)
 
     # Register blueprint
-    from .auth import auth_bp
-    from .dashboard import dashboard_bp
+    from app.controllers.user import auth_bp
+    from app.controllers.dashboard import dashboard_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)

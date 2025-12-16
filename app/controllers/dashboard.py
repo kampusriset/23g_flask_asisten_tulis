@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, session, redirect, url_for
-from .models import User
+from app.models.auth import User
 
 dashboard_bp = Blueprint('dashboard_bp', __name__)
 
