@@ -21,11 +21,13 @@ def create_app():
     from app.controllers.notes import notes_bp
     from app.controllers.gemini import gemini_bp
     from app.models.notes import Note
-    
+    from app.controllers.rapat_controller import rapat_bp
+
     app.register_blueprint(gemini_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(notes_bp)
+    app.register_blueprint(rapat_bp)
 
     @app.context_processor
     def inject_notes():

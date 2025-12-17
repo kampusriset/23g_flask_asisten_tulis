@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Rapat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white text-black min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-black text-white shadow-lg">
+    <div class="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-xl font-semibold">Form Rapat Baru</h1>
+      <span class="text-sm opacity-80">17 Desember 2025</span>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-6 py-8">
+
+    <form class="space-y-6 bg-white border border-black/10 shadow-md rounded-lg p-6">
+
+      <!-- Judul Rapat -->
+      <div>
+        <label for="judul" class="block text-sm font-medium mb-1">Judul Rapat</label>
+        <input 
+          type="text" 
+          id="judul" 
+          name="judul" 
+          placeholder="Masukkan judul rapat" 
+          class="w-full border border-black/20 rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+          required
+        >
+      </div>
+
+      <!-- Tanggal Rapat -->
+      <div>
+        <label for="tanggal" class="block text-sm font-medium mb-1">Tanggal Rapat</label>
+        <input 
+          type="date" 
+          id="tanggal" 
+          name="tanggal" 
+          class="w-full border border-black/20 rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+          required
+        >
+      </div>
+
+      <!-- Peserta -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Peserta</label>
+        <div id="peserta-container" class="space-y-2">
+          <input 
+            type="text" 
+            name="peserta[]" 
+            placeholder="Nama peserta" 
+            class="w-full border border-black/20 rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+            required
+          >
+        </div>
+        <button type="button" id="tambah-peserta" 
+          class="mt-2 px-4 py-2 text-sm border border-black rounded shadow hover:bg-black hover:text-white transition">
+          Tambah Peserta
+        </button>
+      </div>
+
+      <!-- Catatan Rapat -->
+      <div>
+        <label for="catatan" class="block text-sm font-medium mb-1">Catatan Rapat</label>
+        <textarea
+          id="catatan"
+          name="catatan"
+          placeholder="Tuliskan catatan rapat di sini..."
+          class="w-full h-32 border border-black/20 rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-black"
+        ></textarea>
+      </div>
+
+      <!-- Aksi -->
+      <div class="flex justify-end gap-4">
+        <button type="submit" class="px-6 py-2 border border-black text-black rounded shadow hover:bg-black hover:text-white transition">
+          Simpan
+        </button>
+        <button type="reset" class="px-6 py-2 bg-black text-white rounded shadow hover:opacity-90 transition">
+          Reset
+        </button>
+      </div>
+
+    </form>
+
+  </main>
+
+  <!-- Script Tambah Peserta -->
+  <script>
+    const tambahBtn = document.getElementById('tambah-peserta');
+    const pesertaContainer = document.getElementById('peserta-container');
+
+    tambahBtn.addEventListener('click', () => {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.name = 'peserta[]';
+      input.placeholder = 'Nama peserta';
+      input.required = true;
+      input.className = 'w-full border border-black/20 rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-black';
+      pesertaContainer.appendChild(input);
+    });
+  </script>
+
+</body>
+</html>
