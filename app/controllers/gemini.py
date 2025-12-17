@@ -14,6 +14,7 @@ gemini_bp = Blueprint('gemini', __name__)
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 GEMINI_API_URL = f'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}'
 
+
 @gemini_bp.route('/api/ai-chat', methods=['POST'])
 def ai_chat():
     data = request.get_json()
@@ -32,10 +33,12 @@ def ai_chat():
         response = requests.post(GEMINI_API_URL, json=payload)
         response.raise_for_status()
         result = response.json()
-        ai_text = result.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', 'Maaf, tidak ada respons.')
+        ai_text = result.get('candidates', [{}])[0].get('content', {}).get(
+            'parts', [{}])[0].get('text', 'Maaf, tidak ada respons.')
 
         # Simpan ke database
-        chat = ChatHistory(user_id=user_id, user_input=user_message, ai_output=ai_text)
+        chat = ChatHistory(
+            user_id=user_id, user_input=user_message, ai_output=ai_text)
         db.session.add(chat)
         db.session.commit()
 
@@ -55,7 +58,8 @@ def ai_chat_history():
             return jsonify({'error': 'User not logged in'}), 401
 
     if request.method == 'GET':
-        history = ChatHistory.query.filter_by(user_id=user_id).order_by(ChatHistory.created_at.asc()).all()
+        history = ChatHistory.query.filter_by(user_id=user_id).order_by(
+            ChatHistory.created_at.asc()).all()
         result = [
             {
                 'user_input': item.user_input,
