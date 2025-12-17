@@ -18,10 +18,11 @@
     </div>
 
     <div class="mb-3">
-        <div id="editor" contenteditable="true" class="form-control" style="min-height:200px; white-space: pre-wrap;">{{
-            note.content }}</div>
-    </div>
+        <textarea id="content" name="content" class="form-control" rows="12"
+            placeholder="Tulis catatan di sini...">{{ note.content }}</textarea>
 
+        <div id="suggestion" style="color: gray; margin-top:5px;"></div>
+    </div>
 
 
     <script>
