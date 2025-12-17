@@ -1,8 +1,52 @@
+from dotenv import load_dotenv
+import requests
+import os
+from flask import Blueprint, request, jsonify, session
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from app.models.notes import Note
 from app import db
 
 notes_bp = Blueprint("notes_bp", __name__, url_prefix="/notes")
+
+
+load_dotenv()
+
+notes_bp = Blueprint('notes_bp', __name__)
+
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+GEMINI_API_URL = f'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}'
+
+
+@notes_bp.route('/<int:note_id>/suggest', methods=['POST'])
+def note_suggest(note_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'suggestion': ''}), 401
+
+    data = request.get_json()
+    text = data.get('text', '')
+    if not text:
+        return jsonify({'suggestion': ''})
+
+    # === DISINI BANG TARUH PAYLOAD ===
+    payload = {
+        "contents": [
+            {"parts": [
+                {"text": f"Lanjutkan teks berikut secara cerdas, tapi pendek-pendek, satu atau dua kata/frasa saja:\n{text}"}]}
+        ],
+        "temperature": 0.5,
+        "max_output_tokens": 10
+    }
+
+    try:
+        response = requests.post(GEMINI_API_URL, json=payload)
+        response.raise_for_status()
+        result = response.json()
+        suggestion = result.get('candidates', [{}])[0].get(
+            'content', {}).get('parts', [{}])[0].get('text', '')
+        return jsonify({'suggestion': suggestion})
+    except Exception as e:
+        return jsonify({'suggestion': '', 'error': str(e)})
 
 
 # --------------------------

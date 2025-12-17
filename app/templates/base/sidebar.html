@@ -8,7 +8,6 @@
 
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
 </head>
 
@@ -99,7 +98,7 @@
                 chatBody.innerHTML = '<div><em>Gagal menghapus riwayat chat.</em></div>';
             }
         }
-    chatClear.addEventListener('click', clearChatHistory);
+        chatClear.addEventListener('click', clearChatHistory);
 
         async function loadChatHistory() {
             try {
