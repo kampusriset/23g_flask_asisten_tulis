@@ -32,22 +32,25 @@ def note_suggest(note_id):
     payload = {
         "contents": [
             {
-                "role": "user",
                 "parts": [
                     {
                         "text": (
-                            "Prediksi 1 kata atau frasa pendek "
-                            "yang paling mungkin muncul setelah teks berikut:\n"
-                            f"{context}"
+                            "Lanjutkan teks berikut dengan 1 atau 2 kata saja.\n"
+                            "Contoh jawaban yang benar:\n"
+                            "- dan\n"
+                            "- sehingga\n"
+                            "- untuk itu\n\n"
+                            f"Teks:\n{context}\n\n"
+                            "Jawaban:"
                         )
                     }
                 ]
             }
         ],
         "generationConfig": {
-            "temperature": 0.6,
-            "maxOutputTokens": 32,
-            "stopSequences": ["\n"]
+            "temperature": 0.25,
+            "maxOutputTokens": 100,
+            "topP": 0.9
         }
     }
 
@@ -61,8 +64,10 @@ def note_suggest(note_id):
         suggestion = ""
         candidates = result.get("candidates", [])
         if candidates:
-            parts = candidates[0].get("content", {}).get("parts", [])
-            if parts:
+            content = candidates[0].get("content", {})
+            parts = content.get("parts")
+
+            if parts and isinstance(parts, list):
                 suggestion = parts[0].get("text", "").strip()
 
         return jsonify({'suggestion': suggestion})

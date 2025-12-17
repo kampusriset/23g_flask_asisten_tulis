@@ -16,20 +16,41 @@
             value="{{ note.title }}">
     </div>
 
-    <div class="mb-3">
-        <!-- Contenteditable div -->
-        <div id="editor" contenteditable="true" class="form-control" style="min-height:200px; white-space: pre-wrap;">{{
-            note.content }}</div>
-        <div id="suggestion" style="color: gray; margin-top:5px;"></div>
+    <div class="mb-3 position-relative">
 
-        <!-- Hidden input supaya bisa disubmit ke DB -->
+        <!-- GHOST SUGGESTION (DI DALAM BOX) -->
+        <div id="ghost" class="form-control" style="
+            min-height:200px;
+            white-space:pre-wrap;
+            color:#aaa;
+            position:absolute;
+            top:0;
+            left:0;
+            pointer-events:none;
+            background:transparent;
+        ">
+        </div>
+
+        <!-- EDITOR ASLI -->
+        <div id="editor" contenteditable="true" class="form-control" style="
+            min-height:200px;
+            background:transparent;
+            position:relative;
+        ">
+            {{ note.content }}
+        </div>
+
         <input type="hidden" name="content" id="contentHidden">
     </div>
+
 
     <button class="btn btn-success">
         <i class="fi fi-rr-disk"> Simpan</i>
     </button>
 </form>
+
+
+
 
 <hr>
 
@@ -43,39 +64,95 @@
 
 <script>
     const editor = document.getElementById("editor");
-    const suggestionDiv = document.getElementById("suggestion");
+    const ghost = document.getElementById("ghost");
     const hiddenInput = document.getElementById("contentHidden");
 
     let suggestion = "";
-    let triggerTimer = null;
+    let debounceTimer = null;
     let lastText = "";
 
-    // trigger via SPACE atau ENTER
+    /* --------------------
+       helper
+    -------------------- */
+    function clearSuggestion() {
+        suggestion = "";
+        ghost.innerText = editor.innerText;
+        syncGhost();
+    }
+
+    function syncGhost() {
+        ghost.innerText = editor.innerText + suggestion;
+    }
+
+    function getLastLine(text) {
+        const lines = text.split("\n");
+        return lines[lines.length - 1];
+    }
+
+    /* --------------------
+       input update
+    -------------------- */
+    editor.addEventListener("input", () => {
+        syncGhost();
+    });
+
+    /* --------------------
+       key handling
+    -------------------- */
     editor.addEventListener("keydown", (e) => {
-        if (e.key === " " || e.key === "Enter") {
-            clearTimeout(triggerTimer);
 
-            triggerTimer = setTimeout(() => {
-                const text = editor.innerText.trim();
-
-                if (text.length < 3 || text === lastText) return;
-
-                lastText = text;
-                requestSuggestion(text);
-            }, 2000); // ⏱ 2 detik setelah Space / Enter
-        }
-
-        // Tab → apply suggestion
+        /* TAB → accept */
         if (e.key === "Tab" && suggestion) {
             e.preventDefault();
             editor.innerText += suggestion;
-            suggestion = "";
-            suggestionDiv.innerText = "";
+            clearSuggestion();
+            moveCursorToEnd(editor);
+            return;
+        }
+
+        /* kalau user ngetik apa pun selain kontrol → batalin suggestion */
+        if (
+            suggestion &&
+            (
+                e.key.length === 1 ||        // huruf, angka, simbol
+                e.key === "Backspace" ||
+                e.key === "Enter"
+            )
+        ) {
+            clearSuggestion();
+            return;
+        }
+
+        /* navigasi cursor → batal */
+        if (
+            suggestion &&
+            ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Escape"].includes(e.key)
+        ) {
+            clearSuggestion();
+            return;
+        }
+
+        /* trigger AI hanya via SPACE */
+        if (e.key === " ") {
+            clearTimeout(debounceTimer);
+
+            debounceTimer = setTimeout(() => {
+                const lastLine = editor.innerText.split("\n").pop().trim();
+                if (lastLine.length < 3 || lastLine === lastText) return;
+
+                lastText = lastLine;
+                requestSuggestion(lastLine);
+            }, 2000);
         }
     });
 
+    /* --------------------
+       call backend
+    -------------------- */
     async function requestSuggestion(text) {
         try {
+            console.log("Sending to backend:", text);
+
             const res = await fetch(`/notes/{{ note.id }}/suggest`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -83,8 +160,8 @@
             });
 
             const data = await res.json();
-            suggestion = data.suggestion || "";
-            suggestionDiv.innerText = suggestion;
+            suggestion = data.suggestion ? "" + data.suggestion : "";
+            syncGhost();
 
             console.log("AI Suggestion:", suggestion);
         } catch (err) {
@@ -92,11 +169,28 @@
         }
     }
 
-    // submit form → ambil teks editor
+    /* --------------------
+       cursor helper
+    -------------------- */
+    function moveCursorToEnd(el) {
+        el.focus();
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        range.collapse(false);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+
+    /* --------------------
+       submit → DB
+    -------------------- */
     document.getElementById("saveForm").addEventListener("submit", () => {
         hiddenInput.value = editor.innerText;
     });
 </script>
+
+
 
 
 {% endblock %}
