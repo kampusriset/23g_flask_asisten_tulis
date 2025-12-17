@@ -10,85 +10,21 @@
 
 {% block content %}
 
-<!-- FORM SIMPAN -->
-<form method="POST">
+<form method="POST" id="saveForm">
     <div class="mb-3">
         <input type="text" name="title" class="form-control form-control-lg" placeholder="Judul catatan..."
             value="{{ note.title }}">
     </div>
 
     <div class="mb-3">
-        <textarea id="content" name="content" class="form-control" rows="12"
-            placeholder="Tulis catatan di sini...">{{ note.content }}</textarea>
-
+        <!-- Contenteditable div -->
+        <div id="editor" contenteditable="true" class="form-control" style="min-height:200px; white-space: pre-wrap;">{{
+            note.content }}</div>
         <div id="suggestion" style="color: gray; margin-top:5px;"></div>
+
+        <!-- Hidden input supaya bisa disubmit ke DB -->
+        <input type="hidden" name="content" id="contentHidden">
     </div>
-
-
-    <script>
-        const editor = document.getElementById("editor");
-        let suggestion = "";
-        let debounceTimer = null;
-
-        editor.addEventListener("input", () => {
-            clearTimeout(debounceTimer);
-
-            const text = editor.innerText;
-            if (text.trim().length < 3) {
-                suggestion = "";
-                renderEditor(text, suggestion);
-                return;
-            }
-
-            debounceTimer = setTimeout(async () => {
-                try {
-                    const res = await fetch(`{{ url_for('notes_bp.note_suggest', note_id=note.id) }}`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ text })
-                    });
-                    const data = await res.json();
-                    suggestion = data.suggestion ? data.suggestion.slice(text.length) : "";
-                    renderEditor(text, suggestion);
-                } catch (err) {
-                    console.error(err);
-                }
-            }, 1000); // delay 1 detik
-        });
-
-        // fungsi render teks + saran
-        function renderEditor(text, suggestion) {
-            editor.innerHTML = text +
-                (suggestion ? `<span style="color:gray;">${suggestion}</span>` : "");
-            placeCaretAtEnd(editor);
-        }
-
-        // fungsi biar caret tetep di akhir teks user
-        function placeCaretAtEnd(el) {
-            el.focus();
-            if (typeof window.getSelection != "undefined"
-                && typeof document.createRange != "undefined") {
-                var range = document.createRange();
-                range.selectNodeContents(el);
-                range.collapse(false);
-                var sel = window.getSelection();
-                sel.removeAllRanges();
-                sel.addRange(range);
-            }
-        }
-
-        // Tab untuk apply suggestion
-        editor.addEventListener("keydown", (e) => {
-            if (e.key === "Tab" && suggestion) {
-                e.preventDefault();
-                editor.innerText += suggestion;
-                suggestion = "";
-            }
-        });
-    </script>
-
-
-
 
     <button class="btn btn-success">
         <i class="fi fi-rr-disk"> Simpan</i>
@@ -104,5 +40,63 @@
         <i class="fi fi-rr-trash"> Hapus</i>
     </button>
 </form>
+
+<script>
+    const editor = document.getElementById("editor");
+    const suggestionDiv = document.getElementById("suggestion");
+    const hiddenInput = document.getElementById("contentHidden");
+
+    let suggestion = "";
+    let triggerTimer = null;
+    let lastText = "";
+
+    // trigger via SPACE atau ENTER
+    editor.addEventListener("keydown", (e) => {
+        if (e.key === " " || e.key === "Enter") {
+            clearTimeout(triggerTimer);
+
+            triggerTimer = setTimeout(() => {
+                const text = editor.innerText.trim();
+
+                if (text.length < 3 || text === lastText) return;
+
+                lastText = text;
+                requestSuggestion(text);
+            }, 2000); // ⏱ 2 detik setelah Space / Enter
+        }
+
+        // Tab → apply suggestion
+        if (e.key === "Tab" && suggestion) {
+            e.preventDefault();
+            editor.innerText += suggestion;
+            suggestion = "";
+            suggestionDiv.innerText = "";
+        }
+    });
+
+    async function requestSuggestion(text) {
+        try {
+            const res = await fetch(`/notes/{{ note.id }}/suggest`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text })
+            });
+
+            const data = await res.json();
+            suggestion = data.suggestion || "";
+            suggestionDiv.innerText = suggestion;
+
+            console.log("AI Suggestion:", suggestion);
+        } catch (err) {
+            console.error("AI error:", err);
+        }
+    }
+
+    // submit form → ambil teks editor
+    document.getElementById("saveForm").addEventListener("submit", () => {
+        hiddenInput.value = editor.innerText;
+    });
+</script>
+
 
 {% endblock %}

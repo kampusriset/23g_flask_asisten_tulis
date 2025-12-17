@@ -1,8 +1,7 @@
 from dotenv import load_dotenv
 import requests
 import os
-from flask import Blueprint, request, jsonify, session
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify
 from app.models.notes import Note
 from app import db
 
@@ -11,7 +10,6 @@ notes_bp = Blueprint("notes_bp", __name__, url_prefix="/notes")
 
 load_dotenv()
 
-notes_bp = Blueprint('notes_bp', __name__)
 
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 GEMINI_API_URL = f'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}'
@@ -19,34 +17,59 @@ GEMINI_API_URL = f'https://generativelanguage.googleapis.com/v1/models/gemini-2.
 
 @notes_bp.route('/<int:note_id>/suggest', methods=['POST'])
 def note_suggest(note_id):
-    user_id = session.get('user_id')
-    if not user_id:
+    if not session.get('user_id'):
         return jsonify({'suggestion': ''}), 401
 
-    data = request.get_json()
-    text = data.get('text', '')
-    if not text:
+    data = request.get_json() or {}
+    text = data.get('text', '').strip()
+
+    if len(text) < 3:
         return jsonify({'suggestion': ''})
 
-    # === DISINI BANG TARUH PAYLOAD ===
+    last_words = text.split()[-3:]  # ambil 1–3 kata terakhir
+    context = " ".join(last_words)
+
     payload = {
         "contents": [
-            {"parts": [
-                {"text": f"Lanjutkan teks berikut secara cerdas, tapi pendek-pendek, satu atau dua kata/frasa saja:\n{text}"}]}
+            {
+                "role": "user",
+                "parts": [
+                    {
+                        "text": (
+                            "Prediksi 1 kata atau frasa pendek "
+                            "yang paling mungkin muncul setelah teks berikut:\n"
+                            f"{context}"
+                        )
+                    }
+                ]
+            }
         ],
-        "temperature": 0.5,
-        "max_output_tokens": 10
+        "generationConfig": {
+            "temperature": 0.6,
+            "maxOutputTokens": 32,
+            "stopSequences": ["\n"]
+        }
     }
 
     try:
-        response = requests.post(GEMINI_API_URL, json=payload)
+        response = requests.post(GEMINI_API_URL, json=payload, timeout=10)
         response.raise_for_status()
         result = response.json()
-        suggestion = result.get('candidates', [{}])[0].get(
-            'content', {}).get('parts', [{}])[0].get('text', '')
+
+        print("Gemini response:", result)
+
+        suggestion = ""
+        candidates = result.get("candidates", [])
+        if candidates:
+            parts = candidates[0].get("content", {}).get("parts", [])
+            if parts:
+                suggestion = parts[0].get("text", "").strip()
+
         return jsonify({'suggestion': suggestion})
+
     except Exception as e:
-        return jsonify({'suggestion': '', 'error': str(e)})
+        print("Gemini ERROR:", e)
+        return jsonify({'suggestion': ''})
 
 
 # --------------------------
