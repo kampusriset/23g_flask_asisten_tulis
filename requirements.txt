@@ -7,3 +7,4 @@ Flask_SQLAlchemy
 Werkzeug
 pymysql
 flask-migrate
+flask-socketio

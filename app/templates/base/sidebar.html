@@ -9,6 +9,7 @@
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
 </head>
 
 <body>
@@ -30,9 +31,11 @@
     <div class="d-flex">
 
         <!-- Sidebar desktop -->
-        <div class="d-none d-lg-block bg-dark text-light vh-100 p-3" style="width: 250px;">
+        <div class="d-none d-lg-block bg-dark text-light p-3 sidebar" style="width: 250px;">
             {% include 'base/sidebar_content.html' %}
         </div>
+
+
 
         <!-- Offcanvas sidebar mobile -->
         <div class="offcanvas offcanvas-start bg-dark text-light" tabindex="-1" id="offcanvasSidebar"
@@ -42,9 +45,10 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
                     aria-label="Close"></button>
             </div>
-            <div class="offcanvas-body p-0">
+            <div class="offcanvas-body p-0 sidebar">
                 {% include 'base/sidebar_content.html' %}
             </div>
+
         </div>
 
         <!-- Main Content -->

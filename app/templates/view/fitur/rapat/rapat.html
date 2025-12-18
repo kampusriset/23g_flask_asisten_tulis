@@ -1,0 +1,75 @@
+{% extends "base/sidebar.html" %}
+
+{% block content %}
+
+<div class="container my-5">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+    <h1 class="h4">Form Rapat Baru</h1>
+    <span class="text-muted">17 Desember 2025</span>
+  </div>
+
+  <!-- Form -->
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <form id="form-rapat">
+
+        <!-- Judul -->
+        <div class="mb-3">
+          <label for="judul" class="form-label">Judul Rapat</label>
+          <input type="text" class="form-control" id="judul" name="judul" placeholder="Masukkan judul rapat" required>
+        </div>
+
+        <!-- Tanggal -->
+        <div class="mb-3">
+          <label for="tanggal" class="form-label">Tanggal Rapat</label>
+          <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+        </div>
+
+        <!-- Peserta -->
+        <div class="mb-3">
+          <label class="form-label">Peserta</label>
+          <div id="peserta-container" class="mb-2">
+            <input type="text" name="peserta[]" class="form-control mb-2" placeholder="Nama peserta" required>
+          </div>
+          <button type="button" id="tambah-peserta" class="btn btn-outline-dark btn-sm">Tambah Peserta</button>
+        </div>
+
+        <!-- Catatan -->
+        <div class="mb-3">
+          <label for="catatan" class="form-label">Catatan Rapat</label>
+          <textarea class="form-control" id="catatan" name="catatan" rows="5"
+            placeholder="Tuliskan catatan rapat di sini..."></textarea>
+        </div>
+
+        <!-- Action -->
+        <div class="d-flex justify-content-end gap-2">
+          <button type="reset" class="btn btn-outline-dark">Reset</button>
+          <button type="submit" class="btn btn-dark">Simpan</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<!-- Script tambah peserta -->
+<script>
+  const tambahBtn = document.getElementById('tambah-peserta');
+  const pesertaContainer = document.getElementById('peserta-container');
+
+  tambahBtn.addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'peserta[]';
+    input.placeholder = 'Nama peserta';
+    input.required = true;
+    input.className = 'form-control mb-2';
+
+    pesertaContainer.appendChild(input);
+  });
+</script>
+
+{% endblock %}

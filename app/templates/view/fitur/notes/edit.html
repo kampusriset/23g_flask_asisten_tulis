@@ -9,58 +9,86 @@
 {% endblock %}
 
 {% block content %}
+<div style="display:flex; justify-content:center; margin-top:50px;">
+    <div style="width:60%;">
 
-<form method="POST" id="saveForm">
-    <div class="mb-3">
-        <input type="text" name="title" class="form-control form-control-lg" placeholder="Judul catatan..."
-            value="{{ note.title }}">
-    </div>
+        <form method="POST" id="saveForm">
 
-    <div class="mb-3 position-relative">
-
-        <!-- GHOST SUGGESTION (DI DALAM BOX) -->
-        <div id="ghost" class="form-control" style="
-            min-height:200px;
-            white-space:pre-wrap;
-            color:#aaa;
-            position:absolute;
-            top:0;
-            left:0;
-            pointer-events:none;
-            background:transparent;
+            <!-- JUDUL -->
+            <!-- JUDUL -->
+            <div class="mb-3">
+                <input type="text" name="title" class="form-control placeholder-input"
+                    placeholder="Judul catatan baru..." value="{{ note.title }}" style="
+            width: 100%;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            outline: none;
+            color: inherit;
         ">
-        </div>
+            </div>
 
-        <!-- EDITOR ASLI -->
-        <div id="editor" contenteditable="true" class="form-control" style="
-            min-height:200px;
-            background:transparent;
-            position:relative;
-        ">
-            {{ note.content }}
-        </div>
 
-        <input type="hidden" name="content" id="contentHidden">
+            <!-- KONTEN -->
+            <div class="mb-3 position-relative" style="min-height:300px;">
+
+                <!-- GHOST SUGGESTION -->
+                <div id="ghost" class="form-control" style="
+                    min-height:300px;
+                    white-space:pre-wrap;
+                    color:#aaa;
+                    position:absolute;
+                    top:0;
+                    left:0;
+                    pointer-events:none;
+                    background:transparent;
+                    border:none;
+                    box-shadow:none;
+                "></div>
+
+                <!-- EDITOR ASLI -->
+                <div id="editor" contenteditable="true" class="form-control editable-div"
+                    data-placeholder="Tulis apapun disini..." style="
+                        min-height:300px;
+                        background:transparent;
+                        position:relative;
+                        border:none;
+                        box-shadow:none;
+                        outline:none;
+                        white-space:pre-wrap;
+                    ">{{ note.content }}</div>
+
+                <input type="hidden" name="content" id="contentHidden">
+            </div>
+
+            <button class="btn btn-success">
+                <i class="fi fi-rr-disk"> Simpan</i>
+            </button>
+        </form>
+
+        <hr>
+
+        <!-- FORM HAPUS -->
+        <form method="POST" action="{{ url_for('notes_bp.delete', note_id=note.id) }}"
+            onsubmit="return confirm('Yakin hapus catatan ini, Bang?')">
+            <button class="btn btn-danger">
+                <i class="fi fi-rr-trash"> Hapus</i>
+            </button>
+        </form>
     </div>
+</div>
 
-
-    <button class="btn btn-success">
-        <i class="fi fi-rr-disk"> Simpan</i>
-    </button>
-</form>
-
-
-
-
-<hr>
-
-<!-- FORM HAPUS -->
-<form method="POST" action="{{ url_for('notes_bp.delete', note_id=note.id) }}"
-    onsubmit="return confirm('Yakin hapus catatan ini, Bang?')">
-    <button class="btn btn-danger">
-        <i class="fi fi-rr-trash"> Hapus</i>
-    </button>
-</form>
+<style>
+    /* placeholder untuk div contenteditable */
+    .editable-div:empty::before {
+        content: attr(data-placeholder);
+        color: #aaa;
+        pointer-events: none;
+        display: block;
+    }
+</style>
 
 <script>
     const editor = document.getElementById("editor");
@@ -76,7 +104,6 @@
     -------------------- */
     function clearSuggestion() {
         suggestion = "";
-        ghost.innerText = editor.innerText;
         syncGhost();
     }
 
@@ -84,14 +111,6 @@
         ghost.innerText = editor.innerText + suggestion;
     }
 
-    function getLastLine(text) {
-        const lines = text.split("\n");
-        return lines[lines.length - 1];
-    }
-
-    /* --------------------
-       input update
-    -------------------- */
     editor.addEventListener("input", () => {
         syncGhost();
     });
@@ -100,8 +119,6 @@
        key handling
     -------------------- */
     editor.addEventListener("keydown", (e) => {
-
-        /* TAB → accept */
         if (e.key === "Tab" && suggestion) {
             e.preventDefault();
             editor.innerText += suggestion;
@@ -110,36 +127,21 @@
             return;
         }
 
-        /* kalau user ngetik apa pun selain kontrol → batalin suggestion */
-        if (
-            suggestion &&
-            (
-                e.key.length === 1 ||        // huruf, angka, simbol
-                e.key === "Backspace" ||
-                e.key === "Enter"
-            )
-        ) {
+        if (suggestion && (e.key.length === 1 || e.key === "Backspace" || e.key === "Enter")) {
             clearSuggestion();
             return;
         }
 
-        /* navigasi cursor → batal */
-        if (
-            suggestion &&
-            ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Escape"].includes(e.key)
-        ) {
+        if (suggestion && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Escape"].includes(e.key)) {
             clearSuggestion();
             return;
         }
 
-        /* trigger AI hanya via SPACE */
         if (e.key === " ") {
             clearTimeout(debounceTimer);
-
             debounceTimer = setTimeout(() => {
                 const lastLine = editor.innerText.split("\n").pop().trim();
                 if (lastLine.length < 3 || lastLine === lastText) return;
-
                 lastText = lastLine;
                 requestSuggestion(lastLine);
             }, 2000);
@@ -151,19 +153,14 @@
     -------------------- */
     async function requestSuggestion(text) {
         try {
-            console.log("Sending to backend:", text);
-
             const res = await fetch(`/notes/{{ note.id }}/suggest`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ text })
             });
-
             const data = await res.json();
             suggestion = data.suggestion ? "" + data.suggestion : "";
             syncGhost();
-
-            console.log("AI Suggestion:", suggestion);
         } catch (err) {
             console.error("AI error:", err);
         }
@@ -189,8 +186,5 @@
         hiddenInput.value = editor.innerText;
     });
 </script>
-
-
-
 
 {% endblock %}

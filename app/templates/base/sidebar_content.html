@@ -10,7 +10,8 @@
     </li>
     </li>
     <li class="nav-item">
-        <a href="/rapat" class="nav-link text-light"><i class="fi fi-rr-users-alt"></i> Rapat</a>
+        <a href="/rapat" class="nav-link text-light {% if request.path == '/rapat' %}active{% endif %}"><i
+                class="fi fi-rr-users-alt"></i> Rapat</a>
     </li>
     <li class="nav-item">
         <a href="/not-available" class="nav-link text-light"> <i class="fi fi-rr-user-robot"></i> AI</a>
