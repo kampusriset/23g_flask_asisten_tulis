@@ -1,0 +1,65 @@
+{% extends "base/sidebar.html" %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="card shadow border-0" style="min-height: 420px;">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+          <h3 class="mb-0">Detail Rapat</h3>
+          <div>
+            <a href="{{ url_for('rapat_bp.rapat') }}" class="btn btn-outline-light btn-sm me-2">&larr; Kembali</a>
+            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalHapusRapat">Hapus</button>
+          </div>
+        </div>
+        <div class="card-body bg-white" style="padding: 2.5rem;">
+          <dl class="row mb-0">
+            <dt class="col-sm-4">Topik Rapat</dt>
+            <dd class="col-sm-8 fw-bold">{{ rapat.topik }}</dd>
+
+            <dt class="col-sm-4">Tanggal</dt>
+            <dd class="col-sm-8">{{ rapat.tanggal.strftime('%d %b %Y') if rapat.tanggal else '-' }}</dd>
+
+            <dt class="col-sm-4">Catatan</dt>
+            <dd class="col-sm-8">{{ rapat.catatan or '-' }}</dd>
+
+            <dt class="col-sm-4">Peserta</dt>
+            <dd class="col-sm-8">
+              {% if peserta_list and peserta_list|length > 0 %}
+                <ul class="list-group list-group-flush">
+                  {% for peserta in peserta_list %}
+                    <li class="list-group-item px-0 py-1 border-0 text-dark">&#9679; {{ peserta }}</li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <span class="text-muted">Tidak ada peserta.</span>
+              {% endif %}
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Hapus Rapat -->
+<div class="modal fade" id="modalHapusRapat" tabindex="-1" aria-labelledby="modalHapusRapatLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title" id="modalHapusRapatLabel">Konfirmasi Hapus Rapat</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Yakin Mau Menghapus Rapat ini?
+      </div>
+      <div class="modal-footer">
+        <form method="post" action="{{ url_for('rapat_bp.delete_rapat', id=rapat.id) }}">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-danger">Hapus</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -9,3 +9,4 @@ class Rapat(db.Model):
     topik = db.Column(db.String(200), nullable=False)
     catatan = db.Column(db.Text)
     tanggal = db.Column(db.Date, default=date.today)
+    peserta = db.Column(db.Text)  
