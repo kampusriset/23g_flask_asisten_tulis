@@ -9,8 +9,71 @@
           <h3 class="mb-0">Detail Rapat</h3>
           <div>
             <a href="{{ url_for('rapat_bp.rapat') }}" class="btn btn-outline-light btn-sm me-2">&larr; Kembali</a>
+            <button type="button" class="btn btn-outline-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#modalEditRapat">Edit</button>
             <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalHapusRapat">Hapus</button>
           </div>
+        <!-- Modal Edit Rapat -->
+        <div class="modal fade" id="modalEditRapat" tabindex="-1" aria-labelledby="modalEditRapatLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="modalEditRapatLabel">Edit Rapat</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form method="post" action="{{ url_for('rapat_bp.edit_rapat', id=rapat.id) }}">
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label for="edit-topik" class="form-label">Topik Rapat</label>
+                    <input type="text" class="form-control" id="edit-topik" name="topik" value="{{ rapat.topik }}" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="edit-tanggal" class="form-label">Tanggal Rapat</label>
+                    <input type="date" class="form-control" id="edit-tanggal" name="tanggal" value="{{ rapat.tanggal.strftime('%Y-%m-%d') if rapat.tanggal else '' }}" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Peserta</label>
+                    <div id="edit-peserta-container">
+                      {% for peserta in peserta_list %}
+                        <input type="text" name="peserta[]" class="form-control mb-2" value="{{ peserta }}" required>
+                      {% endfor %}
+                      {% if peserta_list|length == 0 %}
+                        <input type="text" name="peserta[]" class="form-control mb-2" placeholder="Nama peserta" required>
+                      {% endif %}
+                    </div>
+                    <button type="button" id="edit-tambah-peserta" class="btn btn-outline-dark btn-sm mt-2">Tambah Peserta</button>
+                  </div>
+                  <div class="mb-3">
+                    <label for="edit-catatan" class="form-label">Catatan Rapat</label>
+                    <textarea class="form-control" id="edit-catatan" name="catatan" rows="4" placeholder="Tuliskan catatan rapat di sini...">{{ rapat.catatan }}</textarea>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                  <button type="submit" class="btn btn-dark">Simpan Perubahan</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <script>
+          // Script tambah peserta di modal edit
+          document.addEventListener('DOMContentLoaded', function() {
+            const tambahEditBtn = document.getElementById('edit-tambah-peserta');
+            const editPesertaContainer = document.getElementById('edit-peserta-container');
+            if (tambahEditBtn && editPesertaContainer) {
+              tambahEditBtn.addEventListener('click', function() {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.name = 'peserta[]';
+                input.placeholder = 'Nama peserta';
+                input.required = true;
+                input.className = 'form-control mb-2';
+                editPesertaContainer.appendChild(input);
+              });
+            }
+          });
+        </script>
         </div>
         <div class="card-body bg-white" style="padding: 2.5rem;">
           <dl class="row mb-0">
