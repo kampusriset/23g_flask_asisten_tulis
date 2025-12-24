@@ -1,0 +1,14 @@
+{% if notes %}
+<ul class="nav flex-column ms-3">
+    {% for n in notes %}
+    <li class="nav-item">
+        <a href="{{ url_for('notes_bp.edit', note_id=n.id) }}"
+            class="nav-link text-light small {% if note and note.id == n.id %}active{% endif %}">
+            <i class="fi fi-rr-document"></i>
+            {{ n.title or "Catatan Baru" }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endif %}

@@ -15,11 +15,13 @@
 ---
 
 ## Tentang Proyek
+
 **23g_flask_asisten_tulis (TulisAI)** adalah aplikasi berbasis Flask yang terintegrasi dengan AI untuk membantu proses penulisan jadi lebih cepat, lebih rapi, dan lebih efisien
 
 ---
 
 ## Fitur Utama
+
 - AI Writing Assistant (Saran & Perbaikan Otomatis) | Membantu pengguna untuk menulis lebih rapi, jelas & grammar + strukturnya yang diperbaiki.
 - Summarizer & Translation | Membantu pengguna mengubah catatan panjang menjadi ringkas dengan mengambil poin-poin yang penting, dan bisa menerjemahkan teks ke bahasa lain.
 - Smart Notes Management | Catatan otomatis dikelompokan sesuai topik sehingga bisa dicari menggunakan makna, bukan cuma kata yang sama.
@@ -27,14 +29,16 @@
 ---
 
 ## 🛠️ Teknologi yang Digunakan
+
 - **Flask (Python)**
-- **Tailwind**
 - **Gemini API**
 - **Jinja2**
+- **DB PostgreSQL**
 
 ---
 
 ## Kelompok NeoByte
+
 <table>
 <tbody>
 <tr>
@@ -62,19 +66,33 @@
 ---
 
 ## 📥 Instalasi
+
 1. Clone repositori:
+
 ```bash
 git clone https://github.com/kampusriset/23g_flask_asisten_tulis.git
 ```
+
 2. Masuk ke folder proyek:
+
 ```bash
 cd 23g_flask_asisten_tulis
 ```
+
 3. Install dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
-4. Jalankan server Flask:
+
+4. Setup Database:
+
+```bash
+cp .env.example .env
+```
+
+5. Jalankan server Flask:
+
 ```bash
 python app.py
 ```
@@ -84,7 +102,9 @@ python app.py
 ---
 
 ## 🚀 Roadmap Pengembangan
+
 Fitur-fitur yang direncanakan untuk versi selanjutnya:
+
 - ✨ **Mode Penulisan Akademik** (otomatis menyesuaikan gaya ilmiah)
 - 📚 **Template Dokumen** (makalah, laporan, esai, proposal)
 - 🔊 **Text-to-Speech** untuk membaca hasil tulisan
@@ -96,16 +116,16 @@ Fitur-fitur yang direncanakan untuk versi selanjutnya:
 ## 🤝 Kontribusi
 
 Terima kasih atas kontribusi semua pihak atas project ini
- Kami sangat menghargai issue dan PR/masukkan ❤️
+Kami sangat menghargai issue dan PR/masukkan ❤️
 
 ---
 
 ## 📄 Lisensi
+
 Proyek ini menggunakan **MIT License**, sehingga bebas digunakan, dimodifikasi, dan dikembangkan ulang.
 
-
-
 ## Image
+
 ```bash
 Soon
 ```

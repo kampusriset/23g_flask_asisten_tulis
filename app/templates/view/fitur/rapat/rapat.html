@@ -1,0 +1,112 @@
+{% extends "base/sidebar.html" %}
+
+{% block content %}
+
+
+
+<div class="container my-5">
+  <div class="row">
+    <!-- Form Rapat -->
+    <div class="col-lg-5 mb-4 mb-lg-0">
+      <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+        <h1 class="h4">Form Rapat Baru</h1>
+        <span class="text-muted">{{ current_date }}</span>
+      </div>
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <form id="form-rapat" action="{{ url_for('rapat_bp.create_rapat') }}" method="post">
+            <!-- Judul -->
+            <div class="mb-3">
+              <label for="judul" class="form-label">Judul Rapat</label>
+              <input type="text" class="form-control" id="judul" name="judul" placeholder="Masukkan judul rapat" required>
+            </div>
+            <!-- Tanggal -->
+            <div class="mb-3">
+              <label for="tanggal" class="form-label">Tanggal Rapat</label>
+              <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+            </div>
+            <!-- Peserta -->
+            <div class="mb-3">
+              <label class="form-label">Peserta</label>
+              <div id="peserta-container" class="mb-2">
+                <input type="text" name="peserta[]" class="form-control mb-2" placeholder="Nama peserta" required>
+              </div>
+              <button type="button" id="tambah-peserta" class="btn btn-outline-dark btn-sm">Tambah Peserta</button>
+            </div>
+            <!-- Catatan -->
+            <div class="mb-3">
+              <label for="catatan" class="form-label">Catatan Rapat</label>
+              <textarea class="form-control" id="catatan" name="catatan" rows="5" placeholder="Tuliskan catatan rapat di sini..."></textarea>
+            </div>
+            <!-- Action -->
+            <div class="d-flex justify-content-end gap-2">
+              <button type="reset" class="btn btn-outline-dark">Reset</button>
+              <button type="submit" class="btn btn-dark">Simpan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- Daftar Rapat -->
+    <div class="col-lg-7">
+      <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+        <h2 class="h5 mb-0">Daftar Rapat</h2>
+      </div>
+      {% if daftar_rapat and daftar_rapat|length > 0 %}
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle">
+            <thead class="table-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">ID</th>
+                <th scope="col">Topik</th>
+                <th scope="col">Tanggal</th>
+                <th scope="col">Jumlah Peserta</th>
+                <th scope="col">Catatan</th>
+                <th scope="col">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for rapat in daftar_rapat %}
+                <tr>
+                  <th scope="row">{{ loop.index }}</th>
+                  <td>{{ rapat.id }}</td>
+                  <td>{{ rapat.topik }}</td>
+                  <td>{{ rapat.tanggal.strftime('%d %b %Y') if rapat.tanggal else '-' }}</td>
+                  <td>{{ rapat.peserta_list|length }}</td>
+                  <td>{{ rapat.catatan or '-' }}</td>
+                  <td>
+                    <a href="{{ url_for('rapat_bp.detail_rapat', id=rapat.id) }}" class="btn btn-sm btn-outline-primary">Detail</a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="alert alert-info text-center my-4" role="alert">
+          Belum ada rapat yang tercatat. Silakan tambahkan rapat baru melalui form di atas.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Script tambah peserta -->
+<script>
+  const tambahBtn = document.getElementById('tambah-peserta');
+  const pesertaContainer = document.getElementById('peserta-container');
+
+  tambahBtn.addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'peserta[]';
+    input.placeholder = 'Nama peserta';
+    input.required = true;
+    input.className = 'form-control mb-2';
+
+    pesertaContainer.appendChild(input);
+  });
+</script>
+
+{% endblock %}

@@ -5,3 +5,6 @@ flask
 psycopg2-binary
 Flask_SQLAlchemy
 Werkzeug
+pymysql
+flask-migrate
+flask-socketio

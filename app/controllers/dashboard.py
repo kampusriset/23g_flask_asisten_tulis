@@ -1,5 +1,10 @@
+<<<<<<< HEAD:app/dashboard.py
 from flask import Blueprint, render_template, session, redirect, url_for, request, jsonify
 from .models import User
+=======
+from flask import Blueprint, render_template, session, redirect, url_for
+from app.models.user import User
+>>>>>>> c6b9692174b8a5bdf1baf180d89fd2b036579477:app/controllers/dashboard.py
 
 dashboard_bp = Blueprint('dashboard_bp', __name__)
 

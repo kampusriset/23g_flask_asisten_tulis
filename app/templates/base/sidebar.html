@@ -7,9 +7,9 @@
     <title>{{ title if title else "Dashboard" }}</title>
 
     <!-- Bootstrap CSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
+<<<<<<< HEAD
     <style>
         /* Stable bottom-right bubble + popup styles */
         #ai-chat-bubble{position:fixed;bottom:24px;right:24px;width:60px;height:60px;font-size:28px;z-index:2000;cursor:pointer}
@@ -20,6 +20,9 @@
             #ai-chat-popup{right:16px;bottom:80px;width:320px}
         }
     </style>
+=======
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+>>>>>>> c6b9692174b8a5bdf1baf180d89fd2b036579477
 </head>
 
 <body>
@@ -41,9 +44,11 @@
     <div class="d-flex">
 
         <!-- Sidebar desktop -->
-        <div class="d-none d-lg-block bg-dark text-light vh-100 p-3" style="width: 250px;">
+        <div class="d-none d-lg-block bg-dark text-light p-3 sidebar" style="width: 250px;">
             {% include 'base/sidebar_content.html' %}
         </div>
+
+
 
         <!-- Offcanvas sidebar mobile -->
         <div class="offcanvas offcanvas-start bg-dark text-light" tabindex="-1" id="offcanvasSidebar"
@@ -53,9 +58,10 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
                     aria-label="Close"></button>
             </div>
-            <div class="offcanvas-body p-0">
+            <div class="offcanvas-body p-0 sidebar">
                 {% include 'base/sidebar_content.html' %}
             </div>
+
         </div>
 
         <!-- Main Content -->
@@ -82,6 +88,7 @@
         <div class="input-group p-2 border-top">
             <input type="text" class="form-control" placeholder="Tulis pesan..." id="chat-input">
             <button class="btn btn-primary" id="chat-send">Kirim</button>
+            <button class="btn btn-danger ms-2" id="chat-clear">Hapus Riwayat</button>
         </div>
     </div>
 
@@ -91,23 +98,85 @@
         const chatBody = document.getElementById('chat-body');
         const chatInput = document.getElementById('chat-input');
         const chatSend = document.getElementById('chat-send');
+        const chatClear = document.getElementById('chat-clear');
+        async function clearChatHistory() {
+            if (!confirm('Yakin ingin menghapus semua riwayat chat?')) return;
+            try {
+                const res = await fetch('/api/ai-chat-history', { method: 'DELETE' });
+                if (res.ok) {
+                    chatBody.innerHTML = '<div><em>Riwayat chat berhasil dihapus.</em></div>';
+                } else {
+                    chatBody.innerHTML = '<div><em>Gagal menghapus riwayat chat.</em></div>';
+                }
+            } catch (e) {
+                chatBody.innerHTML = '<div><em>Gagal menghapus riwayat chat.</em></div>';
+            }
+        }
+        chatClear.addEventListener('click', clearChatHistory);
+
+        async function loadChatHistory() {
+            try {
+                const res = await fetch('/api/ai-chat-history');
+                const data = await res.json();
+                chatBody.innerHTML = '';
+                if (data.history && data.history.length > 0) {
+                    data.history.forEach(item => {
+                        const userMsg = document.createElement('div');
+                        userMsg.innerHTML = `<strong>Kamu:</strong> ${item.user_input}`;
+                        chatBody.appendChild(userMsg);
+                        const aiMsg = document.createElement('div');
+                        aiMsg.innerHTML = `<strong>AI:</strong> ${item.ai_output}`;
+                        chatBody.appendChild(aiMsg);
+                    });
+                } else {
+                    chatBody.innerHTML = '<div><em>Halo! Ada yang bisa dibantu?</em></div>';
+                }
+                chatBody.scrollTop = chatBody.scrollHeight;
+            } catch (e) {
+                chatBody.innerHTML = '<div><em>Gagal memuat riwayat chat.</em></div>';
+            }
+        }
 
         bubble.addEventListener('click', () => {
             popup.classList.toggle('d-none');
+            if (!popup.classList.contains('d-none')) {
+                loadChatHistory();
+            }
         });
 
-        chatSend.addEventListener('click', () => {
+        async function sendMessageToAI(msg) {
+            try {
+                const response = await fetch('/api/ai-chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg })
+                });
+                const data = await response.json();
+                if (data.reply) return data.reply;
+                if (data.error) return 'Error: ' + data.error;
+                return 'AI tidak merespon.';
+            } catch (err) {
+                return 'Gagal menghubungi AI.';
+            }
+        }
+
+        chatSend.addEventListener('click', async () => {
             const msg = chatInput.value.trim();
             if (msg) {
                 const userMsg = document.createElement('div');
                 userMsg.innerHTML = `<strong>Kamu:</strong> ${msg}`;
                 chatBody.appendChild(userMsg);
 
-                const botMsg = document.createElement('div');
-                botMsg.innerHTML = `<strong>AI:</strong> Maaf, saya cuma demo :)`;
-                chatBody.appendChild(botMsg);
-
                 chatInput.value = '';
+                chatBody.scrollTop = chatBody.scrollHeight;
+
+                const botMsg = document.createElement('div');
+                botMsg.innerHTML = `<strong>AI:</strong> <em>Mengetik...</em>`;
+                chatBody.appendChild(botMsg);
+                chatBody.scrollTop = chatBody.scrollHeight;
+
+                const aiReply = await sendMessageToAI(msg);
+                botMsg.innerHTML = `<strong>AI:</strong> ${aiReply}`;
                 chatBody.scrollTop = chatBody.scrollHeight;
             }
         });
@@ -120,7 +189,7 @@
 
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
 </body>
 
