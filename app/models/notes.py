@@ -17,3 +17,12 @@ class Note(db.Model):
         default=datetime.utcnow,
         onupdate=datetime.utcnow
     )
+
+    # 🔥 RECYLCE BIN
+    deleted_at = db.Column(db.DateTime, nullable=True)
+
+    def soft_delete(self):
+        self.deleted_at = datetime.utcnow()
+
+    def restore(self):
+        self.deleted_at = None

@@ -33,12 +33,10 @@
         </a>
     </li>
 
-
     <!-- LIST CATATAN DINAMIS -->
     {% include "base/sidebar_notes.html" %}
-
-
 </ul>
+
 
 
 <h6 class="text-uppercase text-secondary mt-3 px-3">Team Workspace</h6>
@@ -57,8 +55,11 @@
         <a href="/not-available" class="nav-link text-light"> <i class="fi fi-rr-settings"></i> Pengaturan</a>
     </li>
     <li class="nav-item">
-        <a href="/not-available" class="nav-link text-light"> <i class="fi fi-rr-trash"></i> Sampah</a>
+        <a href="{{ url_for('recycle_bp.index') }}" class="nav-link text-light">
+            <i class="fi fi-rr-trash"></i> Sampah
+        </a>
     </li>
+
     <li class="nav-item">
         <a href="/logout" class="nav-link text-light"> <i class="fi fi-rr-exit"></i> Logout</a>
     </li>

@@ -87,8 +87,10 @@ def require_login():
 
 
 def get_user_notes(user_id):
-    return Note.query.filter_by(user_id=user_id)\
-        .order_by(Note.updated_at.desc()).all()
+    return Note.query.filter(
+        Note.user_id == user_id,
+        Note.deleted_at.is_(None)
+    ).order_by(Note.updated_at.desc()).all()
 
 
 # --------------------------
@@ -103,12 +105,10 @@ def index():
     user_id = session["user_id"]
     notes = get_user_notes(user_id)
 
-    # kalau belum ada catatan → buat satu
     if not notes:
-        note = Note(user_id=user_id, title="", content="")
-        db.session.add(note)
-        db.session.commit()
-        return redirect(url_for("notes_bp.edit", note_id=note.id))
+        return render_template(
+            "view/fitur/notes/empty.html"
+        )
 
     # kalau ada → buka catatan terakhir
     return redirect(url_for("notes_bp.edit", note_id=notes[0].id))
@@ -125,9 +125,10 @@ def edit(note_id):
 
     user_id = session["user_id"]
 
-    note = Note.query.filter_by(
-        id=note_id,
-        user_id=user_id
+    note = Note.query.filter(
+        Note.id == note_id,
+        Note.user_id == user_id,
+        Note.deleted_at.is_(None)
     ).first_or_404()
 
     if request.method == "POST":
@@ -168,14 +169,30 @@ def delete(note_id):
     if check:
         return check
 
-    user_id = session["user_id"]
-
-    note = Note.query.filter_by(
-        id=note_id,
-        user_id=user_id
+    note = Note.query.filter(
+        Note.id == note_id,
+        Note.user_id == session["user_id"],
+        Note.deleted_at.is_(None)
     ).first_or_404()
 
-    db.session.delete(note)
+    note.soft_delete()   # 👈 PINDAH KE RECYCLE BIN
     db.session.commit()
 
     return redirect(url_for("notes_bp.index"))
+
+
+@notes_bp.route("/recycle")
+def trash():
+    check = require_login()
+    if check:
+        return check
+
+    deleted_notes = Note.query.filter(
+        Note.user_id == session["user_id"],
+        Note.deleted_at.isnot(None)
+    ).order_by(Note.deleted_at.desc()).all()
+
+    return render_template(
+        "view/fitur/recycle/recycle.html",
+        deleted_notes=deleted_notes
+    )

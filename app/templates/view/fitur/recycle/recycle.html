@@ -1,0 +1,47 @@
+{% extends "base/sidebar.html" %}
+
+{% block content %}
+<div class="container py-4">
+
+    <h4 class="mb-3">
+        <i class="fi fi-rr-trash"></i> Recycle Bin
+    </h4>
+
+    {% if deleted_notes %}
+    <ul class="list-group">
+        {% for note in deleted_notes %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+
+            <div>
+                <strong>{{ note.title or "Tanpa Judul" }}</strong>
+                <div class="text-muted small">
+                    Dihapus: {{ note.deleted_at.strftime("%d %b %Y %H:%M") }}
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <form method="post" action="{{ url_for('recycle_bp.restore', note_id=note.id) }}">
+                    <button class="btn btn-sm btn-success">
+                        ♻️ Restore
+                    </button>
+                </form>
+
+                <form method="post" action="{{ url_for('recycle_bp.force_delete', note_id=note.id) }}"
+                    onsubmit="return confirm('Yakin hapus permanen?')">
+                    <button class="btn btn-sm btn-danger">
+                        ❌ Hapus
+                    </button>
+                </form>
+            </div>
+
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="alert alert-secondary">
+        Recycle bin kosong 😴
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
