@@ -8,6 +8,16 @@
     </h4>
 
     {% if deleted_notes %}
+    <!-- Tombol Hapus Semua -->
+    <div class="mb-3 text-end">
+        <form method="post" action="{{ url_for('recycle_bp.delete_all') }}"
+            onsubmit="return confirm('Yakin hapus semua permanen?')">
+            <button class="btn btn-sm btn-danger">
+                <i class="fi fi-rr-trash"></i> Hapus Semua
+            </button>
+        </form>
+    </div>
+
     <ul class="list-group">
         {% for note in deleted_notes %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -22,14 +32,14 @@
             <div class="d-flex gap-2">
                 <form method="post" action="{{ url_for('recycle_bp.restore', note_id=note.id) }}">
                     <button class="btn btn-sm btn-success">
-                        ♻️ Restore
+                        <i class="fi fi-rr-time-past"></i> Restore
                     </button>
                 </form>
 
                 <form method="post" action="{{ url_for('recycle_bp.force_delete', note_id=note.id) }}"
                     onsubmit="return confirm('Yakin hapus permanen?')">
                     <button class="btn btn-sm btn-danger">
-                        ❌ Hapus
+                        <i class="fi fi-rr-trash"></i> Hapus Permanen
                     </button>
                 </form>
             </div>
@@ -39,7 +49,7 @@
     </ul>
     {% else %}
     <div class="alert alert-secondary">
-        Recycle bin kosong 😴
+        Kosong
     </div>
     {% endif %}
 

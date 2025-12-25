@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, session
+from flask import Blueprint, render_template, redirect, url_for, session, flash
 from app.models.notes import Note
 from app import db
 
@@ -48,6 +48,25 @@ def restore(note_id):
     db.session.commit()
 
     return redirect(url_for("recycle_bp.index"))
+
+
+@recycle_bp.route("/delete_all", methods=['POST'])
+def delete_all():
+    check = require_login()
+    if check:
+        return check
+
+    # ambil semua note yang dihapus user itu sendiri
+    deleted_notes = Note.query.filter(
+        Note.user_id == session["user_id"],
+        Note.deleted_at.isnot(None)
+    ).all()
+
+    for note in deleted_notes:
+        db.session.delete(note)
+    db.session.commit()
+    flash('Semua catatan dihapus permanen!', 'success')
+    return redirect(url_for('recycle_bp.index'))
 
 
 @recycle_bp.route("/<int:note_id>/force-delete", methods=["POST"])
