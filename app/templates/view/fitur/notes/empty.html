@@ -1,16 +1,20 @@
 {% extends "base/sidebar.html" %}
 
 {% block content %}
-<div class="container py-5 text-center">
+<div class="max-w-3xl mx-auto py-12 px-4 text-center">
 
-    <h4 class="mb-2"><i class="fi fi-rr-memo-pad"></i> Belum ada catatan</h4>
-    <p class="text-muted">
-        Semua catatan sudah dihapus atau belum dibuat.
-    </p>
+    <div class="bg-white shadow rounded p-8">
+        <div class="text-3xl mb-3 text-gray-800"><i class="fi fi-rr-memo-pad"></i></div>
+        <h4 class="text-lg font-semibold mb-2 text-gray-800">Belum ada catatan</h4>
+        <p class="text-sm text-gray-500 mb-4">
+            Semua catatan sudah dihapus atau belum dibuat.
+        </p>
 
-    <a href="{{ url_for('notes_bp.new_note') }}" class="btn btn-primary mt-3">
-        <i class="fi fi-rr-plus"></i> Buat Catatan Baru
-    </a>
+        <a href="{{ url_for('notes_bp.new_note') }}"
+            class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+            <i class="fi fi-rr-plus"></i> Buat Catatan Baru
+        </a>
+    </div>
 
 </div>
 {% endblock %}

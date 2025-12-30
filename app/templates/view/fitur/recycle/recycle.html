@@ -1,54 +1,56 @@
 {% extends "base/sidebar.html" %}
 
 {% block content %}
-<div class="container py-4">
+<div class="max-w-4xl mx-auto py-6 px-4">
 
-    <h4 class="mb-3">
-        <i class="fi fi-rr-trash"></i> Recycle Bin
-    </h4>
+    <div class="flex items-center justify-between mb-4">
+        <h4 class="text-lg font-semibold text-gray-800"><i class="fi fi-rr-trash mr-2"></i> Recycle Bin</h4>
+    </div>
 
     {% if deleted_notes %}
     <!-- Tombol Hapus Semua -->
-    <div class="mb-3 text-end">
+    <div class="mb-4 text-right">
         <form method="post" action="{{ url_for('recycle_bp.delete_all') }}"
             onsubmit="return confirm('Yakin hapus semua permanen?')">
-            <button class="btn btn-sm btn-danger">
-                <i class="fi fi-rr-trash"></i> Hapus Semua
+            <button class="inline-flex items-center px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700">
+                <i class="fi fi-rr-trash mr-2"></i> Hapus Semua
             </button>
         </form>
     </div>
 
-    <ul class="list-group">
+    <div class="bg-white shadow rounded divide-y divide-gray-100">
         {% for note in deleted_notes %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div class="flex items-center justify-between px-4 py-3 hover:bg-gray-50">
 
             <div>
-                <strong>{{ note.title or "Tanpa Judul" }}</strong>
-                <div class="text-muted small">
+                <strong class="block text-gray-800">{{ note.title or "Tanpa Judul" }}</strong>
+                <div class="text-sm text-gray-500">
                     Dihapus: {{ note.deleted_at.strftime("%d %b %Y %H:%M") }}
                 </div>
             </div>
 
-            <div class="d-flex gap-2">
+            <div class="flex items-center gap-2">
                 <form method="post" action="{{ url_for('recycle_bp.restore', note_id=note.id) }}">
-                    <button class="btn btn-sm btn-success">
-                        <i class="fi fi-rr-time-past"></i> Restore
+                    <button
+                        class="inline-flex items-center px-3 py-1.5 bg-green-600 text-white text-sm rounded hover:bg-green-700">
+                        <i class="fi fi-rr-time-past mr-2"></i> Restore
                     </button>
                 </form>
 
                 <form method="post" action="{{ url_for('recycle_bp.force_delete', note_id=note.id) }}"
                     onsubmit="return confirm('Yakin hapus permanen?')">
-                    <button class="btn btn-sm btn-danger">
-                        <i class="fi fi-rr-trash"></i> Hapus Permanen
+                    <button
+                        class="inline-flex items-center px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700">
+                        <i class="fi fi-rr-trash mr-2"></i> Hapus Permanen
                     </button>
                 </form>
             </div>
 
-        </li>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
     {% else %}
-    <div class="alert alert-secondary">
+    <div class="bg-gray-50 border border-gray-200 text-gray-600 rounded p-6 text-center">
         Kosong
     </div>
     {% endif %}

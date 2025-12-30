@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* test tailwind */
+.text-red-test {
+    color: red;
+}
+
+.bg-blue-test {
+    background-color: blue;
+}
+
+
+/* Set default font */
+@layer base {
+    body {
+        @apply font-sans text-sm;
+    }
+}

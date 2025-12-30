@@ -1,128 +1,158 @@
 {% extends "base/sidebar.html" %}
 
 {% block content %}
-<div class="container my-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-7">
-      <div class="card shadow border-0" style="min-height: 420px;">
-        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-          <h3 class="mb-0">Detail Rapat</h3>
-          <div>
-            <a href="{{ url_for('rapat_bp.rapat') }}" class="btn btn-outline-light btn-sm me-2">&larr; Kembali</a>
-            <button type="button" class="btn btn-outline-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#modalEditRapat">Edit</button>
-            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalHapusRapat">Hapus</button>
-          </div>
-        <!-- Modal Edit Rapat -->
-        <div class="modal fade" id="modalEditRapat" tabindex="-1" aria-labelledby="modalEditRapatLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="modalEditRapatLabel">Edit Rapat</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <form method="post" action="{{ url_for('rapat_bp.edit_rapat', id=rapat.id) }}">
-                <div class="modal-body">
-                  <div class="mb-3">
-                    <label for="edit-topik" class="form-label">Topik Rapat</label>
-                    <input type="text" class="form-control" id="edit-topik" name="topik" value="{{ rapat.topik }}" required>
-                  </div>
-                  <div class="mb-3">
-                    <label for="edit-tanggal" class="form-label">Tanggal Rapat</label>
-                    <input type="date" class="form-control" id="edit-tanggal" name="tanggal" value="{{ rapat.tanggal.strftime('%Y-%m-%d') if rapat.tanggal else '' }}" required>
-                  </div>
-                  <div class="mb-3">
-                    <label class="form-label">Peserta</label>
-                    <div id="edit-peserta-container">
-                      {% for peserta in peserta_list %}
-                        <input type="text" name="peserta[]" class="form-control mb-2" value="{{ peserta }}" required>
-                      {% endfor %}
-                      {% if peserta_list|length == 0 %}
-                        <input type="text" name="peserta[]" class="form-control mb-2" placeholder="Nama peserta" required>
-                      {% endif %}
-                    </div>
-                    <button type="button" id="edit-tambah-peserta" class="btn btn-outline-dark btn-sm mt-2">Tambah Peserta</button>
-                  </div>
-                  <div class="mb-3">
-                    <label for="edit-catatan" class="form-label">Catatan Rapat</label>
-                    <textarea class="form-control" id="edit-catatan" name="catatan" rows="4" placeholder="Tuliskan catatan rapat di sini...">{{ rapat.catatan }}</textarea>
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                  <button type="submit" class="btn btn-dark">Simpan Perubahan</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <script>
-          // Script tambah peserta di modal edit
-          document.addEventListener('DOMContentLoaded', function() {
-            const tambahEditBtn = document.getElementById('edit-tambah-peserta');
-            const editPesertaContainer = document.getElementById('edit-peserta-container');
-            if (tambahEditBtn && editPesertaContainer) {
-              tambahEditBtn.addEventListener('click', function() {
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.name = 'peserta[]';
-                input.placeholder = 'Nama peserta';
-                input.required = true;
-                input.className = 'form-control mb-2';
-                editPesertaContainer.appendChild(input);
-              });
-            }
-          });
-        </script>
-        </div>
-        <div class="card-body bg-white" style="padding: 2.5rem;">
-          <dl class="row mb-0">
-            <dt class="col-sm-4">Topik Rapat</dt>
-            <dd class="col-sm-8 fw-bold">{{ rapat.topik }}</dd>
-
-            <dt class="col-sm-4">Tanggal</dt>
-            <dd class="col-sm-8">{{ rapat.tanggal.strftime('%d %b %Y') if rapat.tanggal else '-' }}</dd>
-
-            <dt class="col-sm-4">Catatan</dt>
-            <dd class="col-sm-8">{{ rapat.catatan or '-' }}</dd>
-
-            <dt class="col-sm-4">Peserta</dt>
-            <dd class="col-sm-8">
-              {% if peserta_list and peserta_list|length > 0 %}
-                <ul class="list-group list-group-flush">
-                  {% for peserta in peserta_list %}
-                    <li class="list-group-item px-0 py-1 border-0 text-dark">&#9679; {{ peserta }}</li>
-                  {% endfor %}
-                </ul>
-              {% else %}
-                <span class="text-muted">Tidak ada peserta.</span>
-              {% endif %}
-            </dd>
-          </dl>
-        </div>
+<div class="max-w-4xl mx-auto my-8 px-4">
+  <div class="bg-white shadow rounded overflow-hidden">
+    <div class="flex items-center justify-between px-6 py-4 border-b">
+      <h3 class="text-lg font-semibold text-gray-800">Detail Rapat</h3>
+      <div class="flex items-center gap-2">
+        <a href="{{ url_for('rapat_bp.rapat') }}"
+          class="px-3 py-1.5 border rounded text-sm text-gray-700 hover:bg-gray-50">&larr; Kembali</a>
+        <button id="openEditModal"
+          class="px-3 py-1.5 border rounded text-sm text-gray-700 hover:bg-gray-50">Edit</button>
+        <button id="openDeleteModal"
+          class="px-3 py-1.5 border rounded text-sm text-red-600 hover:bg-red-50">Hapus</button>
       </div>
+    </div>
+
+    <div class="px-6 py-6">
+      <dl class="grid grid-cols-1 sm:grid-cols-3 gap-y-3 gap-x-6 text-sm">
+        <div>
+          <dt class="text-gray-500">Topik Rapat</dt>
+          <dd class="font-semibold text-gray-800">{{ rapat.topik }}</dd>
+        </div>
+
+        <div>
+          <dt class="text-gray-500">Tanggal</dt>
+          <dd class="text-gray-700">{{ rapat.tanggal.strftime('%d %b %Y') if rapat.tanggal else '-' }}</dd>
+        </div>
+
+        <div class="sm:col-span-3">
+          <dt class="text-gray-500">Catatan</dt>
+          <dd class="text-gray-800">{{ rapat.catatan or '-' }}</dd>
+        </div>
+
+        <div class="sm:col-span-3">
+          <dt class="text-gray-500">Peserta</dt>
+          <dd class="mt-2">
+            {% if peserta_list and peserta_list|length > 0 %}
+            <ul class="list-disc list-inside space-y-1">
+              {% for peserta in peserta_list %}
+              <li class="text-gray-700">{{ peserta }}</li>
+              {% endfor %}
+            </ul>
+            {% else %}
+            <span class="text-gray-500">Tidak ada peserta.</span>
+            {% endif %}
+          </dd>
+        </div>
+      </dl>
     </div>
   </div>
 </div>
 
-<!-- Modal Hapus Rapat -->
-<div class="modal fade" id="modalHapusRapat" tabindex="-1" aria-labelledby="modalHapusRapatLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header bg-dark text-white">
-        <h5 class="modal-title" id="modalHapusRapatLabel">Konfirmasi Hapus Rapat</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Edit Modal -->
+<div id="editModal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
+  <div class="bg-white rounded shadow-lg w-full max-w-2xl mx-4">
+    <div class="flex items-center justify-between px-5 py-3 border-b">
+      <h5 class="text-lg font-semibold">Edit Rapat</h5>
+      <button id="closeEditModal" class="text-gray-600">✕</button>
+    </div>
+    <form method="post" action="{{ url_for('rapat_bp.edit_rapat', id=rapat.id) }}">
+      <div class="p-5 space-y-4">
+        <div>
+          <label for="edit-topik" class="block text-sm font-medium text-gray-700 mb-1">Topik Rapat</label>
+          <input type="text" class="w-full border rounded px-3 py-2" id="edit-topik" name="topik"
+            value="{{ rapat.topik }}" required>
+        </div>
+        <div>
+          <label for="edit-tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Rapat</label>
+          <input type="date" class="w-full border rounded px-3 py-2" id="edit-tanggal" name="tanggal"
+            value="{{ rapat.tanggal.strftime('%Y-%m-%d') if rapat.tanggal else '' }}" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Peserta</label>
+          <div id="edit-peserta-container">
+            {% for peserta in peserta_list %}
+            <input type="text" name="peserta[]" class="w-full border rounded px-3 py-2 mb-2" value="{{ peserta }}"
+              required>
+            {% endfor %}
+            {% if peserta_list|length == 0 %}
+            <input type="text" name="peserta[]" class="w-full border rounded px-3 py-2 mb-2" placeholder="Nama peserta"
+              required>
+            {% endif %}
+          </div>
+          <button type="button" id="edit-tambah-peserta"
+            class="inline-flex items-center gap-2 px-3 py-1.5 border rounded text-sm text-gray-700 hover:bg-gray-50">Tambah
+            Peserta</button>
+        </div>
+        <div>
+          <label for="edit-catatan" class="block text-sm font-medium text-gray-700 mb-1">Catatan Rapat</label>
+          <textarea class="w-full border rounded px-3 py-2" id="edit-catatan" name="catatan" rows="4"
+            placeholder="Tuliskan catatan rapat di sini...">{{ rapat.catatan }}</textarea>
+        </div>
       </div>
-      <div class="modal-body">
-        Yakin Mau Menghapus Rapat ini?
+      <div class="flex justify-end gap-2 px-5 py-3 border-t">
+        <button type="button" id="cancelEdit" class="px-4 py-2 border rounded text-gray-700">Batal</button>
+        <button type="submit" class="px-4 py-2 bg-gray-900 text-white rounded">Simpan Perubahan</button>
       </div>
-      <div class="modal-footer">
+    </form>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
+  <div class="bg-white rounded shadow-lg w-full max-w-md mx-4">
+    <div class="px-5 py-4 border-b">
+      <h5 class="text-lg font-semibold text-red-600">Konfirmasi Hapus Rapat</h5>
+    </div>
+    <div class="p-5">
+      <p class="text-gray-700 mb-4">Yakin Mau Menghapus Rapat ini?</p>
+      <div class="flex justify-end gap-2">
+        <button id="cancelDelete" class="px-4 py-2 border rounded text-gray-700">Batal</button>
         <form method="post" action="{{ url_for('rapat_bp.delete_rapat', id=rapat.id) }}">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" class="btn btn-danger">Hapus</button>
+          <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded">Hapus</button>
         </form>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  // Edit modal open/close
+  const editModal = document.getElementById('editModal');
+  const openEditBtn = document.getElementById('openEditModal');
+  const closeEditBtn = document.getElementById('closeEditModal');
+  const cancelEditBtn = document.getElementById('cancelEdit');
+
+  openEditBtn && openEditBtn.addEventListener('click', () => editModal.classList.remove('hidden'));
+  closeEditBtn && closeEditBtn.addEventListener('click', () => editModal.classList.add('hidden'));
+  cancelEditBtn && cancelEditBtn.addEventListener('click', () => editModal.classList.add('hidden'));
+
+  // Delete modal open/close
+  const deleteModal = document.getElementById('deleteModal');
+  const openDeleteBtn = document.getElementById('openDeleteModal');
+  const cancelDeleteBtn = document.getElementById('cancelDelete');
+
+  openDeleteBtn && openDeleteBtn.addEventListener('click', () => deleteModal.classList.remove('hidden'));
+  cancelDeleteBtn && cancelDeleteBtn.addEventListener('click', () => deleteModal.classList.add('hidden'));
+
+  // Script tambah peserta di modal edit
+  document.addEventListener('DOMContentLoaded', function () {
+    const tambahEditBtn = document.getElementById('edit-tambah-peserta');
+    const editPesertaContainer = document.getElementById('edit-peserta-container');
+    if (tambahEditBtn && editPesertaContainer) {
+      tambahEditBtn.addEventListener('click', function () {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'peserta[]';
+        input.placeholder = 'Nama peserta';
+        input.required = true;
+        input.className = 'w-full border rounded px-3 py-2 mb-2';
+        editPesertaContainer.appendChild(input);
+      });
+    }
+  });
+</script>
+
 {% endblock %}

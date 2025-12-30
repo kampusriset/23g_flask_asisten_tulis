@@ -1,0 +1,154 @@
+<!-- AI Chat Bubble and Popup (partial) -->
+<div id="ai-chat-bubble"
+    class="fixed right-8 bottom-8 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center z-50 cursor-pointer">
+    <i class="fi fi-rr-comment"></i>
+</div>
+
+
+<!-- Popup -->
+<div id="ai-chat-popup"
+    class="fixed right-8 bottom-28 w-96 max-w-full bg-white rounded-xl shadow-lg hidden flex-col z-50 overflow-hidden">
+    <div class="px-4 py-3 bg-blue-600 text-white font-semibold flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <i class="fi fi-rr-comment"></i>
+            <span>AI Assistant</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <button id="chat-clear" class="text-white opacity-90 hover:opacity-100 flex items-center"
+                title="Hapus riwayat">
+                <i class="fi fi-rr-trash mr-2"></i>
+            </button>
+            <button id="ai-chat-close" class="text-white opacity-90 hover:opacity-100">✕</button>
+        </div>
+    </div>
+
+    <div class="p-3 overflow-auto flex flex-col gap-3 bg-gray-50" style="height:340px;" id="chat-body">
+        <div class="flex justify-start">
+            <div class="bg-gray-100 text-gray-800 px-3 py-2 rounded-lg max-w-[80%]">
+                <em>Halo! Ada yang bisa dibantu?</em>
+            </div>
+        </div>
+    </div>
+
+    <div class="border-t p-3 bg-white flex items-center gap-2">
+        <input type="text" id="chat-input"
+            class="flex-1 border border-gray-200 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            placeholder="Tulis pesan..." aria-label="Tulis pesan" />
+        <button id="chat-send"
+            class="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-4 py-2 shadow">Kirim</button>
+    </div>
+</div>
+
+<script>
+    // Chat popup logic (partial) with message bubbles
+    const bubble = document.getElementById('ai-chat-bubble');
+    const popup = document.getElementById('ai-chat-popup');
+    const chatBody = document.getElementById('chat-body');
+    const chatInput = document.getElementById('chat-input');
+    const chatSend = document.getElementById('chat-send');
+    const chatClear = document.getElementById('chat-clear');
+    const chatClose = document.getElementById('ai-chat-close');
+
+    function createMessageBubble(text, from) {
+        const wrapper = document.createElement('div');
+        wrapper.className = from === 'user' ? 'flex justify-end' : 'flex justify-start';
+        const bubble = document.createElement('div');
+        bubble.className = from === 'user'
+            ? 'bg-blue-600 text-white px-3 py-2 rounded-lg rounded-br-none max-w-[80%]'
+            : 'bg-white border border-gray-200 text-gray-900 px-3 py-2 rounded-lg rounded-bl-none max-w-[80%]';
+        bubble.innerHTML = text;
+        wrapper.appendChild(bubble);
+        return wrapper;
+    }
+
+    async function clearChatHistory() {
+        if (!confirm('Yakin ingin menghapus semua riwayat chat?')) return;
+        try {
+            const res = await fetch('/api/ai-chat-history', { method: 'DELETE' });
+            if (res.ok) {
+                chatBody.innerHTML = '';
+                chatBody.appendChild(createMessageBubble('<em>Riwayat chat berhasil dihapus.</em>', 'ai'));
+            } else {
+                chatBody.appendChild(createMessageBubble('<em>Gagal menghapus riwayat chat.</em>', 'ai'));
+            }
+        } catch (e) {
+            chatBody.appendChild(createMessageBubble('<em>Gagal menghapus riwayat chat.</em>', 'ai'));
+        }
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+    chatClear && chatClear.addEventListener('click', clearChatHistory);
+
+    async function loadChatHistory() {
+        try {
+            const res = await fetch('/api/ai-chat-history');
+            const data = await res.json();
+            chatBody.innerHTML = '';
+            if (data.history && data.history.length > 0) {
+                data.history.forEach(item => {
+                    chatBody.appendChild(createMessageBubble(item.user_input, 'user'));
+                    chatBody.appendChild(createMessageBubble(item.ai_output, 'ai'));
+                });
+            } else {
+                chatBody.appendChild(createMessageBubble('<em>Halo! Ada yang bisa dibantu?</em>', 'ai'));
+            }
+            chatBody.scrollTop = chatBody.scrollHeight;
+        } catch (e) {
+            chatBody.innerHTML = '';
+            chatBody.appendChild(createMessageBubble('<em>Gagal memuat riwayat chat.</em>', 'ai'));
+        }
+    }
+
+    bubble && bubble.addEventListener('click', () => {
+        popup.classList.toggle('hidden');
+        if (!popup.classList.contains('hidden')) {
+            loadChatHistory();
+            chatInput && chatInput.focus();
+        }
+    });
+
+    chatClose && chatClose.addEventListener('click', () => {
+        popup.classList.add('hidden');
+    });
+
+    async function sendMessageToAI(msg) {
+        try {
+            const response = await fetch('/api/ai-chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: msg })
+            });
+            const data = await response.json();
+            if (data.reply) return data.reply;
+            if (data.error) return 'Error: ' + data.error;
+            return 'AI tidak merespon.';
+        } catch (err) {
+            return 'Gagal menghubungi AI.';
+        }
+    }
+
+    chatSend && chatSend.addEventListener('click', async () => {
+        const msg = chatInput.value.trim();
+        if (!msg) return;
+
+        // add user bubble
+        chatBody.appendChild(createMessageBubble(msg, 'user'));
+        chatInput.value = '';
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        // add bot typing bubble
+        const typingBubble = createMessageBubble('<em>Mengetik...</em>', 'ai');
+        chatBody.appendChild(typingBubble);
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        const aiReply = await sendMessageToAI(msg);
+        typingBubble.querySelector('div').innerHTML = aiReply;
+        chatBody.scrollTop = chatBody.scrollHeight;
+    });
+
+    chatInput && chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            chatSend.click();
+        }
+    });
+</script>

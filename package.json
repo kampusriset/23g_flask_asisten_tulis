@@ -1,0 +1,19 @@
+{
+  "name": "23g_flask_asisten_tulis",
+  "version": "1.0.0",
+  "description": "<p align=\"center\">\r   Sistem Asisten Penulisan Berbasis Flask\r </p>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-css": "tailwindcss -i ./app/static/css/input.css -o ./app/static/css/tailwind.css",
+    "watch-css": "tailwindcss -i ./app/static/css/input.css -o ./app/static/css/tailwind.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.19"
+  }
+}

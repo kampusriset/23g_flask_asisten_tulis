@@ -1,35 +1,40 @@
-<div class="d-flex align-items-center mb-3 px-3">
-    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="me-2 rounded" style="height: 35px;">
+<div class="flex items-center mb-3 px-3">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="mr-2 rounded h-9">
 </div>
 
-<h6 class="text-uppercase text-secondary mt-3 px-3">Menu</h6>
-<ul class="nav flex-column mb-3">
-    <li class="nav-item">
-        <a href="/dashboard" class="nav-link text-light {% if request.path == '/dashboard' %}active{% endif %}"><i
-                class="fi fi-rr-home"></i> Beranda</a>
+
+<ul class="flex flex-col mb-3">
+    <li>
+        <a href="/dashboard"
+            class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800 {% if request.path == '/dashboard' %}bg-gray-800{% endif %}"><i
+                class="fi fi-rr-home mr-2"></i> Beranda</a>
     </li>
+    <li>
+        <a href="/rapat"
+            class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800 {% if request.path == '/rapat' %}bg-gray-800{% endif %}"><i
+                class="fi fi-rr-users-alt mr-2"></i> Rapat</a>
     </li>
-    <li class="nav-item">
-        <a href="/rapat" class="nav-link text-light {% if request.path == '/rapat' %}active{% endif %}"><i
-                class="fi fi-rr-users-alt"></i> Rapat</a>
+    <li>
+        <a href="/not-available" class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
+                class="fi fi-rr-user-robot mr-2"></i> AI</a>
     </li>
-    <li class="nav-item">
-        <a href="/not-available" class="nav-link text-light"> <i class="fi fi-rr-user-robot"></i> AI</a>
-    </li>
-    <li class="nav-item">
-        <a href="/not-available" class="nav-link text-light"> <i class="fi fi-rr-envelope-plus"></i> Kotak Masuk</a>
+    <li>
+        <a href="/not-available" class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
+                class="fi fi-rr-envelope-plus mr-2"></i> Kotak Masuk</a>
     </li>
 </ul>
 
-<h6 class="text-uppercase text-secondary mt-3 px-3">Privat</h6>
-<ul class="nav flex-column mb-3">
-    <li class="nav-item">
-        <a href="/not-available" class="nav-link text-light"><i class="fi fi-rr-user"></i> Profile</a>
+<h6 class="uppercase text-gray-400 mt-6 px-3 text-sm font-semibold">Privat </h6>
+<ul class="flex flex-col mb-3">
+    <li>
+        <a href="/not-available" class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
+                class="fi fi-rr-user mr-2"></i> Profile</a>
     </li>
 
-    <li class="nav-item">
-        <a href="{{ url_for('notes_bp.new_note') }}" class="nav-link text-light">
-            <i class="fi fi-rr-plus-small"></i> Tambah catatan baru
+    <li>
+        <a href="{{ url_for('notes_bp.new_note') }}"
+            class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800">
+            <i class="fi fi-rr-plus-small mr-2"></i> Tambah catatan baru
         </a>
     </li>
 
@@ -39,28 +44,33 @@
 
 
 
-<h6 class="text-uppercase text-secondary mt-3 px-3">Team Workspace</h6>
-<ul class="nav flex-column mb-3">
-    <li class="nav-item">
-        <a href="/not-available" class="nav-link text-light"> <i class="fi fi-rr-house-building"></i> Proyek</a>
+<h6 class="uppercase text-gray-400 mt-10 px-3 text-sm font-semibold">Team Workspace</h6>
+<ul class="flex flex-col mb-3">
+    <li>
+        <a href="/not-available" class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
+                class="fi fi-rr-house-building mr-2"></i> Proyek</a>
     </li>
-    <li class="nav-item">
-        <a href="/not-available" class="nav-link text-light"> <i class="fi fi-rr-plus-small"></i> Tambah Proyek</a>
+    <li>
+        <a href="/not-available" class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
+                class="fi fi-rr-plus-small mr-2"></i> Tambah Proyek</a>
     </li>
 </ul>
 
-<h6 class="text-uppercase text-secondary mt-3 px-3">Lainnya</h6>
-<ul class="nav flex-column mb-3">
-    <li class="nav-item">
-        <a href="/not-available" class="nav-link text-light"> <i class="fi fi-rr-settings"></i> Pengaturan</a>
+<h6 class="uppercase text-gray-400 mt-6 px-3 text-sm font-semibold">Lainnya</h6>
+<ul class="flex flex-col mb-3">
+    <li>
+        <a href="/not-available" class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
+                class="fi fi-rr-settings mr-2"></i> Pengaturan</a>
     </li>
-    <li class="nav-item">
-        <a href="{{ url_for('recycle_bp.index') }}" class="nav-link text-light">
-            <i class="fi fi-rr-trash"></i> Sampah
+    <li>
+        <a href="{{ url_for('recycle_bp.index') }}"
+            class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800">
+            <i class="fi fi-rr-trash mr-2"></i> Sampah
         </a>
     </li>
 
-    <li class="nav-item">
-        <a href="/logout" class="nav-link text-light"> <i class="fi fi-rr-exit"></i> Logout</a>
+    <li>
+        <a href="/logout" class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
+                class="fi fi-rr-exit mr-2"></i> Logout</a>
     </li>
 </ul>

@@ -1,82 +1,59 @@
 {% extends "base/sidebar.html" %}
 
 {% block sidebar %}
-<ul class="list-group list-group-flush">
-    <a href="{{ url_for('notes_bp.edit', note_id=note.id) }}" class="list-group-item active">
+<div class="px-3 py-2">
+    <a href="{{ url_for('notes_bp.edit', note_id=note.id) }}"
+        class="block bg-gray-900 text-white px-3 py-2 rounded text-sm font-medium">
         ✏️ {{ note.title or "Catatan Baru" }}
     </a>
-</ul>
+</div>
 {% endblock %}
 
 {% block content %}
-<div style="display:flex; justify-content:center; margin-top:50px;">
-    <div style="width:60%;">
+<div class="flex justify-center mt-12">
+    <div class="w-full max-w-3xl px-4">
 
         <form method="POST" id="saveForm">
 
             <!-- JUDUL -->
-            <!-- JUDUL -->
-            <div class="mb-3">
-                <input type="text" name="title" class="form-control placeholder-input"
-                    placeholder="Judul catatan baru..." value="{{ note.title }}" style="
-            width: 100%;
-            background: transparent;
-            border: none;
-            box-shadow: none;
-            font-size: 1.5rem;
-            font-weight: bold;
-            outline: none;
-            color: inherit;
-        ">
+            <div class="mb-4">
+                <input type="text" name="title"
+                    class="w-full bg-transparent border-b border-gray-200 text-2xl font-bold py-2 focus:outline-none focus:border-b-2 focus:border-blue-500"
+                    placeholder="Judul catatan baru..." value="{{ note.title }}">
             </div>
 
-
             <!-- KONTEN -->
-            <div class="mb-3 position-relative" style="min-height:300px;">
+            <div class="mb-4 relative min-h-[300px]">
 
                 <!-- GHOST SUGGESTION -->
-                <div id="ghost" class="form-control" style="
-                    min-height:300px;
-                    white-space:pre-wrap;
-                    color:#aaa;
-                    position:absolute;
-                    top:0;
-                    left:0;
-                    pointer-events:none;
-                    background:transparent;
-                    border:none;
-                    box-shadow:none;
-                "></div>
+                <div id="ghost"
+                    class="absolute inset-0 text-gray-400 whitespace-pre-wrap pointer-events-none bg-transparent"></div>
 
                 <!-- EDITOR ASLI -->
-                <div id="editor" contenteditable="true" class="form-control editable-div"
-                    data-placeholder="Tulis apapun disini..." style="
-                        min-height:300px;
-                        background:transparent;
-                        position:relative;
-                        border:none;
-                        box-shadow:none;
-                        outline:none;
-                        white-space:pre-wrap;
-                    ">{{ note.content }}</div>
+                <div id="editor" contenteditable="true"
+                    class="relative min-h-[300px] bg-transparent outline-none whitespace-pre-wrap editable-div text-gray-800"
+                    data-placeholder="Tulis apapun disini...">{{ note.content }}</div>
 
                 <input type="hidden" name="content" id="contentHidden">
             </div>
 
-            <button class="btn btn-success">
-                <i class="fi fi-rr-disk"> Simpan</i>
-            </button>
+            <div class="flex items-center gap-3">
+                <button class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                    type="submit">
+                    <i class="fi fi-rr-disk mr-2"></i> Simpan
+                </button>
+            </div>
         </form>
 
-        <hr>
-
-        <!-- FORM HAPUS -->
-        <form method="POST" action="{{ url_for('notes_bp.delete', note_id=note.id) }}"
-            onsubmit="return confirm('Yakin hapus catatan ini, Bang?')">
-            <button class="btn btn-danger">
-                <i class="fi fi-rr-trash"> Hapus</i>
-            </button>
-        </form>
+        <div class="mt-4">
+            <form method="POST" action="{{ url_for('notes_bp.delete', note_id=note.id) }}"
+                onsubmit="return confirm('Yakin hapus catatan ini, Bang?')">
+                <button class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                    type="submit">
+                    <i class="fi fi-rr-trash mr-2"></i> Hapus
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -84,9 +61,21 @@
     /* placeholder untuk div contenteditable */
     .editable-div:empty::before {
         content: attr(data-placeholder);
-        color: #aaa;
+        color: #9CA3AF;
+        /* gray-400 */
         pointer-events: none;
         display: block;
+    }
+
+    /* ensure ghost sits behind cursor text but above background */
+    #ghost {
+        z-index: 0;
+        padding: 0.5rem 0;
+    }
+
+    #editor {
+        z-index: 10;
+        padding: 0.5rem 0;
     }
 </style>
 
@@ -108,6 +97,7 @@
     }
 
     function syncGhost() {
+        // keep ghost content behind the editor content
         ghost.innerText = editor.innerText + suggestion;
     }
 

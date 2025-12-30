@@ -85,13 +85,29 @@ cd 23g_flask_asisten_tulis
 pip install -r requirements.txt
 ```
 
-4. Setup Database:
+4. Install npm:
+
+```bash
+npm install
+```
+
+5. Build tailwindcss:
+
+```bash
+npm run build-css
+```
+
+```bash
+npm run watch-css
+```
+
+6. Setup Database:
 
 ```bash
 cp .env.example .env
 ```
 
-5. Jalankan server Flask:
+7. Jalankan server Flask:
 
 ```bash
 python app.py
