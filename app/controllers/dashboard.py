@@ -17,7 +17,7 @@ def dashboard():
 
     # Ambil data user
     user = User.query.get(user_id)
-    return render_template("view/dashboard.html", user=user, title="Dashboard")
+    return render_template("view/dashboard.html", user=user, title="Beranda")
 
 
 # --------------------------

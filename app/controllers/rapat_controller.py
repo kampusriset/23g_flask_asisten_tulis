@@ -1,4 +1,3 @@
-
 from flask import Blueprint, render_template, request, redirect, url_for
 from app.models.rapat import Rapat
 from app import db
@@ -8,6 +7,8 @@ rapat_bp = Blueprint("rapat_bp", __name__)
 # --------------------------
 # EDIT RAPAT
 # --------------------------
+
+
 @rapat_bp.route("/rapat/<int:id>/edit", methods=["POST"])
 def edit_rapat(id):
     rapat = Rapat.query.get_or_404(id)
@@ -18,7 +19,8 @@ def edit_rapat(id):
     from datetime import datetime
     import json
     rapat.topik = topik
-    rapat.tanggal = datetime.strptime(tanggal, "%Y-%m-%d").date() if tanggal else None
+    rapat.tanggal = datetime.strptime(
+        tanggal, "%Y-%m-%d").date() if tanggal else None
     rapat.peserta = json.dumps(peserta)
     rapat.catatan = catatan
     db.session.commit()
@@ -27,6 +29,8 @@ def edit_rapat(id):
 # --------------------------
 # DELETE RAPAT
 # --------------------------
+
+
 @rapat_bp.route("/rapat/<int:id>/delete", methods=["POST"])
 def delete_rapat(id):
     rapat = Rapat.query.get_or_404(id)
@@ -37,6 +41,7 @@ def delete_rapat(id):
 # --------------------------
 # LIST RAPAT
 # --------------------------
+
 
 @rapat_bp.route("/rapat")
 def rapat():
@@ -64,11 +69,15 @@ def rapat():
             'catatan': r.catatan,
             'peserta_list': peserta_list
         })
-    return render_template("view/fitur/rapat/rapat.html", daftar_rapat=daftar_rapat, current_date=current_date)
+    # Set browser page title to 'Rapat' to match sidebar
+    # (Kept separate comment for clarity)
+    return render_template("view/fitur/rapat/rapat.html", daftar_rapat=daftar_rapat, current_date=current_date, title="Rapat")
 
 # --------------------------
 # DETAIL RAPAT
 # --------------------------
+
+
 @rapat_bp.route("/rapat/<int:id>")
 def detail_rapat(id):
     rapat = Rapat.query.get_or_404(id)
@@ -77,7 +86,7 @@ def detail_rapat(id):
         peserta_list = json.loads(rapat.peserta) if rapat.peserta else []
     except Exception:
         peserta_list = []
-    return render_template("view/fitur/rapat/detail.html", rapat=rapat, peserta_list=peserta_list)
+    return render_template("view/fitur/rapat/detail.html", rapat=rapat, peserta_list=peserta_list, title="Detail Rapat")
 
 # --------------------------
 # CREATE RAPAT
@@ -94,7 +103,8 @@ def create_rapat():
     import json
     rapat = Rapat(
         topik=judul,
-        tanggal=datetime.strptime(tanggal, "%Y-%m-%d").date() if tanggal else None,
+        tanggal=datetime.strptime(
+            tanggal, "%Y-%m-%d").date() if tanggal else None,
         peserta=json.dumps(peserta),
         catatan=catatan
     )

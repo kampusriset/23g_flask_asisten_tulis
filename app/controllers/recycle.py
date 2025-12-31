@@ -29,7 +29,7 @@ def index():
     return render_template(
         "view/fitur/recycle/recycle.html",
         # gunakan nama berbeda agar tidak menimpa `notes` dari context processor
-        deleted_notes=deleted_notes
+        deleted_notes=deleted_notes, title="Sampah"
     )
 
 

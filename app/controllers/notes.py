@@ -107,7 +107,7 @@ def index():
 
     if not notes:
         return render_template(
-            "view/fitur/notes/empty.html"
+            "view/fitur/notes/empty.html", title="Empty"
         )
 
     # kalau ada → buka catatan terakhir
@@ -138,9 +138,13 @@ def edit(note_id):
 
         return redirect(url_for("notes_bp.edit", note_id=note.id))
 
+    # Use note title as browser page title; fallback to 'Catatan' when empty
+    page_title = note.title.strip() if getattr(
+        note, 'title', None) and note.title.strip() else "Catatan"
     return render_template(
         "view/fitur/notes/edit.html",
-        note=note
+        note=note,
+        title=page_title
     )
 
 

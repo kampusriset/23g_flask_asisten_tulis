@@ -107,13 +107,21 @@ npm run watch-css
 cp .env.example .env
 ```
 
-7. Jalankan server Flask:
+7. Migrate Database:
+
+```bash
+flask db migrate
+```
+
+```bash
+flask db upgrade
+```
+
+8. Jalankan server Flask:
 
 ```bash
 python app.py
 ```
-
----
 
 ---
 

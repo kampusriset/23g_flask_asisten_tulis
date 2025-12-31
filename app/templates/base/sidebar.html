@@ -9,7 +9,8 @@
     <!-- Local Tailwind CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}">
     <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
-
+    {# Default favicon: use app static logo.png as browser tab icon #}
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo.png') }}">
 
 </head>
 
