@@ -26,16 +26,19 @@ def upgrade():
     sa.Column('peserta', sa.Text(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('users',
+    op.create_table(
+    'users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=120), nullable=False),
     sa.Column('email', sa.String(length=200), nullable=False),
     sa.Column('password_hash', sa.String(length=255), nullable=False),
+    sa.Column('profile_pic', sa.String(length=255), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
-    )
+)
+
     op.create_table('chat_history',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),

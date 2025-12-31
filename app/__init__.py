@@ -23,6 +23,7 @@ def create_app():
     from app.models.notes import Note
     from app.controllers.rapat_controller import rapat_bp
     from app.controllers.recycle import recycle_bp
+    from app.controllers.profile import profile_bp
 
     app.register_blueprint(gemini_bp)
     app.register_blueprint(auth_bp)
@@ -30,6 +31,7 @@ def create_app():
     app.register_blueprint(notes_bp)
     app.register_blueprint(rapat_bp)
     app.register_blueprint(recycle_bp)
+    app.register_blueprint(profile_bp)
 
     @app.context_processor
     def inject_notes():

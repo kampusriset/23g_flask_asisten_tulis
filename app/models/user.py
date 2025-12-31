@@ -10,6 +10,7 @@ class User(db.Model):
     username = db.Column(db.String(120), unique=True, nullable=False)
     email = db.Column(db.String(200), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
+    profile_pic = db.Column(db.String(255), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     # ---- Helper functions ----

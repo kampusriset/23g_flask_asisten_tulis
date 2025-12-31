@@ -1,0 +1,49 @@
+{% extends "base/sidebar.html" %}
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <h2>Edit Profil</h2>
+        <p>Perbarui informasi akun kamu di sini</p>
+    </div>
+    <div class="card" style="max-width:500px;margin:0 auto;">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div id="flash-popup" style="background:#dcfce7;color:#166534;padding:12px 18px;border-radius:8px;margin-bottom:18px;text-align:center;font-weight:500;">
+            {% for category, message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+        <script>
+        setTimeout(function(){
+            var popup = document.getElementById('flash-popup');
+            if(popup) popup.style.display = 'none';
+        }, 2000);
+        </script>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" enctype="multipart/form-data">
+            <div style="margin-bottom:18px;">
+                <label for="username" style="font-weight:500;">Username</label>
+                <input type="text" id="username" name="username" value="{{ user.username }}" class="w-full border rounded px-3 py-2 mt-1" required>
+            </div>
+            <div style="margin-bottom:18px;">
+                <label for="email" style="font-weight:500;">Email</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" class="w-full border rounded px-3 py-2 mt-1" required>
+            </div>
+            <div style="margin-bottom:18px;">
+                <label for="profile_pic" style="font-weight:500;">Foto Profil</label>
+                <input type="file" id="profile_pic" name="profile_pic" accept="image/*" class="w-full border rounded px-3 py-2 mt-1">
+                {% if user.profile_pic %}
+                <div style="margin-top:8px;">
+                    <img src="{{ url_for('static', filename=user.profile_pic) }}" alt="Foto Profil Saat Ini" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:1px solid #e5e7eb;">
+                </div>
+                {% endif %}
+            </div>
+            <div style="display:flex;gap:12px;justify-content:flex-end;">
+                <a href="/profile" class="btn-secondary">Batal</a>
+                <button type="submit" class="btn-primary">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

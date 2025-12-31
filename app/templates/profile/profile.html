@@ -1,0 +1,262 @@
+{% extends "base/sidebar.html" %}
+{% block content %}
+
+<style>
+/* ===== PROFILE PAGE ===== */
+.profile-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+.profile-header {
+    margin-bottom: 32px;
+}
+
+.profile-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #017de5;
+    margin-bottom: 4px;
+}
+
+.profile-header p {
+    color: #666;
+    font-size: 14px;
+}
+
+/* ===== CARD ===== */
+.card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+/* ===== PROFILE TOP ===== */
+.profile-top {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid #dbeafe;
+    flex-shrink: 0;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-info h3 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.profile-info p {
+    color: #6b7280;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.badges {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+}
+
+.badge-active {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.badge-id {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+.joined {
+    margin-top: 14px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+/* ===== INFO GRID ===== */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.info-item p:first-child {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.info-item p:last-child {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1f2937;
+    margin-top: 4px;
+}
+
+/* ===== ACTIONS ===== */
+.actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-primary {
+    background: #017de5;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.btn-secondary {
+    background: #e0f2fe;
+    color: #017de5;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.btn-secondary:hover {
+    background: #bae6fd;
+}
+
+/* ===== NO USER ===== */
+.no-user {
+    text-align: center;
+    padding: 40px;
+}
+
+.no-user h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #017de5;
+    margin-bottom: 8px;
+}
+
+.no-user p {
+    color: #6b7280;
+}
+</style>
+
+<div class="profile-container">
+
+{% if user %}
+    <!-- HEADER -->
+    <div class="profile-header">
+        <h2>Profil</h2>
+        <p>Kelola informasi akun dan status kamu di sini</p>
+    </div>
+
+    <!-- PROFILE CARD -->
+    <div class="card">
+        <div class="profile-top">
+            <div class="avatar">
+                <img
+                    src="{{ url_for('static', filename=user.profile_pic) if user.profile_pic else url_for('static', filename='img/default-profile.png') }}"
+                    alt="Foto Profil"
+                />
+            </div>
+
+            <div class="profile-info">
+                <h3>{{ user.username }}</h3>
+                <p>{{ user.email }}</p>
+
+                <div class="badges">
+                    <span class="badge badge-active">Aktif</span>
+                    <span class="badge badge-id">ID: {{ user.id }}</span>
+                </div>
+
+                <p class="joined">
+                    Bergabung sejak {{ user.created_at.strftime('%d %B %Y') }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DETAIL INFO -->
+    <div class="card">
+        <h4 style="margin-bottom:16px;font-size:18px;font-weight:600;color:#1f2937;">
+            Informasi Akun
+        </h4>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <p>Username</p>
+                <p>{{ user.username }}</p>
+            </div>
+
+            <div class="info-item">
+                <p>Email</p>
+                <p>{{ user.email }}</p>
+            </div>
+
+            <div class="info-item">
+                <p>Status</p>
+                <p style="color:#15803d;">Aktif</p>
+            </div>
+
+            <div class="info-item">
+                <p>User ID</p>
+                <p>{{ user.id }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="card">
+        <h4 style="margin-bottom:16px;font-size:18px;font-weight:600;color:#1f2937;">
+            Aksi
+        </h4>
+
+        <div class="actions">
+            <a href="/profile/edit" class="btn-primary">✏️ Edit Profil</a>
+            <a href="/profile/change-password" class="btn-secondary">🔒 Ganti Password</a>
+        </div>
+    </div>
+
+{% else %}
+    <div class="card no-user">
+        <h2>Tidak ada data user</h2>
+        <p>Silakan login untuk melihat profil kamu.</p>
+    </div>
+{% endif %}
+
+</div>
+
+{% endblock %}
