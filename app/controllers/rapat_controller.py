@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from app.models.rapat import Rapat
 from app import db
+from flask import session
 
 rapat_bp = Blueprint("rapat_bp", __name__)
 
@@ -44,6 +45,7 @@ def delete_rapat(id):
 
 
 @rapat_bp.route("/rapat")
+
 def rapat():
     from sqlalchemy import desc
     import json
@@ -55,7 +57,10 @@ def rapat():
         pass
     today = datetime.today()
     current_date = today.strftime('%d %B %Y')
-    rapats = Rapat.query.order_by(desc(Rapat.tanggal)).all()
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('auth_bp.login'))
+    rapats = Rapat.query.filter_by(user_id=user_id).order_by(desc(Rapat.tanggal)).all()
     daftar_rapat = []
     for r in rapats:
         try:
@@ -69,8 +74,6 @@ def rapat():
             'catatan': r.catatan,
             'peserta_list': peserta_list
         })
-    # Set browser page title to 'Rapat' to match sidebar
-    # (Kept separate comment for clarity)
     return render_template("view/fitur/rapat/rapat.html", daftar_rapat=daftar_rapat, current_date=current_date, title="Rapat")
 
 # --------------------------
@@ -94,6 +97,7 @@ def detail_rapat(id):
 
 
 @rapat_bp.route("/rapat/create", methods=["POST"])
+
 def create_rapat():
     judul = request.form.get("judul")
     tanggal = request.form.get("tanggal")
@@ -101,12 +105,16 @@ def create_rapat():
     catatan = request.form.get("catatan")
     from datetime import datetime
     import json
+    user_id = session.get("user_id")
+    if not user_id:
+        return redirect(url_for('auth_bp.login'))
     rapat = Rapat(
         topik=judul,
         tanggal=datetime.strptime(
             tanggal, "%Y-%m-%d").date() if tanggal else None,
         peserta=json.dumps(peserta),
-        catatan=catatan
+        catatan=catatan,
+        user_id=user_id
     )
     db.session.add(rapat)
     db.session.commit()
