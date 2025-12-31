@@ -1,3 +1,4 @@
+from sqlalchemy import desc
 from flask import Blueprint, render_template, session, redirect, url_for
 from app.models.user import User
 from app.models.notes import Note
@@ -20,18 +21,20 @@ def dashboard():
 
     # Ambil data user
     user = User.query.get(user_id)
+
     # Ambil daftar notes untuk sidebar/dashboard
     notes = Note.query.filter(
         Note.user_id == user_id,
         Note.deleted_at.is_(None)
     ).order_by(Note.updated_at.desc()).all()
+
     # Greeting berdasarkan jam lokal server
     hour = datetime.now().hour
     if 5 <= hour < 11:
         greet = "Selamat Pagi"
-    elif 11 <= hour < 17:
+    elif 11 <= hour < 15:
         greet = "Selamat Siang"
-    elif 17 <= hour < 20:
+    elif 15 <= hour < 18:
         greet = "Selamat Sore"
     else:
         greet = "Selamat Malam"
@@ -40,11 +43,20 @@ def dashboard():
     name = (user.username.split('@')
             [0].split('.')[0].capitalize() if user and user.username else "")
     greeting = f"{greet}, {name}" if name else greet
-    # Ambil daftar rapat terbaru (maks 6)
-    from sqlalchemy import desc
-    rapats = Rapat.query.order_by(desc(Rapat.tanggal)).limit(6).all()
 
-    return render_template("view/dashboard.html", user=user, notes=notes, rapats=rapats, greeting=greeting, title="Beranda")
+    # Ambil daftar rapat terbaru (maks 6) sesuai user yang login
+    rapats = Rapat.query.filter(
+        Rapat.user_id == user_id
+    ).order_by(desc(Rapat.tanggal)).limit(6).all()
+
+    return render_template(
+        "view/dashboard.html",
+        user=user,
+        notes=notes,
+        rapats=rapats,
+        greeting=greeting,
+        title="Beranda"
+    )
 
 
 # --------------------------
