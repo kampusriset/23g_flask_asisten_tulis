@@ -1,21 +1,90 @@
 {% extends "base/sidebar.html" %}
+
 {% block content %}
+<!-- Notes Section -->
+<div class="p-6 text-gray-200 mt-6">
+    {% if greeting %}
+    <div class="mb-12 text-center">
+        <h1 class="text-2xl font-semibold text-black">
+            {{ greeting }}
+        </h1>
+        <div class="mt-2 text-sm text-gray-400">
+            Semoga harimu menyenangkan ✨
+        </div>
+    </div>
+    {% endif %}
 
-<h2 style="margin-top: 30px;">Dashboard</h2>
+    <div class="mx-auto w-full max-w-4xl">
+        <div class="flex items-center justify-between mb-4">
+            <div class="text-sm text-gray-400">Catatan Saya</div>
+            <!-- tombol tambah kini menjadi kartu 'Catatan Baru' di dalam grid -->
+        </div>
 
-<div style="
-        margin-top: 20px; 
-        padding: 20px; 
-        border-radius: 8px; 
-        border: 1px solid #ddd;
-        background: #f8f8f8;
-        max-width: 600px;
-    ">
-    <p>Halo, <strong>{{ user.username }}</strong> 👋</p>
-    <p>Selamat datang...</p>
-    <p>Ada rencana apa hari ini?</p>
-    <i data-lucide="alarm-clock-plus" class="w-6 h-6 text-blue-500"></i>
 
+        {% if notes and notes|length > 0 %}
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 justify-center">
+            <!-- New note card (first item) -->
+            <a href="{{ url_for('notes_bp.new_note') }}"
+                class="block rounded-xl bg-zinc-800 hover:bg-zinc-700 transition p-4 overflow-hidden flex flex-col justify-center items-center text-center"
+                style="aspect-ratio:1 / 1;">
+                <div class="text-3xl text-white font-bold">+</div>
+                <div class="mt-2 text-sm text-gray-300">Catatan Baru</div>
+            </a>
+
+            {% for note in notes %}
+            <a href="{{ url_for('notes_bp.edit', note_id=note.id) }}"
+                class="block rounded-xl bg-zinc-800 hover:bg-zinc-700 transition p-4 overflow-hidden flex flex-col justify-between"
+                style="aspect-ratio:1 / 1;">
+                <div class="font-medium text-white truncate"><i class="fi fi-rr-document mr-2"></i>{{ note.title.strip()
+                    if note.title and note.title.strip()
+                    else
+                    'Catatan Baru' }}</div>
+                <div class="mt-2 text-xs text-gray-400">{{ note.updated_at.strftime('%d %b %Y, %H:%M') if
+                    note.updated_at
+                    else (note.created_at.strftime('%d %b %Y, %H:%M') if note.created_at else '') }}</div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="grid place-items-center">
+            <a href="{{ url_for('notes_bp.new_note') }}"
+                class="block rounded-xl bg-zinc-800 hover:bg-zinc-700 transition p-4 overflow-hidden flex flex-col justify-center items-center text-center"
+                style="width:220px;aspect-ratio:1 / 1;">
+                <div class="text-3xl text-white font-bold">+</div>
+                <div class="mt-2 text-sm text-gray-300">Catatan Baru</div>
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Rapat Section -->
+        <div class="mt-8">
+            <div class="flex items-center justify-between mb-4">
+                <div class="text-sm text-gray-400">Rapat Saya</div>
+                <div>
+                    <a href="{{ url_for('rapat_bp.rapat') }}" class="text-sm text-gray-400 hover:underline">Lihat
+                        semua</a>
+                </div>
+            </div>
+
+            {% if rapats and rapats|length > 0 %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {% for r in rapats %}
+                <a href="{{ url_for('rapat_bp.detail_rapat', id=r.id) }}"
+                    class="block rounded-lg bg-zinc-800 hover:bg-zinc-700 p-4">
+                    <div class="font-medium text-white truncate"><i class="fi fi-rr-users-alt mr-2"></i>{{ r.topik }}
+                    </div>
+                    <div class="mt-2 text-xs text-gray-400">{{ r.tanggal.strftime('%d %b %Y') if r.tanggal else '' }}
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="rounded-xl bg-zinc-800 p-4 text-gray-400 text-center">
+                Belum ada rapat. <a href="{{ url_for('rapat_bp.rapat') }}" class="text-blue-400 hover:underline">Buat
+                    atau lihat rapat</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
-
 {% endblock %}
