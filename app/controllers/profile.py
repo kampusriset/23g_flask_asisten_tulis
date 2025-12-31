@@ -8,11 +8,13 @@ from app import db
 
 profile_bp = Blueprint('profile_bp', __name__)
 
+
 @profile_bp.route('/profile')
 def profile():
     user_id = session.get('user_id')
     user = User.query.get(user_id) if user_id else None
-    return render_template('profile/profile.html', user=user)
+    return render_template('profile/profile.html', user=user, title='Profil Saya')
+
 
 @profile_bp.route('/profile/edit', methods=['GET', 'POST'])
 def edit_profile():
@@ -38,4 +40,4 @@ def edit_profile():
         db.session.commit()
         flash('Profil berhasil diperbarui.', 'success')
         return redirect(url_for('profile_bp.edit_profile'))
-    return render_template('profile/edit_profile.html', user=user)
+    return render_template('profile/edit_profile.html', user=user, title='Edit Profil')

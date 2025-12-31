@@ -1,0 +1,95 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+    <div class="w-full max-w-3xl rounded-xl bg-neutral-900 text-neutral-200 shadow-xl">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b border-neutral-800 px-5 py-4">
+            <div class="flex items-center gap-2 text-sm text-neutral-400 flex-1">
+                <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18a7.5 7.5 0 006.15-3.35z" />
+                </svg>
+
+                <input type="text" name="q" placeholder="Cari catatan atau rapat…"
+                    class="w-full bg-transparent text-sm text-neutral-200 placeholder-neutral-500 focus:outline-none"
+                    hx-get="/datasearch" hx-trigger="keyup" hx-target="#searchResult" hx-swap="innerHTML" hx-on="
+        htmx:beforeRequest:
+            document.getElementById('todayContent').classList.add('hidden');
+            document.getElementById('searchResult').classList.remove('hidden');
+
+        htmx:afterSwap:
+            if(this.value.trim() === ''){
+                document.getElementById('todayContent').classList.remove('hidden');
+                document.getElementById('searchResult').classList.add('hidden');
+            }
+    " />
+
+
+            </div>
+
+            <button class="rounded-md p-1 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200">
+                ✕
+            </button>
+        </div>
+
+
+        <!-- Filter bar -->
+        <div class="flex flex-wrap items-center gap-4 border-b border-neutral-800 px-5 py-3 text-sm text-neutral-400">
+            <span class="flex items-center gap-1 cursor-pointer hover:text-neutral-200">
+                ⇅ Urutkan
+            </span>
+            <span class="cursor-pointer hover:text-neutral-200">🗂 Di</span>
+            <span class="cursor-pointer hover:text-neutral-200">📅 Tanggal</span>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="px-5 py-4">
+
+            <!-- HARI INI (DEFAULT) -->
+            <div id="todayContent">
+                <div class="mb-3 text-xs uppercase tracking-wide text-neutral-500">
+                    Hari ini
+                </div>
+
+                {% if notes_today %}
+                {% for n in notes_today %}
+                <a href="{{ url_for('notes_bp.edit', note_id=n.id) }}" class="block">
+                    <div class="flex items-center justify-between rounded-md px-4 py-3 hover:bg-white/5 transition">
+                        <div class="flex items-center gap-3">
+                            <i class="fi fi-rr-document text-neutral-400"></i>
+                            <span class="text-sm">{{ n.title or 'Catatan' }}</span>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+                {% endif %}
+
+                {% if rapats_today %}
+                {% for r in rapats_today %}
+                <a href="{{ url_for('rapat_bp.detail_rapat', id=r.id) }}" class="block">
+                    <div class="flex items-center justify-between rounded-md px-4 py-3 hover:bg-white/5 transition">
+                        <div class="flex items-center gap-3">
+                            <i class="fi fi-rr-users-alt text-neutral-400"></i>
+                            <span class="text-sm">{{ r.topik }}</span>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- HASIL SEARCH -->
+            <div id="searchResult" class="hidden"></div>
+
+        </div>
+
+
+
+        <!-- Footer -->
+        <div class="flex items-center justify-between border-t border-neutral-800 px-5 py-3 text-xs text-neutral-500">
+            <span>⇅ Pilih</span>
+            <span>↵ Buka</span>
+            <span>Ctrl + ↵ Buka di tab baru</span>
+        </div>
+
+    </div>
+</div>

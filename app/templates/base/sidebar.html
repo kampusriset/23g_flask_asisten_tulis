@@ -12,6 +12,8 @@
     {# Default favicon: use app static logo.png as browser tab icon #}
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo.png') }}">
 
+
+
 </head>
 
 <body class="antialiased">
@@ -54,6 +56,7 @@
     {# AI chat partial included here #}
     {% include 'base/ai_chat.html' %}
 
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <script>
         // Mobile sidebar toggle
         (function () {
@@ -73,6 +76,65 @@
                 const target = e.target;
                 if (mobileSidebar.contains(target) || (mobileToggle && mobileToggle.contains(target))) return;
                 mobileSidebar.classList.add('-translate-x-full');
+            });
+        })();
+    </script>
+
+    <script>
+        // Search modal: fetch `/search` and append to body so it appears as popup
+        (function () {
+
+            let modalContainer = null;
+            const openBtn = document.getElementById('openSearchModal');
+
+            function removeModal() {
+                if (!modalContainer) return;
+                document.body.style.overflow = '';
+                modalContainer.remove();
+                modalContainer = null;
+                document.removeEventListener('keydown', onKeydown);
+            }
+
+
+
+            function onKeydown(e) {
+                if (e.key === 'Escape') removeModal();
+            }
+
+            openBtn && openBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                if (modalContainer) return; // already open
+                try {
+                    const res = await fetch('/search');
+                    const html = await res.text();
+
+                    modalContainer = document.createElement('div');
+                    modalContainer.innerHTML = html;
+                    document.body.appendChild(modalContainer);
+
+                    // 🔥 INI PENTING BANGET
+                    htmx.process(modalContainer);
+
+                    // prevent body scroll
+                    document.body.style.overflow = 'hidden';
+
+
+                    // Close button inside modal (✕)
+                    const closeBtn = modalContainer.querySelector('button');
+                    closeBtn && closeBtn.addEventListener('click', removeModal);
+
+                    // If clicking on backdrop (overlay), close modal
+                    const overlay = modalContainer.querySelector('.fixed.inset-0');
+                    if (overlay) {
+                        overlay.addEventListener('click', (ev) => {
+                            if (ev.target === overlay) removeModal();
+                        });
+                    }
+
+                    document.addEventListener('keydown', onKeydown);
+                } catch (err) {
+                    console.error(err);
+                }
             });
         })();
     </script>

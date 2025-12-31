@@ -1,9 +1,14 @@
-<div class="flex items-center mb-3 px-3">
+<div class="flex items-center mb-3">
     <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="mr-2 rounded h-9">
 </div>
 
 
 <ul class="flex flex-col mb-3">
+    <li>
+        <button id="openSearchModal"
+            class="w-full text-left flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
+                class="fi fi-rr-search mr-2"></i> Cari</button>
+    </li>
     <li>
         <a href="/dashboard"
             class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800 {% if request.path == '/dashboard' %}bg-gray-800{% endif %}"><i
@@ -27,8 +32,9 @@
 <h6 class="uppercase text-gray-400 mt-6 px-3 text-sm font-semibold">Privat </h6>
 <ul class="flex flex-col mb-3">
     <li>
-        <a href="/profile" class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800 {% if request.path == '/profile' %}bg-gray-800{% endif %}"> <i
-                class="fi fi-rr-user mr-2"></i> Profile</a>
+        <a href="/profile"
+            class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800 {% if request.path == '/profile' %}bg-gray-800{% endif %}">
+            <i class="fi fi-rr-user mr-2"></i> Profile</a>
     </li>
 
     <li>

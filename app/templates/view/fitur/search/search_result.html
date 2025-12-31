@@ -1,0 +1,27 @@
+{% if notes_today or rapats_today %}
+{% for n in notes_today %}
+<a href="{{ url_for('notes_bp.edit', note_id=n.id) }}" class="block">
+    <div class="flex items-center justify-between rounded-md px-4 py-3 hover:bg-white/5 transition">
+        <div class="flex items-center gap-3">
+            <i class="fi fi-rr-document text-neutral-400"></i>
+            <span class="text-sm">{{ n.title }}</span>
+        </div>
+    </div>
+</a>
+{% endfor %}
+
+{% for r in rapats_today %}
+<a href="{{ url_for('rapat_bp.detail_rapat', id=r.id) }}" class="block">
+    <div class="flex items-center justify-between rounded-md px-4 py-3 hover:bg-white/5 transition">
+        <div class="flex items-center gap-3">
+            <i class="fi fi-rr-users-alt text-neutral-400"></i>
+            <span class="text-sm">{{ r.topik }}</span>
+        </div>
+    </div>
+</a>
+{% endfor %}
+{% else %}
+<div class="text-neutral-500 text-sm">
+    Tidak ada data
+</div>
+{% endif %}
