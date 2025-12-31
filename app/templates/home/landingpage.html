@@ -1,12 +1,199 @@
 {% extends "base/navbar.html" %}
 {% block content %}
 
-<h1 style="margin-top: 40px; text-align:center;">
-    Selamat Datang
-</h1>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TulisAi — AI Productivity Assistant</title>
 
-<p style="text-align:center;">
-    Ini Landing Page.
-</p>
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#053d6eff',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="min-h-screen text-white bg-[#053d6e]">
+
+  <!-- HERO -->
+<section class="min-h-screen flex flex-col justify-center items-center text-center px-6
+relative overflow-hidden bg-[#053d6e] text-white">
+
+  <!-- Glow Effect -->
+  <div class="absolute inset-0 -z-10">
+    <div class="absolute top-1/2 left-1/2 w-[600px] h-[600px]
+                -translate-x-1/2 -translate-y-1/2
+                bg-blue-400/20 blur-[140px] rounded-full">
+    </div>
+  </div>
+
+  <h2 class="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
+    Rapikan Catatan<br>
+    <span class="bg-gradient-to-r from-blue-300 to-blue-600
+                 bg-clip-text text-transparent">
+      Dibantu AI
+    </span>
+  </h2>
+
+  <p class="max-w-2xl mt-6 text-gray-200">
+    TulisAi membantu kamu merapikan catatan, mengatur tugas,
+    memperbaiki grammar, meringkas teks, dan menerjemahkan dengan AI.
+  </p>
+
+  <div class="mt-8 flex gap-4 flex-wrap justify-center">
+    <a href="/login"
+      class="px-7 py-3 rounded-xl font-semibold
+      bg-blue-600 hover:bg-blue-500 transition">
+      Coba Gratis
+    </a>
+
+    <a href="#fitur"
+      class="px-7 py-3 rounded-xl font-semibold
+      border border-white/30 hover:bg-white/10 transition">
+      Lihat Fitur
+    </a>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="py-20 px-6 bg-[#053d6e] text-white">
+  <div class="max-w-6xl mx-auto">
+    <h3 class="text-3xl font-bold text-center mb-14">
+      Capek Sama Ini?
+    </h3>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="p-6 rounded-2xl bg-white/5 backdrop-blur
+                  hover:-translate-y-1 transition">
+        📄 Catatan berantakan
+      </div>
+      <div class="p-6 rounded-2xl bg-white/5 backdrop-blur
+                  hover:-translate-y-1 transition">
+        ⏰ Tugas numpuk
+      </div>
+      <div class="p-6 rounded-2xl bg-white/5 backdrop-blur
+                  hover:-translate-y-1 transition">
+        ❌ Grammar bikin ragu
+      </div>
+      <div class="p-6 rounded-2xl bg-white/5 backdrop-blur
+                  hover:-translate-y-1 transition">
+        📚 Artikel kepanjangan
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="fitur" class="py-24 px-6 bg-[#053d6e] text-white">
+  <div class="max-w-7xl mx-auto">
+    <h3 class="text-4xl font-bold text-center mb-16">
+      Fitur Unggulan
+    </h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="p-8 rounded-3xl bg-white/5 backdrop-blur
+                  hover:bg-white/10 hover:-translate-y-1 transition">
+        <h4 class="text-xl font-semibold text-blue-300 mb-5">
+          AI Writing
+        </h4>
+        <ul class="space-y-3 text-gray-200">
+          <li>✍️ Paraphraser</li>
+          <li>✅ Grammar Checker</li>
+          <li>📄 Summarizer</li>
+          <li>🌐 Deep Translate</li>
+        </ul>
+      </div>
+
+      <div class="p-8 rounded-3xl bg-white/5 backdrop-blur
+                  hover:bg-white/10 hover:-translate-y-1 transition">
+        <h4 class="text-xl font-semibold text-blue-300 mb-5">
+          Productivity
+        </h4>
+        <ul class="space-y-3 text-gray-200">
+          <li>🗂️ AI Task Planner</li>
+          <li>📅 Schedule Calendar</li>
+          <li>👤 Profile & Settings</li>
+        </ul>
+      </div>
+
+      <div class="p-8 rounded-3xl bg-white/5 backdrop-blur
+                  hover:bg-white/10 hover:-translate-y-1 transition">
+        <h4 class="text-xl font-semibold text-blue-300 mb-5">
+          Smart System
+        </h4>
+        <ul class="space-y-3 text-gray-200">
+          <li>🔍 Deep Search</li>
+          <li>🛡️ Admin Panel</li>
+          <li>⚡ Fast UI</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="py-24 px-6 bg-[#053d6e] text-white">
+  <div class="max-w-6xl mx-auto">
+    <h3 class="text-3xl font-bold text-center mb-16">
+      Cara Kerja
+    </h3>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+      <div>
+        <div class="text-4xl">✍️</div>
+        <h4 class="mt-4 font-semibold text-lg">Tulis</h4>
+        <p class="mt-2 text-gray-300">Masukkan catatan kamu</p>
+      </div>
+
+      <div>
+        <div class="text-4xl">🤖</div>
+        <h4 class="mt-4 font-semibold text-lg">Pilih AI</h4>
+        <p class="mt-2 text-gray-300">Gunakan fitur sesuai kebutuhan</p>
+      </div>
+
+      <div>
+        <div class="text-4xl">✅</div>
+        <h4 class="mt-4 font-semibold text-lg">Selesai</h4>
+        <p class="mt-2 text-gray-300">Catatan jadi rapi</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="py-24 px-6 text-center bg-[#053d6e] text-white">
+  <h3 class="text-4xl font-bold">
+    Mulai Rapikan Catatanmu
+  </h3>
+  <p class="mt-4 text-gray-300">
+    Gratis, cepat, dan dibantu AI
+  </p>
+  <p class="mt-2 text-sm text-gray-400">
+    Cocok buat pelajar, mahasiswa, dan pekerja sibuk
+  </p>
+
+  <div class="mt-8">
+    <a href="#"
+      class="inline-block px-9 py-4 rounded-xl font-semibold
+      bg-blue-600 hover:bg-blue-500 transition">
+      Mulai Sekarang 🚀
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="py-6 text-center text-sm text-gray-400 bg-[#053d6e]">
+  Built with ❤️ and AI • © 2025 TulisAi
+</footer>
 
 {% endblock %}
