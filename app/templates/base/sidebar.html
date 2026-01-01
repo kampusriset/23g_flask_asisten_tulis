@@ -16,6 +16,95 @@
 
 </head>
 
+<script>
+    let activeIndex = -1;
+
+    function updateHighlight(items) {
+        items.forEach((el, i) => {
+            el.classList.remove(
+                'border',
+                'border-indigo-400',
+                'ring-1',
+                'ring-indigo-400/40'
+            );
+
+            if (i === activeIndex) {
+                el.classList.add(
+                    'border',
+                    'border-indigo-400',
+                    'ring-1',
+                    'ring-indigo-400/40'
+                );
+            }
+        });
+    }
+</script>
+
+<script>
+    document.addEventListener('keydown', function (e) {
+        const container = document.getElementById('searchResult');
+        if (!container || container.classList.contains('hidden')) return;
+
+        const items = container.querySelectorAll('.search-item');
+        if (!items.length) return;
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            activeIndex = Math.min(activeIndex + 1, items.length - 1);
+            updateHighlight(items);
+        }
+
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            activeIndex = Math.max(activeIndex - 1, 0);
+            updateHighlight(items);
+        }
+
+        if (e.key === 'Enter' && activeIndex >= 0) {
+            e.preventDefault();
+            const url = items[activeIndex].dataset.url;
+            if (url) window.location.href = url;
+        }
+    });
+</script>
+
+
+<script>
+    document.body.addEventListener('htmx:afterSwap', (e) => {
+        if (e.target.id !== 'searchResult') return;
+        activeIndex = -1;
+    });
+</script>
+
+<script>
+    const searchCache = {};
+
+    document.body.addEventListener('htmx:beforeRequest', (e) => {
+        if (e.detail.path !== '/datasearch') return;
+
+        const input = document.querySelector('input[name="q"]');
+        const q = input?.value.trim();
+        if (!q) return;
+
+        if (searchCache[q]) {
+            e.preventDefault(); // 🔥 stop request
+            document.getElementById('searchResult').innerHTML = searchCache[q];
+        }
+    });
+
+    document.body.addEventListener('htmx:afterSwap', (e) => {
+        if (e.target.id !== 'searchResult') return;
+
+        const input = document.querySelector('input[name="q"]');
+        const q = input?.value.trim();
+        if (!q) return;
+
+        searchCache[q] = e.target.innerHTML;
+    });
+</script>
+
+
+
 <body class="antialiased">
 
     <!-- Navbar for mobile -->
@@ -114,6 +203,11 @@
 
                     // 🔥 INI PENTING BANGET
                     htmx.process(modalContainer);
+
+                    setTimeout(() => {
+                        const input = modalContainer.querySelector('input[type="search"], input[name="q"], input');
+                        input && input.focus();
+                    }, 0);
 
                     // prevent body scroll
                     document.body.style.overflow = 'hidden';

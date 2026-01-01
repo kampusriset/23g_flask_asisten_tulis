@@ -1,27 +1,65 @@
-{% if notes_today or rapats_today %}
-{% for n in notes_today %}
-<a href="{{ url_for('notes_bp.edit', note_id=n.id) }}" class="block">
-    <div class="flex items-center justify-between rounded-md px-4 py-3 hover:bg-white/5 transition">
-        <div class="flex items-center gap-3">
-            <i class="fi fi-rr-document text-neutral-400"></i>
-            <span class="text-sm">{{ n.title }}</span>
-        </div>
-    </div>
-</a>
-{% endfor %}
-
-{% for r in rapats_today %}
-<a href="{{ url_for('rapat_bp.detail_rapat', id=r.id) }}" class="block">
-    <div class="flex items-center justify-between rounded-md px-4 py-3 hover:bg-white/5 transition">
-        <div class="flex items-center gap-3">
-            <i class="fi fi-rr-users-alt text-neutral-400"></i>
-            <span class="text-sm">{{ r.topik }}</span>
-        </div>
-    </div>
-</a>
-{% endfor %}
+{% macro highlight(text, q) %}
+{% if q %}
+{{ text | replace(q, '<span class="text-indigo-400 font-semibold">' ~ q ~ '</span>') | safe }}
 {% else %}
-<div class="text-neutral-500 text-sm">
+{{ text }}
+{% endif %}
+{% endmacro %}
+
+{% if notes_today or rapats_today %}
+
+{# ================= CATATAN ================= #}
+{% if notes_today %}
+<div class="mb-4">
+    <div class="px-4 mb-2 text-xs uppercase tracking-wide text-neutral-500">
+        Catatan
+    </div>
+
+    <div class="space-y-1">
+        {% for n in notes_today %}
+        <a class="search-item block rounded-md px-4 py-3
+           hover:bg-white/5 transition" href="{{ url_for('notes_bp.edit', note_id=n.id) }}"
+            data-url="{{ url_for('notes_bp.edit', note_id=n.id) }}">
+
+            <div class="flex items-center gap-3">
+                <i class="fi fi-rr-document text-neutral-400"></i>
+                <span class="text-sm">
+                    {{ highlight(n.title or 'Catatan', query) }}
+                </span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{# ================= RAPAT ================= #}
+{% if rapats_today %}
+<div>
+    <div class="px-4 mb-2 text-xs uppercase tracking-wide text-neutral-500">
+        Rapat
+    </div>
+
+    <div class="space-y-1">
+        {% for r in rapats_today %}
+        <a class="search-item block rounded-md px-4 py-3
+           hover:bg-white/5 transition" href="{{ url_for('rapat_bp.detail_rapat', id=r.id) }}"
+            data-url="{{ url_for('rapat_bp.detail_rapat', id=r.id) }}">
+
+            <div class="flex items-center gap-3">
+                <i class="fi fi-rr-users-alt text-neutral-400"></i>
+                <span class="text-sm">
+                    {{ highlight(r.topik, query) }}
+                </span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% else %}
+<div class="text-neutral-500 text-sm px-4 py-2">
     Tidak ada data
 </div>
 {% endif %}
