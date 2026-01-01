@@ -1,82 +1,123 @@
 <div class="flex items-center mb-3">
-    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="mr-2 rounded h-9">
+  <img
+    src="{{ url_for('static', filename='img/logo.png') }}"
+    alt="Logo"
+    class="mr-2 rounded h-9"
+  />
 </div>
 
-
 <ul class="flex flex-col mb-3">
-    <li>
-        <button id="openSearchModal"
-            class="w-full text-left flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
-                class="fi fi-rr-search mr-2"></i> Cari</button>
-    </li>
-    <li>
-        <a href="/dashboard"
-            class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800 {% if request.path == '/dashboard' %}bg-gray-800{% endif %}"><i
-                class="fi fi-rr-home mr-2"></i> Beranda</a>
-    </li>
-    <li>
-        <a href="/rapat"
-            class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800 {% if request.path == '/rapat' %}bg-gray-800{% endif %}"><i
-                class="fi fi-rr-users-alt mr-2"></i> Rapat</a>
-    </li>
-    <li>
-        <a href="/not-available" class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
-                class="fi fi-rr-user-robot mr-2"></i> AI Tools</a>
-    </li>
-    <li>
-        <a href="/not-available" class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
-                class="fi fi-rr-envelope-plus mr-2"></i> Kotak Masuk</a>
-    </li>
+  <li>
+    <button
+      id="openSearchModal"
+      class="w-full text-left flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"
+    >
+      <i class="fi fi-rr-search mr-2"></i> Cari
+    </button>
+  </li>
+  <li>
+    <a
+      href="/dashboard"
+      class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800 {% if request.path == '/dashboard' %}bg-gray-800{% endif %}"
+      ><i class="fi fi-rr-home mr-2"></i> Beranda</a
+    >
+  </li>
+  <li>
+    <a
+      href="/rapat"
+      class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800 {% if request.path == '/rapat' %}bg-gray-800{% endif %}"
+      ><i class="fi fi-rr-users-alt mr-2"></i> Rapat</a
+    >
+  </li>
+  <li>
+    <a
+      href="/not-available"
+      class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"
+    >
+      <i class="fi fi-rr-user-robot mr-2"></i> AI Tools</a
+    >
+  </li>
+  <li>
+    <a
+      href="{{ url_for('notes_bp.inbox') }}"
+      class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"
+    >
+      <i class="fi fi-rr-envelope-plus mr-2"></i> Kotak Masuk
+    </a>
+  </li>
 </ul>
 
-<h6 class="uppercase text-gray-400 mt-6 px-3 text-sm font-semibold">Privat </h6>
+<h6 class="uppercase text-gray-400 mt-6 px-3 text-sm font-semibold">Privat</h6>
 <ul class="flex flex-col mb-3">
-    <li>
-        <a href="/profile"
-            class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800 {% if request.path == '/profile' %}bg-gray-800{% endif %}">
-            <i class="fi fi-rr-user mr-2"></i> Profile</a>
-    </li>
+  <li>
+    <a
+      href="/profile"
+      class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800 {% if request.path == '/profile' %}bg-gray-800{% endif %}"
+    >
+      <i class="fi fi-rr-user mr-2"></i> Profile</a
+    >
+  </li>
 
-    <li>
-        <a href="{{ url_for('notes_bp.new_note') }}"
-            class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800">
-            <i class="fi fi-rr-plus-small mr-2"></i> Tambah catatan baru
-        </a>
-    </li>
+  <li>
+    <a
+      href="{{ url_for('notes_bp.new_note') }}"
+      class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"
+    >
+      <i class="fi fi-rr-plus-small mr-2"></i> Tambah catatan baru
+    </a>
+  </li>
 
-    <!-- LIST CATATAN DINAMIS -->
-    {% include "base/sidebar_notes.html" %}
+  <!-- LIST CATATAN DINAMIS -->
+  {% include "base/sidebar_notes.html" %}
 </ul>
 
-
-
-<h6 class="uppercase text-gray-400 mt-10 px-3 text-sm font-semibold">Team Workspace</h6>
+<h6 class="uppercase text-gray-400 mt-10 px-3 text-sm font-semibold">
+  Team Workspace
+</h6>
 <ul class="flex flex-col mb-3">
-    <li>
-        <a href="/not-available" class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
-                class="fi fi-rr-house-building mr-2"></i> Proyek</a>
-    </li>
-    <li>
-        <a href="/not-available" class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
-                class="fi fi-rr-plus-small mr-2"></i> Tambah Proyek</a>
-    </li>
+  <li>
+    <a
+      href="/not-available"
+      class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"
+    >
+      <i class="fi fi-rr-house-building mr-2"></i> Proyek</a
+    >
+  </li>
+  <li>
+    <a
+      href="/not-available"
+      class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"
+    >
+      <i class="fi fi-rr-plus-small mr-2"></i> Tambah Proyek</a
+    >
+  </li>
 </ul>
 
 <h6 class="uppercase text-gray-400 mt-6 px-3 text-sm font-semibold">Lainnya</h6>
 <ul class="flex flex-col mb-3">
-    <li>
-        <a href="/not-available" class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
-                class="fi fi-rr-settings mr-2"></i> Pengaturan</a>
-    </li>
-    <li>
-        <a href="{{ url_for('recycle_bp.index') }}"
-            class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800">
-            <i class="fi fi-rr-trash mr-2"></i> Sampah
-        </a>
-    </li>
+  <li>
+    <a
+      href="/not-available"
+      class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"
+    >
+      <i class="fi fi-rr-settings mr-2"></i> Pengaturan</a
+    >
+  </li>
+  <li>
+    <a
+      href="{{ url_for('recycle_bp.index') }}"
+      class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"
+    >
+      <i class="fi fi-rr-trash mr-2"></i> Sampah
+    </a>
+  </li>
 
-    <li>
-        <a href="/logout" class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
-                class="fi fi-rr-exit mr-2"></i> Logout</a>
-    </li>
+  <li>
+    <a
+      href="/logout"
+      class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"
+    >
+      <i class="fi fi-rr-exit mr-2"></i> Logout</a
+    >
+  </li>
 </ul>

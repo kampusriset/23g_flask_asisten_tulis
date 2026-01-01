@@ -1,15 +1,17 @@
 {% if notes %}
 <ul class="flex flex-col ml-3">
-    {% for n in notes %}
-    {% if n.deleted_at is none %} {# cuma tampilkan catatan aktif #}
-    <li>
-        <a href="{{ url_for('notes_bp.edit', note_id=n.id) }}"
-            class="flex items-center text-white text-sm py-1 px-2 mt-1.5 rounded hover:bg-gray-800 {% if note and note.id == n.id %}bg-gray-800{% endif %}">
-            <i class="fi fi-rr-document mr-2"></i>
-            {{ n.title or "Catatan Baru" }}
-        </a>
-    </li>
-    {% endif %}
-    {% endfor %}
+  {% for n in notes %} {% if n.deleted_at is none %} {# cuma tampilkan catatan
+  aktif #}
+  <li>
+    <a
+      href="{{ url_for('notes_bp.edit', note_id=n.id) }}"
+      class="flex items-center text-white text-sm py-1 px-2 mt-1.5 rounded hover:bg-gray-800 {% if note and note.id == n.id %}bg-gray-800{% endif %}"
+    >
+      <i class="fi fi-rr-document mr-2"></i>
+      {{ n.title or "Catatan Baru" }}
+    </a>
+  </li>
+  {% endif %} {% endfor %}
 </ul>
 {% endif %}
+

@@ -11,6 +11,11 @@ class Note(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
+    # 🔽 TAMBAHKAN INI (SELIPAN)
+    type = db.Column(db.String(20), default="note")
+    # "note"  = catatan
+    # "inbox" = kotak masuk
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(
         db.DateTime,
@@ -18,7 +23,7 @@ class Note(db.Model):
         onupdate=datetime.utcnow
     )
 
-    # 🔥 RECYLCE BIN
+    # 🔥 RECYCLE BIN
     deleted_at = db.Column(db.DateTime, nullable=True)
 
     def soft_delete(self):
