@@ -41,3 +41,30 @@ def edit_profile():
         flash('Profil berhasil diperbarui.', 'success')
         return redirect(url_for('profile_bp.edit_profile'))
     return render_template('profile/edit_profile.html', user=user, title='Edit Profil')
+
+
+# Route untuk mengganti password
+@profile_bp.route('/profile/change-password', methods=['GET', 'POST'])
+def change_password():
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('Anda harus login untuk mengganti password.', 'error')
+        return redirect(url_for('profile_bp.profile'))
+    user = User.query.get(user_id)
+    if request.method == 'POST':
+        current_password = request.form.get('current_password')
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+        # Validasi sederhana, sesuaikan dengan implementasi password hash di model User
+        if not user.check_password(current_password):
+            flash('Password lama salah.', 'error')
+        elif new_password != confirm_password:
+            flash('Password baru dan konfirmasi tidak cocok.', 'error')
+        elif not new_password:
+            flash('Password baru tidak boleh kosong.', 'error')
+        else:
+            user.set_password(new_password)
+            db.session.commit()
+            flash('Password berhasil diubah.', 'success')
+            return redirect(url_for('profile_bp.change_password'))
+    return render_template('profile/change_password.html', user=user, title='Ganti Password')
