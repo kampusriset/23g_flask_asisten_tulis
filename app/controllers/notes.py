@@ -200,20 +200,3 @@ def trash():
         "view/fitur/recycle/recycle.html",
         deleted_notes=deleted_notes
     )
-
-
-@notes_bp.route("/inbox")
-def inbox():
-    if not session.get("user_id"):
-        return redirect("/login")
-
-    inbox_items = Note.query.filter(
-        Note.user_id == session["user_id"],
-        Note.type == "inbox",
-        Note.deleted_at.is_(None)
-    ).order_by(Note.created_at.desc()).all()
-
-    return render_template(
-    "view/fitur/notes/inbox.html",
-    inbox_items=inbox_items
-)
