@@ -1,6 +1,3 @@
-{% extends "base/navbar.html" %}
-{% block content %}
-
 <!DOCTYPE html>
 <html lang="id">
 
@@ -9,187 +6,291 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TulisAi — AI Productivity Assistant</title>
 
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#053d6eff',
-          }
-        }
-      }
-    }
-  </script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}">
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 
-<body class="min-h-screen text-white bg-[#053d6e]">
+<body class="min-h-screen bg-[#053d6e]">
 
-  <!-- HERO -->
-  <section class="min-h-screen flex flex-col justify-center items-center text-center px-6
-relative overflow-hidden bg-[#053d6e] text-white">
+  <!-- HERO (BIRU) -->
+  <section id="mulai" class="min-h-screen flex flex-col justify-center items-center text-center px-6
+  relative overflow-hidden bg-[#053d6e] text-white">
 
-    <!-- Glow Effect -->
     <div class="absolute inset-0 -z-10">
       <div class="absolute top-1/2 left-1/2 w-[600px] h-[600px]
-                -translate-x-1/2 -translate-y-1/2
-                bg-blue-400/20 blur-[140px] rounded-full">
-      </div>
+        -translate-x-1/2 -translate-y-1/2
+        bg-blue-400/20 blur-[140px] rounded-full"></div>
     </div>
 
-    <h2 class="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
+    <h2 data-aos="fade-right" data-aos-duration="2000"
+      class="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
       Rapikan Catatan<br>
-      <span class="bg-gradient-to-r from-blue-300 to-blue-600
-                 bg-clip-text text-transparent">
+      <span class="bg-gradient-to-r from-blue-300 to-blue-600 bg-clip-text text-transparent">
         Dibantu AI
       </span>
     </h2>
 
-    <p class="max-w-2xl mt-6 text-gray-200">
+    <p data-aos="fade-right" data-aos-duration="3000" class="max-w-2xl mt-6 text-gray-200">
       TulisAi membantu kamu merapikan catatan, mengatur tugas,
       memperbaiki grammar, meringkas teks, dan menerjemahkan dengan AI.
     </p>
 
-    <div class="mt-8 flex gap-4 flex-wrap justify-center">
-      <a href="/login" class="px-7 py-3 rounded-xl font-semibold
-      bg-blue-600 hover:bg-blue-500 transition">
+    <div data-aos="fade-right" data-aos-duration="900" class="mt-8 flex gap-4 flex-wrap justify-center">
+      <a href="/register" class="px-7 py-3 rounded-xl font-semibold bg-blue-600 hover:bg-blue-500 transition">
         Coba Gratis
       </a>
 
-      <a href="#fitur" class="px-7 py-3 rounded-xl font-semibold
-      border border-white/30 hover:bg-white/10 transition">
+      <a href="#fitur" class="px-7 py-3 rounded-xl font-semibold border border-white/30 hover:bg-white/10 transition">
         Lihat Fitur
       </a>
     </div>
   </section>
 
-  <!-- PROBLEM -->
-  <section class="py-20 px-6 bg-[#053d6e] text-white">
+  <!-- PROBLEM (PUTIH) -->
+  <section id="capek" class="min-h-screen flex flex-col justify-center items-center text-center px-6
+relative overflow-hidden bg-white text-gray-800">
+
     <div class="max-w-6xl mx-auto">
-      <h3 class="text-3xl font-bold text-center mb-14">
+
+      <!-- Judul -->
+      <h3 class="text-3xl font-bold text-center mb-14 text-[#053d6e]" data-aos="fade-up">
         Capek Sama Ini?
       </h3>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="p-6 rounded-2xl bg-white/5 backdrop-blur
-                  hover:-translate-y-1 transition">
-          📄 Catatan berantakan
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+        <!-- Card 1 -->
+        <div class="p-6 rounded-2xl border border-gray-200 bg-white
+                  shadow-sm hover:shadow-lg hover:-translate-y-1 transition" data-aos="fade-up" data-aos-delay="0">
+          <div class="text-3xl mb-3">
+            <i class="fi fi-rr-document"></i>
+          </div>
+          <p class="font-semibold">Catatan berantakan</p>
         </div>
-        <div class="p-6 rounded-2xl bg-white/5 backdrop-blur
-                  hover:-translate-y-1 transition">
-          ⏰ Tugas numpuk
+
+        <!-- Card 2 -->
+        <div class="p-6 rounded-2xl border border-gray-200 bg-white
+                  shadow-sm hover:shadow-lg hover:-translate-y-1 transition" data-aos="fade-up" data-aos-delay="100">
+          <div class="text-3xl mb-3">
+            <i class="fi fi-rr-alarm-clock"></i>
+          </div>
+          <p class="font-semibold">Tugas numpuk</p>
         </div>
-        <div class="p-6 rounded-2xl bg-white/5 backdrop-blur
-                  hover:-translate-y-1 transition">
-          ❌ Grammar bikin ragu
+
+        <!-- Card 3 -->
+        <div class="p-6 rounded-2xl border border-gray-200 bg-white
+                  shadow-sm hover:shadow-lg hover:-translate-y-1 transition" data-aos="fade-up" data-aos-delay="200">
+          <div class="text-3xl mb-3">
+            <i class="fi fi-rr-cross-circle"></i>
+          </div>
+          <p class="font-semibold">Grammar bikin ragu</p>
         </div>
-        <div class="p-6 rounded-2xl bg-white/5 backdrop-blur
-                  hover:-translate-y-1 transition">
-          📚 Artikel kepanjangan
+
+        <!-- Card 4 -->
+        <div class="p-6 rounded-2xl border border-gray-200 bg-white
+                  shadow-sm hover:shadow-lg hover:-translate-y-1 transition" data-aos="fade-up" data-aos-delay="300">
+          <div class="text-3xl mb-3">
+            <i class="fi fi-rr-book-bookmark"></i>
+          </div>
+          <p class="font-semibold">Artikel kepanjangan</p>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- FEATURES -->
-  <section id="fitur" class="py-24 px-6 bg-[#053d6e] text-white">
+
+
+  <!-- FEATURES (BIRU) -->
+  <section id="fitur" class="min-h-screen flex flex-col justify-center items-center px-6
+relative overflow-hidden bg-[#053d6e] text-white">
+
     <div class="max-w-7xl mx-auto">
-      <h3 class="text-4xl font-bold text-center mb-16">
+
+      <!-- Judul -->
+      <h3 class="text-4xl font-bold text-center mb-16" data-aos="fade-up">
         Fitur Unggulan
       </h3>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="p-8 rounded-3xl bg-white/5 backdrop-blur
-                  hover:bg-white/10 hover:-translate-y-1 transition">
-          <h4 class="text-xl font-semibold text-blue-300 mb-5">
-            AI Writing
-          </h4>
+
+        <!-- Card 1 -->
+        <div class="p-8 rounded-3xl bg-white/10 hover:bg-white/20 transition" data-aos="fade-up" data-aos-delay="0">
+          <h4 class="text-xl font-semibold text-blue-300 mb-5">AI Writing</h4>
           <ul class="space-y-3 text-gray-200">
-            <li>✍️ Paraphraser</li>
-            <li>✅ Grammar Checker</li>
-            <li>📄 Summarizer</li>
-            <li>🌐 Deep Translate</li>
+            <li><i class="fi fi-rr-poll-h"></i> Paraphraser</li>
+            <li><i class="fi fi-rr-memo-circle-check"></i> Grammar Checker</li>
+            <li><i class="fi fi-rr-document"></i> Summarizer</li>
+            <li><i class="fi fi-rr-globe"></i> Deep Translate</li>
           </ul>
         </div>
 
-        <div class="p-8 rounded-3xl bg-white/5 backdrop-blur
-                  hover:bg-white/10 hover:-translate-y-1 transition">
-          <h4 class="text-xl font-semibold text-blue-300 mb-5">
-            Productivity
-          </h4>
+        <!-- Card 2 -->
+        <div class="p-8 rounded-3xl bg-white/10 hover:bg-white/20 transition" data-aos="fade-up" data-aos-delay="150">
+          <h4 class="text-xl font-semibold text-blue-300 mb-5">Productivity</h4>
           <ul class="space-y-3 text-gray-200">
-            <li>🗂️ AI Task Planner</li>
-            <li>📅 Schedule Calendar</li>
+            <li><i class="fi fi-rr-list-check"></i> AI Task Planner</li>
+            <li><i class="fi fi-rr-calendar-clock"></i> Schedule Calendar</li>
           </ul>
         </div>
 
-        <div class="p-8 rounded-3xl bg-white/5 backdrop-blur
-                  hover:bg-white/10 hover:-translate-y-1 transition">
-          <h4 class="text-xl font-semibold text-blue-300 mb-5">
-            Smart System
-          </h4>
+        <!-- Card 3 -->
+        <div class="p-8 rounded-3xl bg-white/10 hover:bg-white/20 transition" data-aos="fade-up" data-aos-delay="300">
+          <h4 class="text-xl font-semibold text-blue-300 mb-5">Smart System</h4>
           <ul class="space-y-3 text-gray-200">
-            <li>🔍 Deep Search</li>
-            <li>⚡ Fast UI</li>
+            <li><i class="fi fi-rr-search"></i> Deep Search</li>
+            <li><i class="fi fi-rr-bolt"></i> Fast UI</li>
           </ul>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
-  <section class="py-24 px-6 bg-[#053d6e] text-white">
+
+  <!-- HOW IT WORKS (PUTIH) -->
+  <section id="cara" class="min-h-screen flex flex-col justify-center items-center text-center px-6
+relative overflow-hidden bg-white text-gray-800">
+
     <div class="max-w-6xl mx-auto">
-      <h3 class="text-3xl font-bold text-center mb-16">
+
+      <!-- Judul -->
+      <h3 class="text-3xl font-bold text-center mb-16 text-[#053d6e]" data-aos="fade-up">
         Cara Kerja
       </h3>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-        <div>
-          <div class="text-4xl">✍️</div>
-          <h4 class="mt-4 font-semibold text-lg">Tulis</h4>
-          <p class="mt-2 text-gray-300">Masukkan catatan kamu</p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+        <!-- Card 1 -->
+        <div class="p-8 rounded-2xl border border-gray-200 bg-white
+                  shadow-sm hover:shadow-lg hover:-translate-y-1 transition text-center" data-aos="fade-up"
+          data-aos-delay="0">
+          <div class="text-4xl mb-4">
+            <i class="fi fi-rr-pen-field"></i>
+          </div>
+          <h4 class="font-semibold text-lg mb-2">Tulis</h4>
+          <p class="text-gray-600">Masukkan catatan kamu</p>
         </div>
 
-        <div>
-          <div class="text-4xl">🤖</div>
-          <h4 class="mt-4 font-semibold text-lg">Pilih AI</h4>
-          <p class="mt-2 text-gray-300">Gunakan fitur sesuai kebutuhan</p>
+        <!-- Card 2 -->
+        <div class="p-8 rounded-2xl border border-gray-200 bg-white
+                  shadow-sm hover:shadow-lg hover:-translate-y-1 transition text-center" data-aos="fade-up"
+          data-aos-delay="150">
+          <div class="text-4xl mb-4">
+            <i class="fi fi-rr-gears"></i>
+          </div>
+          <h4 class="font-semibold text-lg mb-2">Pilih AI</h4>
+          <p class="text-gray-600">Gunakan fitur sesuai kebutuhan</p>
         </div>
 
-        <div>
-          <div class="text-4xl">✅</div>
-          <h4 class="mt-4 font-semibold text-lg">Selesai</h4>
-          <p class="mt-2 text-gray-300">Catatan jadi rapi</p>
+        <!-- Card 3 -->
+        <div class="p-8 rounded-2xl border border-gray-200 bg-white
+                  shadow-sm hover:shadow-lg hover:-translate-y-1 transition text-center" data-aos="fade-up"
+          data-aos-delay="300">
+          <div class="text-4xl mb-4">
+            <i class="fi fi-rr-checkbox"></i>
+          </div>
+          <h4 class="font-semibold text-lg mb-2">Selesai</h4>
+          <p class="text-gray-600">Catatan jadi rapi</p>
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="py-24 px-6 text-center bg-[#053d6e] text-white">
-    <h3 class="text-4xl font-bold">
+
+
+  <!-- CTA (BIRU) -->
+  <section class="min-h-screen flex flex-col justify-center items-center px-6
+relative overflow-hidden text-center bg-[#053d6e] text-white">
+
+    <h3 class="text-4xl font-bold" data-aos="fade-right">
       Mulai Rapikan Catatanmu
     </h3>
-    <p class="mt-4 text-gray-300">
+
+    <p class="mt-4 text-gray-300" data-aos="fade-right" data-aos-delay="150">
       Gratis, cepat, dan dibantu AI
     </p>
-    <p class="mt-2 text-sm text-gray-400">
+
+    <p class="mt-2 text-sm text-gray-400" data-aos="fade-right" data-aos-delay="300">
       Cocok buat pelajar, mahasiswa, dan pekerja sibuk
     </p>
 
-    <div class="mt-8">
-      <a href="#" class="inline-block px-9 py-4 rounded-xl font-semibold
-      bg-blue-600 hover:bg-blue-500 transition">
+    <div class="mt-8" data-aos="fade-right" data-aos-delay="450">
+      <a href="#" class="inline-block px-9 py-4 rounded-xl font-semibold bg-blue-600 hover:bg-blue-500 transition">
         Mulai Sekarang 🚀
       </a>
     </div>
+
   </section>
 
-  <!-- FOOTER -->
-  <footer class="py-6 text-center text-sm text-gray-400 bg-[#053d6e]">
-    Built with ❤️ and AI • © 2025 TulisAi
+
+  <!-- FOOTER (PUTIH) -->
+  <footer class="bg-white text-gray-800 py-16 border-t border-gray-200">
+    <div class="container mx-auto px-6">
+      <div class="grid md:grid-cols-4 gap-8">
+
+        <div>
+          <div class="flex items-center space-x-2 mb-4">
+            <span class="text-xl font-bold text-gray-900">TulisAI</span>
+          </div>
+          <p class="text-gray-600">
+            TulisAi membantu kamu merapikan catatan, mengatur tugas,
+            memperbaiki grammar, meringkas teks, dan menerjemahkan dengan AI.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-lg font-semibold mb-4 text-gray-900">Layanan</h4>
+          <ul class="space-y-2">
+            <li><a href="#capek" class="text-gray-600 hover:text-gray-900 transition-colors">Reason</a></li>
+            <li><a href="#fitur" class="text-gray-600 hover:text-gray-900 transition-colors">Fitur Kami</a>
+            </li>
+            <li><a href="#cara" class="text-gray-600 hover:text-gray-900 transition-colors">Cara Kerja</a></li>
+            <li><a href="#mulai" class="text-gray-600 hover:text-gray-900 transition-colors">Mulai Sekarang</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-lg font-semibold mb-4 text-gray-900">Perusahaan</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Tentang Kami</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Karir</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Partnership</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-lg font-semibold mb-4 text-gray-900">Support</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Kontak Kami</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Customer Service</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Kebijakan Privasi</a></li>
+            <li><a href="#" class="text-gray-600 hover:text-gray-900 transition-colors">Syarat & Ketentuan</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="border-t border-gray-200 mt-12 pt-8 text-center">
+        <p class="text-gray-500">© Copyright 2025–2026 TulisAI.</p>
+      </div>
+    </div>
   </footer>
 
-  {% endblock %}
+
+</body>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 800,
+    easing: 'ease-out-cubic',
+    mirror: true,
+    once: false
+  });
+
+</script>
+
+</html>

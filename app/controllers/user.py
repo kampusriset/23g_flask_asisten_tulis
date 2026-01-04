@@ -10,6 +10,9 @@ auth_bp = Blueprint('auth_bp', __name__)
 # --------------------------
 @auth_bp.route("/register", methods=["GET", "POST"])
 def register():
+    if session.get("user_id"):
+        return redirect(url_for("dashboard_bp.dashboard"))
+
     if request.method == "POST":
         username = request.form.get("username").strip()
         email = request.form.get("email").strip()

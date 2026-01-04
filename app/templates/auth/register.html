@@ -1,69 +1,104 @@
-{% extends "base/navbar.html" %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="id">
 
-<!-- Bootstrap CDN -->
-<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}">
+<head>
+    <meta charset="UTF-8">
+    <title>Register | TulisAi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-    input[type="text"]::placeholder,
-    input[type="email"]::placeholder,
-    input[type="password"]::placeholder {
-        color: rgba(255, 255, 255, 0.6) !important;
-        opacity: 1;
-    }
-</style>
+    <!-- Tailwind -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}">
 
-<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <style>
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+    </style>
+</head>
 
-    <div class="card p-4 shadow-lg"
-        style="width: 100%; max-width: 450px; backdrop-filter: blur(12px); background: rgba(255,255,255,0.15); border-radius: 18px; border: 1px solid rgba(255,255,255,0.25); color: white;">
+<body class="min-h-screen bg-[#053d6e] text-white flex flex-col">
 
-        <h2 class="text-center mb-4 fw-bold">Register</h2>
+    <!-- NAVBAR SIMPLE -->
+    <nav class="w-full px-6 py-4 flex items-center">
+        <a href="/" class="flex items-center text-white">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="rounded mr-4"
+                style="height: 35px;">
+        </a>
+    </nav>
 
-        <form action="/register" method="POST">
+    <!-- REGISTER CARD -->
+    <div class="flex flex-1 justify-center items-center px-6">
+        <div class="w-full max-w-lg p-8 rounded-2xl
+                backdrop-blur-xl bg-white/15
+                border border-white/25 shadow-xl">
 
-            <!-- Username -->
-            <div class="mb-3">
-                <label class="form-label text-white">Username</label>
-                <input type="text" name="username" class="form-control" placeholder="Masukkan username" required
-                    style="background: rgba(255,255,255,0.2); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.4);">
-            </div>
+            <h2 class="text-2xl font-bold text-center mb-6">
+                Register
+            </h2>
 
-            <!-- Email -->
-            <div class="mb-3">
-                <label class="form-label text-white">Email</label>
-                <input type="email" name="email" class="form-control" placeholder="Masukkan email" required
-                    style="background: rgba(255,255,255,0.2); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.4);">
-            </div>
+            <form action="/register" method="POST" class="space-y-5">
 
-            <!-- Password -->
-            <div class="mb-3">
-                <label class="form-label text-white">Password</label>
-                <input type="password" name="password" class="form-control" placeholder="Masukkan password" required
-                    style="background: rgba(255,255,255,0.2); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.4);">
-            </div>
+                <!-- Username -->
+                <div>
+                    <label class="block mb-1 text-sm font-medium">
+                        Username
+                    </label>
+                    <input type="text" name="username" required placeholder="Masukkan username" class="w-full px-4 py-3 rounded-lg
+                        bg-white/20 border border-white/30
+                        text-white focus:outline-none
+                        focus:ring-2 focus:ring-blue-400">
+                </div>
 
-            <!-- Confirm Password -->
-            <div class="mb-4">
-                <label class="form-label text-white">Konfirmasi Password</label>
-                <input type="password" name="confirm_password" class="form-control" placeholder="Ulangi password"
-                    required
-                    style="background: rgba(255,255,255,0.2); color: white; border-radius: 8px; border: 1px solid rgba(255,255,255,0.4);">
-            </div>
+                <!-- Email -->
+                <div>
+                    <label class="block mb-1 text-sm font-medium">
+                        Email
+                    </label>
+                    <input type="email" name="email" required placeholder="Masukkan email" class="w-full px-4 py-3 rounded-lg
+                        bg-white/20 border border-white/30
+                        text-white focus:outline-none
+                        focus:ring-2 focus:ring-blue-400">
+                </div>
 
-            <button type="submit" class="btn btn-light w-100 fw-bold rounded-pill">Register</button>
+                <!-- Password -->
+                <div>
+                    <label class="block mb-1 text-sm font-medium">
+                        Password
+                    </label>
+                    <input type="password" name="password" required placeholder="Masukkan password" class="w-full px-4 py-3 rounded-lg
+                        bg-white/20 border border-white/30
+                        text-white focus:outline-none
+                        focus:ring-2 focus:ring-blue-400">
+                </div>
 
-            <p class="text-center mt-3 mb-0 text-white">
-                Sudah punya akun?
-                <a href="/login" class="text-white fw-bold text-decoration-underline">Login</a>
-            </p>
+                <!-- Confirm Password -->
+                <div>
+                    <label class="block mb-1 text-sm font-medium">
+                        Konfirmasi Password
+                    </label>
+                    <input type="password" name="confirm_password" required placeholder="Ulangi password" class="w-full px-4 py-3 rounded-lg
+                        bg-white/20 border border-white/30
+                        text-white focus:outline-none
+                        focus:ring-2 focus:ring-blue-400">
+                </div>
 
-        </form>
+                <button type="submit" class="w-full py-3 rounded-xl font-semibold
+                       bg-blue-600 hover:bg-blue-500
+                       transition">
+                    Register
+                </button>
 
+                <p class="text-center text-sm text-white/80">
+                    Sudah punya akun?
+                    <a href="/login" class="font-semibold underline hover:text-white">
+                        Login
+                    </a>
+                </p>
+
+            </form>
+        </div>
     </div>
-</div>
 
-<!-- Optional Bootstrap JS -->
-<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+</body>
 
-{% endblock %}
+</html>
