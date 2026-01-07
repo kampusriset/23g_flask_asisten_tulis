@@ -1,0 +1,76 @@
+{% extends "base/sidebar.html" %}
+
+{% block sidebar %}
+<div class="px-3 py-2">
+    <a href="{{ url_for('inbox.index') }}"
+       class="flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium
+              bg-gray-900 text-white">
+        <span class="flex items-center gap-2">
+            <i class="fi fi-rr-envelope"></i>
+            Inbox
+        </span>
+
+        {% if unread_count > 0 %}
+        <span class="bg-red-500 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+            {{ unread_count }}
+        </span>
+        {% endif %}
+    </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto mt-10 px-4">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-semibold text-gray-900">Inbox</h1>
+        <span class="text-sm text-gray-500">
+            {{ messages|length }} pesan
+        </span>
+    </div>
+
+    <!-- Inbox List -->
+    <div class="bg-white border border-gray-200 rounded-xl divide-y overflow-hidden">
+
+        {% for msg in messages %}
+        <a href="{{ url_for('inbox.read', id=msg.id) }}"
+           class="group flex gap-4 px-5 py-4 transition
+           {% if not msg.is_read %}
+                bg-blue-50/60
+           {% else %}
+                hover:bg-gray-50
+           {% endif %}">
+
+            <!-- Status dot -->
+            <div class="pt-2">
+                {% if not msg.is_read %}
+                <span class="block w-2.5 h-2.5 bg-blue-600 rounded-full"></span>
+                {% endif %}
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                    <h2 class="font-medium text-gray-900 truncate">
+                        {{ msg.title }}
+                    </h2>
+                    <span class="text-xs text-gray-400 ml-4 whitespace-nowrap">
+                        {{ msg.created_at.strftime('%d %b %Y %H:%M') }}
+                    </span>
+                </div>
+
+                <p class="text-sm text-gray-600 mt-1 truncate">
+                    {{ msg.message }}
+                </p>
+            </div>
+        </a>
+        {% else %}
+        <div class="py-16 text-center text-gray-500">
+            Tidak ada pesan masuk
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

@@ -20,6 +20,7 @@ def create_app():
     from app.controllers.dashboard import dashboard_bp
     from app.controllers.notes import notes_bp
     from app.controllers.gemini import gemini_bp
+    from app.controllers.inbox import inbox_bp      # ← TAMBAHAN
     from app.models.notes import Note
     from app.controllers.rapat_controller import rapat_bp
     from app.controllers.recycle import recycle_bp
@@ -30,6 +31,7 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(notes_bp)
+    app.register_blueprint(inbox_bp)                # ← TAMBAHAN
     app.register_blueprint(rapat_bp)
     app.register_blueprint(recycle_bp)
     app.register_blueprint(profile_bp)
@@ -42,14 +44,14 @@ def create_app():
                 Note.user_id == session["user_id"],
                 Note.deleted_at.is_(None)  # hanya catatan aktif
             ).order_by(Note.updated_at.desc()).all()
-            return dict(notes=notes)  # <-- ini sidebar selalu pakai ini
+            return dict(notes=notes)  # sidebar pakai ini
         return dict(notes=[])
 
     # HOME ROUTE
-
     @app.route("/")
     def home():
         if session.get('user_id'):
             return redirect("/dashboard")
         return render_template("home/landingpage.html")
+
     return app
