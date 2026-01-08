@@ -1,8 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
-from datetime import date
+from datetime import date, datetime
 from app import db
 
-from app.models.user import User
 
 class Rapat(db.Model):
     __tablename__ = "rapats"
@@ -12,5 +11,15 @@ class Rapat(db.Model):
     catatan = db.Column(db.Text)
     tanggal = db.Column(db.Date, default=date.today)
     peserta = db.Column(db.Text)
+
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('rapats', lazy=True))
+
+    # 🗑️ SOFT DELETE
+    deleted_at = db.Column(db.DateTime, nullable=True)
+
+    def soft_delete(self):
+        self.deleted_at = datetime.utcnow()
+
+    def restore(self):
+        self.deleted_at = None

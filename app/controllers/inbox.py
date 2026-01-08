@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, url_for
 from datetime import datetime
-
+from flask import request
 from app import db
 from app.models.inbox import Inbox
 
@@ -45,5 +45,21 @@ def read(id):
         msg.is_read = True
         msg.read_at = datetime.utcnow()
         db.session.commit()
+
+    return redirect(url_for("inbox.index"))
+
+
+@inbox_bp.route("/delete/<int:id>", methods=["POST"])
+def delete(id):
+    if not session.get("user_id"):
+        return redirect(url_for("auth.login"))
+
+    msg = Inbox.query.filter_by(
+        id=id,
+        user_id=session["user_id"]
+    ).first_or_404()
+
+    db.session.delete(msg)
+    db.session.commit()
 
     return redirect(url_for("inbox.index"))

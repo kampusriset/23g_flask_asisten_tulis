@@ -2,8 +2,7 @@
 
 {% block sidebar %}
 <div class="px-3 py-2">
-    <a href="{{ url_for('inbox.index') }}"
-       class="flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium
+    <a href="{{ url_for('inbox.index') }}" class="flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium
               bg-gray-900 text-white">
         <span class="flex items-center gap-2">
             <i class="fi fi-rr-envelope"></i>
@@ -34,8 +33,7 @@
     <div class="bg-white border border-gray-200 rounded-xl divide-y overflow-hidden">
 
         {% for msg in messages %}
-        <a href="{{ url_for('inbox.read', id=msg.id) }}"
-           class="group flex gap-4 px-5 py-4 transition
+        <a href="{{ url_for('inbox.read', id=msg.id) }}" class="group flex gap-4 px-5 py-4 transition
            {% if not msg.is_read %}
                 bg-blue-50/60
            {% else %}
@@ -55,9 +53,21 @@
                     <h2 class="font-medium text-gray-900 truncate">
                         {{ msg.title }}
                     </h2>
-                    <span class="text-xs text-gray-400 ml-4 whitespace-nowrap">
-                        {{ msg.created_at.strftime('%d %b %Y %H:%M') }}
-                    </span>
+                    <div class="flex items-center gap-3 ml-4 whitespace-nowrap">
+
+                        <span class="text-xs text-gray-400">
+                            {{ msg.created_at.strftime('%d %b %Y %H:%M') }}
+                        </span>
+
+                        <form method="post" action="{{ url_for('inbox.delete', id=msg.id) }}"
+                            onsubmit="return confirm('Hapus pesan ini?')">
+                            <button type="submit" class="text-gray-400 hover:text-red-600 transition">
+                                <i class="fi fi-rr-trash text-sm"></i>
+                            </button>
+                        </form>
+
+                    </div>
+
                 </div>
 
                 <p class="text-sm text-gray-600 mt-1 truncate">

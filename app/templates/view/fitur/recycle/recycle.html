@@ -4,44 +4,58 @@
 <div class="max-w-4xl mx-auto py-6 px-4">
 
     <div class="flex items-center justify-between mb-4">
-        <h4 class="text-lg font-semibold text-gray-800"><i class="fi fi-rr-trash mr-2"></i> Recycle Bin</h4>
-    </div>
+        <h4 class="text-lg font-semibold text-gray-800">
+            <i class="fi fi-rr-trash mr-2"></i> Recycle Bin
+        </h4>
 
-    {% if deleted_notes %}
-    <!-- Tombol Hapus Semua -->
-    <div class="mb-4 text-right">
+        {% if deleted_notes or deleted_rapats %}
         <form method="post" action="{{ url_for('recycle_bp.delete_all') }}"
-            onsubmit="return confirm('Yakin hapus semua permanen?')">
+            onsubmit="return confirm('Yakin hapus SEMUA data permanen?')">
             <button class="inline-flex items-center px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700">
                 <i class="fi fi-rr-trash mr-2"></i> Hapus Semua
             </button>
         </form>
+        {% endif %}
     </div>
+
+    {% if not deleted_notes and not deleted_rapats %}
+    <div class="bg-gray-50 border border-gray-200 text-gray-600 rounded p-6 text-center">
+        Recycle bin kosong ✨
+    </div>
+    {% endif %}
+
+    {# ================= NOTES ================= #}
+    {% if deleted_notes %}
+    <h5 class="text-sm font-semibold text-gray-600 mt-6 mb-2">
+        Catatan
+    </h5>
 
     <div class="bg-white shadow rounded divide-y divide-gray-100">
         {% for note in deleted_notes %}
         <div class="flex items-center justify-between px-4 py-3 hover:bg-gray-50">
 
             <div>
-                <strong class="block text-gray-800">{{ note.title or "Tanpa Judul" }}</strong>
+                <strong class="block text-gray-800">
+                    {{ note.title or "Tanpa Judul" }}
+                </strong>
                 <div class="text-sm text-gray-500">
                     Dihapus: {{ note.deleted_at.strftime("%d %b %Y %H:%M") }}
                 </div>
             </div>
 
             <div class="flex items-center gap-2">
-                <form method="post" action="{{ url_for('recycle_bp.restore', note_id=note.id) }}">
+                <form method="post" action="{{ url_for('recycle_bp.restore_note', note_id=note.id) }}">
                     <button
                         class="inline-flex items-center px-3 py-1.5 bg-green-600 text-white text-sm rounded hover:bg-green-700">
-                        <i class="fi fi-rr-time-past mr-2"></i> Restore
+                        <i class="fi fi-rr-time-past mr-1"></i> Restore
                     </button>
                 </form>
 
-                <form method="post" action="{{ url_for('recycle_bp.force_delete', note_id=note.id) }}"
-                    onsubmit="return confirm('Yakin hapus permanen?')">
+                <form method="post" action="{{ url_for('recycle_bp.force_delete_note', note_id=note.id) }}"
+                    onsubmit="return confirm('Yakin hapus catatan ini permanen?')">
                     <button
                         class="inline-flex items-center px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700">
-                        <i class="fi fi-rr-trash mr-2"></i> Hapus Permanen
+                        <i class="fi fi-rr-trash mr-1"></i> Hapus
                     </button>
                 </form>
             </div>
@@ -49,9 +63,46 @@
         </div>
         {% endfor %}
     </div>
-    {% else %}
-    <div class="bg-gray-50 border border-gray-200 text-gray-600 rounded p-6 text-center">
-        Kosong
+    {% endif %}
+
+    {# ================= RAPAT ================= #}
+    {% if deleted_rapats %}
+    <h5 class="text-sm font-semibold text-gray-600 mt-8 mb-2">
+        <i class="fi fi-rr-meeting mr-1"></i> Rapat
+    </h5>
+
+    <div class="bg-white shadow rounded divide-y divide-gray-100">
+        {% for rapat in deleted_rapats %}
+        <div class="flex items-center justify-between px-4 py-3 hover:bg-gray-50">
+
+            <div>
+                <strong class="block text-gray-800">
+                    {{ rapat.topik }}
+                </strong>
+                <div class="text-sm text-gray-500">
+                    Dihapus: {{ rapat.deleted_at.strftime("%d %b %Y %H:%M") }}
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <form method="post" action="{{ url_for('recycle_bp.restore_rapat', rapat_id=rapat.id) }}">
+                    <button
+                        class="inline-flex items-center px-3 py-1.5 bg-green-600 text-white text-sm rounded hover:bg-green-700">
+                        <i class="fi fi-rr-time-past mr-1"></i> Restore
+                    </button>
+                </form>
+
+                <form method="post" action="{{ url_for('recycle_bp.force_delete_rapat', rapat_id=rapat.id) }}"
+                    onsubmit="return confirm('Yakin hapus rapat ini permanen?')">
+                    <button
+                        class="inline-flex items-center px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700">
+                        <i class="fi fi-rr-trash mr-1"></i> Hapus
+                    </button>
+                </form>
+            </div>
+
+        </div>
+        {% endfor %}
     </div>
     {% endif %}
 
