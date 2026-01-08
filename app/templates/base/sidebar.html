@@ -12,6 +12,39 @@
     {# Default favicon: use app static logo.png as browser tab icon #}
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/logo.png') }}">
 
+    <style>
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+
+        .animate-toast-in {
+            animation: toastIn .4s ease-out forwards;
+        }
+
+        .animate-toast-out {
+            animation: toastOut .35s ease-in forwards;
+        }
+    </style>
 
 
 </head>
@@ -106,6 +139,43 @@
 
 
 <body class="antialiased">
+
+    {# ===== TOAST CATATAN ===== #}
+    {% set note_messages = [] %}
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+    {% if category in ['note_create', 'note_delete'] %}
+    {% set _ = note_messages.append((category, message)) %}
+    {% endif %}
+    {% endfor %}
+
+    {% if note_messages %}
+    <div id="note-toast" class="fixed top-6 right-6 z-[9999] bg-white border border-gray-300
+            shadow-lg rounded-xl px-6 py-4 flex items-start gap-3 animate-toast-in">
+
+        <div class="text-xl">
+            {% if note_messages[0][0] == 'note_create' %}
+            <span class="text-green-600">📝</span>
+            {% else %}
+            <span class="text-red-600">🗑️</span>
+            {% endif %}
+        </div>
+
+        <div>
+            <p class="font-semibold text-gray-800">Catatan</p>
+            <p class="text-sm text-gray-600">{{ note_messages[0][1] }}</p>
+        </div>
+    </div>
+
+    <script>
+        setTimeout(() => {
+            const t = document.getElementById('note-toast');
+            t && t.classList.replace('animate-toast-in', 'animate-toast-out');
+            setTimeout(() => t && t.remove(), 400);
+        }, 2500);
+    </script>
+    {% endif %}
+
+
 
     <!-- Navbar for mobile -->
     <nav class="bg-gray-900 text-white lg:hidden">

@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from app.models.rapat import Rapat
 from app import db
+from flask import flash
 
 rapat_bp = Blueprint("rapat_bp", __name__)
 
@@ -125,6 +126,7 @@ def create_rapat():
 
     db.session.add(rapat)
     db.session.commit()
+    flash("Rapat berhasil disimpan", "rapat_create")
 
     return redirect(url_for("rapat_bp.rapat"))
 
@@ -155,6 +157,7 @@ def edit_rapat(id):
     rapat.catatan = request.form.get("catatan")
 
     db.session.commit()
+    flash("Rapat berhasil diperbarui", "rapat_update")
 
     return redirect(url_for("rapat_bp.detail_rapat", id=rapat.id))
 
@@ -176,5 +179,6 @@ def delete_rapat(id):
 
     rapat.soft_delete()
     db.session.commit()
+    flash("Rapat berhasil dipindahkan ke recycle bin", "rapat_delete")
 
     return redirect(url_for("rapat_bp.rapat"))

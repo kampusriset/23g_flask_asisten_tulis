@@ -1,6 +1,36 @@
 {% extends "base/sidebar.html" %}
 
 {% block content %}
+{% set login_messages = [] %}
+{% for category, message in get_flashed_messages(with_categories=true) %}
+{% if category == 'login_success' %}
+{% set _ = login_messages.append(message) %}
+{% endif %}
+{% endfor %}
+
+{% if login_messages %}
+
+
+<div id="login-toast" class="fixed top-6 right-6 z-[9999] bg-white border border-green-400
+            shadow-lg rounded-xl px-6 py-4 flex items-start gap-3
+            animate-toast-in">
+
+    <div class="text-green-500 text-xl">✔</div>
+    <div>
+        <p class="font-semibold text-gray-800">Login Berhasil</p>
+        <p class="text-sm text-gray-600">{{ login_messages[0] }}</p>
+    </div>
+</div>
+
+<script>
+    setTimeout(() => {
+        const toast = document.getElementById('login-toast');
+        toast && toast.classList.replace('animate-toast-in', 'animate-toast-out');
+        setTimeout(() => toast && toast.remove(), 2000);
+    }, 2500);
+</script>
+{% endif %}
+
 <!-- Notes Section -->
 <div class="p-6 text-gray-200 mt-6">
     {% if greeting %}

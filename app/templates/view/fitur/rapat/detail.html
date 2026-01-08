@@ -1,6 +1,32 @@
 {% extends "base/sidebar.html" %}
 
 {% block content %}
+{% set detail_messages = [] %}
+{% for category, message in get_flashed_messages(with_categories=true) %}
+{% if category == 'rapat_update' %}
+{% set _ = detail_messages.append(message) %}
+{% endif %}
+{% endfor %}
+
+{% if detail_messages %}
+<div id="detail-toast" class="fixed top-6 right-6 z-[9999] bg-white border border-blue-300
+         shadow-lg rounded-xl px-6 py-4 flex items-start gap-3 animate-toast-in">
+  <div class="text-blue-600 text-xl">✏️</div>
+  <div>
+    <p class="font-semibold text-gray-800">Rapat</p>
+    <p class="text-sm text-gray-600">{{ detail_messages[0] }}</p>
+  </div>
+</div>
+
+<script>
+  setTimeout(() => {
+    const t = document.getElementById('detail-toast');
+    t && t.classList.replace('animate-toast-in', 'animate-toast-out');
+    setTimeout(() => t && t.remove(), 400);
+  }, 2500);
+</script>
+{% endif %}
+
 <div class="max-w-4xl mx-auto my-8 px-4">
   <div class="bg-white shadow rounded overflow-hidden">
     <div class="flex items-center justify-between px-6 py-4 border-b">

@@ -66,6 +66,7 @@ def restore_note(note_id):
 
     note.restore()
     db.session.commit()
+    flash("Catatan berhasil dipulihkan", "recycle_success")
 
     return redirect(url_for("recycle_bp.index"))
 
@@ -87,6 +88,7 @@ def restore_rapat(rapat_id):
 
     rapat.restore()
     db.session.commit()
+    flash("Rapat berhasil dipulihkan", "recycle_success")
 
     return redirect(url_for("recycle_bp.index"))
 
@@ -153,6 +155,6 @@ def delete_all():
     ).delete(synchronize_session=False)
 
     db.session.commit()
-    flash("Semua data di recycle bin dihapus permanen!", "success")
+    flash("Semua data di recycle bin dihapus permanen!", "recycle_success")
 
     return redirect(url_for("recycle_bp.index"))

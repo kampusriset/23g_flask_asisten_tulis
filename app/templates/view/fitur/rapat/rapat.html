@@ -1,6 +1,32 @@
 {% extends "base/sidebar.html" %}
 
 {% block content %}
+{% set rapat_messages = [] %}
+{% for category, message in get_flashed_messages(with_categories=true) %}
+{% if category in ['rapat_create', 'rapat_delete'] %}
+{% set _ = rapat_messages.append(message) %}
+{% endif %}
+{% endfor %}
+
+{% if rapat_messages %}
+<div id="rapat-toast" class="fixed top-6 right-6 z-[9999] bg-white border border-gray-300
+         shadow-lg rounded-xl px-6 py-4 flex items-start gap-3 animate-toast-in">
+  <div class="text-green-600 text-xl">📅</div>
+  <div>
+    <p class="font-semibold text-gray-800">Rapat</p>
+    <p class="text-sm text-gray-600">{{ rapat_messages[0] }}</p>
+  </div>
+</div>
+
+<script>
+  setTimeout(() => {
+    const t = document.getElementById('rapat-toast');
+    t && t.classList.replace('animate-toast-in', 'animate-toast-out');
+    setTimeout(() => t && t.remove(), 400);
+  }, 2500);
+</script>
+{% endif %}
+
 
 <div class="max-w-6xl mx-auto my-8 px-4">
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">

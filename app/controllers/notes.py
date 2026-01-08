@@ -1,9 +1,10 @@
 from dotenv import load_dotenv
 import requests
 import os
-from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, flash
 from app.models.notes import Note
 from app import db
+
 
 notes_bp = Blueprint("notes_bp", __name__, url_prefix="/notes")
 
@@ -268,6 +269,7 @@ def new_note():
     note = Note(user_id=user_id, title="", content="")
     db.session.add(note)
     db.session.commit()
+    flash("Catatan baru berhasil dibuat", "note_create")
     return redirect(url_for("notes_bp.edit", note_id=note.id))
 
 
@@ -288,6 +290,7 @@ def delete(note_id):
 
     note.soft_delete()   # 👈 PINDAH KE RECYCLE BIN
     db.session.commit()
+    flash("Catatan dipindahkan ke Recycle Bin", "note_delete")
 
     return redirect(url_for("notes_bp.index"))
 

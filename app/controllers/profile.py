@@ -38,7 +38,7 @@ def edit_profile():
             file.save(os.path.join(current_app.root_path, img_path))
             user.profile_pic = f'img/{filename}'
         db.session.commit()
-        flash('Profil berhasil diperbarui.', 'success')
+        flash('Profil berhasil diperbarui.', 'profile_success')
         return redirect(url_for('profile_bp.edit_profile'))
     return render_template('profile/edit_profile.html', user=user, title='Edit Profil')
 

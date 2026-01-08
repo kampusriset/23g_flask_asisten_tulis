@@ -2,147 +2,188 @@
 {% block content %}
 
 <style>
-.profile-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 16px;
-}
-.profile-header {
-    margin-bottom: 32px;
-}
-.profile-header h2 {
-    font-size: 28px;
-    font-weight: 700;
-    color: #017de5;
-    margin-bottom: 4px;
-}
-.profile-header p {
-    color: #666;
-    font-size: 14px;
-}
-.card {
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 24px;
-}
-.form-group {
-    margin-bottom: 22px;
-}
-.form-group label {
-    display: block;
-    font-size: 14px;
-    font-weight: 500;
-    color: #374151;
-    margin-bottom: 7px;
-}
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="file"] {
-    width: 100%;
-    padding: 12px 14px;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s;
-}
-.form-group input:focus {
-    border-color: #017de5;
-}
-.profile-pic-preview {
-    margin-top: 10px;
-}
-.profile-pic-preview img {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1.5px solid #e5e7eb;
-}
-.actions {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-    margin-top: 8px;
-}
-.btn-primary {
-    background: #017de5;
-    color: #fff;
-    padding: 10px 18px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
-    transition: background 0.18s, opacity 0.18s;
-}
-.btn-primary:hover {
-    background: #0369b1;
-    opacity: 0.93;
-}
-.btn-secondary {
-    background: #f3f4f6;
-    color: #374151;
-    padding: 10px 18px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 500;
-    text-decoration: none;
-    border: none;
-    transition: background 0.18s;
-}
-.btn-secondary:hover {
-    background: #e5e7eb;
-}
-/* ===== POPUP MESSAGE ===== */
-#popup-message-wrapper {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    background: rgba(0,0,0,0.15);
-}
-.popup-message {
-    min-width: 320px;
-    max-width: 90vw;
-    background: #fff;
-    border-radius: 18px;
-    box-shadow: 0 8px 32px rgba(1,125,229,0.12), 0 1.5px 6px rgba(0,0,0,0.08);
-    padding: 32px 36px;
-    text-align: center;
-    font-size: 18px;
-    font-weight: 600;
-    color: #017de5;
-    border: 2px solid #017de5;
-    animation: popup-fade-in 0.4s;
-}
-.popup-message.success::before {
-    content: '✔';
-    display: block;
-    font-size: 36px;
-    color: #22c55e;
-    margin-bottom: 12px;
-}
-@keyframes popup-fade-in {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
-}
-/* ERROR POPUP */
-.popup-message.error {
-    color: #dc2626;
-    border-color: #dc2626;
-}
-.popup-message.error::before {
-    content: '✖';
-    display: block;
-    font-size: 36px;
-    color: #dc2626;
-    margin-bottom: 12px;
-}
+    .profile-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 16px;
+    }
+
+    .profile-header {
+        margin-bottom: 32px;
+    }
+
+    .profile-header h2 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #017de5;
+        margin-bottom: 4px;
+    }
+
+    .profile-header p {
+        color: #666;
+        font-size: 14px;
+    }
+
+    .card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 22px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 7px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="file"] {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    .form-group input:focus {
+        border-color: #017de5;
+    }
+
+    .profile-pic-preview {
+        margin-top: 10px;
+    }
+
+    .profile-pic-preview img {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1.5px solid #e5e7eb;
+    }
+
+    .actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 8px;
+    }
+
+    .btn-primary {
+        background: #017de5;
+        color: #fff;
+        padding: 10px 18px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: background 0.18s, opacity 0.18s;
+    }
+
+    .btn-primary:hover {
+        background: #0369b1;
+        opacity: 0.93;
+    }
+
+    .btn-secondary {
+        background: #f3f4f6;
+        color: #374151;
+        padding: 10px 18px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        border: none;
+        transition: background 0.18s;
+    }
+
+    .btn-secondary:hover {
+        background: #e5e7eb;
+    }
+
+    /* === TOAST CONTAINER === */
+    #toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    /* === TOAST ITEM === */
+    .toast-message {
+        min-width: 320px;
+        max-width: 420px;
+        background: #fff;
+        border-radius: 14px;
+        padding: 16px 18px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
+        font-size: 14px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        animation: toastIn .4s ease-out forwards;
+    }
+
+    /* SUCCESS */
+    .toast-message.success {
+        border-left: 5px solid #22c55e;
+        color: #166534;
+    }
+
+    /* ERROR */
+    .toast-message.error {
+        border-left: 5px solid #dc2626;
+        color: #7f1d1d;
+    }
+
+    /* ICON */
+    .toast-icon {
+        font-size: 20px;
+    }
+
+    /* ANIMATION */
+    @keyframes toastIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes toastOut {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        to {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+    }
+
+    .animate-toast-out {
+        animation: toastOut .35s ease-in forwards;
+    }
 </style>
 
 <div class="profile-container">
@@ -151,25 +192,37 @@
         <p>Perbarui informasi akun kamu di sini</p>
     </div>
     <div class="card">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        <div id="popup-message-wrapper">
-            {% for category, message in messages %}
-                {% if category == 'success' %}
-                <div class="popup-message success">{{ message }}</div>
-                {% elif category == 'error' %}
-                <div class="popup-message error">{{ message }}</div>
-                {% endif %}
+        {% set valid_messages = [] %}
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+        {% if category in ['profile_success', 'error'] %}
+        {% set _ = valid_messages.append((category, message)) %}
+        {% endif %}
+        {% endfor %}
+
+        {% if valid_messages %}
+        <div id="toast-container">
+            {% for category, message in valid_messages %}
+            <div class="toast-message {{ 'success' if category == 'profile_success' else 'error' }}">
+                <div class="toast-icon">
+                    {{ '✔' if category == 'profile_success' else '✖' }}
+                </div>
+                <div>{{ message }}</div>
+            </div>
             {% endfor %}
         </div>
+
         <script>
-        setTimeout(function(){
-            var popup = document.getElementById('popup-message-wrapper');
-            if(popup) popup.style.display = 'none';
-        }, 2500);
+            setTimeout(() => {
+                document.querySelectorAll('.toast-message').forEach(el => {
+                    el.classList.add('animate-toast-out');
+                    setTimeout(() => el.remove(), 350);
+                });
+            }, 2500);
         </script>
         {% endif %}
-        {% endwith %}
+
+
+
         <form method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="username">Username</label>

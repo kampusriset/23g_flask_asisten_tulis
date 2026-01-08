@@ -71,7 +71,7 @@ def login():
             return redirect(url_for("auth_bp.login"))
 
         session["user_id"] = user.id
-        flash("Login berhasil! Selamat datang!", "success")
+        flash("Login berhasil! Selamat datang!", "login_success")
         return redirect(url_for("dashboard_bp.dashboard"))
 
     return render_template("auth/login.html", title="Login")
