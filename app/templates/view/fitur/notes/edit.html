@@ -204,11 +204,11 @@
     });
 </script>
 
-
 <script>
     const editor = document.getElementById("editor");
     const ghost = document.getElementById("ghost");
     const hiddenInput = document.getElementById("contentHidden");
+    const titleInput = document.querySelector('input[name="title"]');
 
     let suggestion = "";
     let debounceTimer = null;
@@ -233,12 +233,18 @@
         markDirty();
     });
 
-
+    titleInput.addEventListener("input", () => {
+        markDirty();
+    });
 
     async function autoSave() {
         if (!isDirty) return;
 
-        hiddenInput.value = editor.innerText;
+        // isi hidden content & title
+        hiddenInput.value = editor.innerHTML;
+
+        document.querySelector('input[name="title"]').value =
+            document.querySelector('input[name="title"]').value.trim();
 
         try {
             await fetch(`/notes/{{ note.id }}`, {
@@ -256,6 +262,7 @@
     }
 
 
+
     window.addEventListener("beforeunload", (e) => {
         if (isDirty) {
             hiddenInput.value = editor.innerText;
@@ -266,6 +273,23 @@
             );
         }
     });
+
+
+    const currentNoteId = "{{ note.id }}";
+
+    const sidebarTitle = document.querySelector(
+        `.note-link[data-note-id="${currentNoteId}"] .note-title`
+    );
+
+    if (titleInput && sidebarTitle) {
+        titleInput.addEventListener("input", () => {
+            sidebarTitle.textContent =
+                titleInput.value.trim() || "Catatan Baru";
+            markDirty();
+        });
+    }
+
+
 
 
 
@@ -358,6 +382,29 @@
     document.getElementById("saveForm").addEventListener("submit", () => {
         hiddenInput.value = editor.innerText;
     });
+</script>
+
+<script>
+    document.querySelectorAll("#sidebar a").forEach(link => {
+        link.addEventListener("click", (e) => {
+            if (!isDirty) return;
+
+            e.preventDefault();
+
+            hiddenInput.value = editor.innerText;
+
+            navigator.sendBeacon(
+                `/notes/{{ note.id }}`,
+                new URLSearchParams(new FormData(saveForm))
+            );
+
+            // kasih delay dikit biar beacon terkirim
+            setTimeout(() => {
+                window.location.href = link.href;
+            }, 50);
+        });
+    });
+
 </script>
 
 {% endblock %}

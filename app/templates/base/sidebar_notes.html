@@ -3,11 +3,16 @@
     {% for n in notes %}
     {% if n.deleted_at is none %} {# cuma tampilkan catatan aktif #}
     <li>
-        <a href="{{ url_for('notes_bp.edit', note_id=n.id) }}"
-            class="flex items-center text-white text-sm py-1 px-2 mt-1.5 rounded hover:bg-gray-800 {% if note and note.id == n.id %}bg-gray-800{% endif %}">
+        <a href="{{ url_for('notes_bp.edit', note_id=n.id) }}" class="note-link flex items-center text-white text-sm py-1 px-2 mt-1.5 rounded hover:bg-gray-800
+   {% if note and note.id == n.id %}bg-gray-800{% endif %}" data-note-id="{{ n.id }}">
+
             <i class="fi fi-rr-document mr-2"></i>
-            {{ n.title or "Catatan Baru" }}
+            <span class="note-title">
+                {{ n.title or "Catatan Baru" }}
+            </span>
         </a>
+
+
     </li>
     {% endif %}
     {% endfor %}

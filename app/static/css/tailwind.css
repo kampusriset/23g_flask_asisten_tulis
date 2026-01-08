@@ -758,6 +758,10 @@ body {
   margin-left: 1rem;
 }
 
+.mr-1 {
+  margin-right: 0.25rem;
+}
+
 .mr-2 {
   margin-right: 0.5rem;
 }
@@ -804,10 +808,6 @@ body {
 
 .mt-8 {
   margin-top: 2rem;
-}
-
-.mr-1 {
-  margin-right: 0.25rem;
 }
 
 .block {
@@ -1011,12 +1011,6 @@ body {
 
 .cursor-pointer {
   cursor: pointer;
-}
-
-.select-none {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
 }
 
 .list-inside {
@@ -1548,20 +1542,12 @@ body {
   padding-top: 2rem;
 }
 
-.pt-1 {
-  padding-top: 0.25rem;
-}
-
 .text-left {
   text-align: left;
 }
 
 .text-center {
   text-align: center;
-}
-
-.text-right {
-  text-align: right;
 }
 
 .text-2xl {
@@ -1966,10 +1952,6 @@ html {
   background-color: rgb(63 63 70 / var(--tw-bg-opacity, 1));
 }
 
-.hover\:bg-blue-100\/60:hover {
-  background-color: rgb(219 234 254 / 0.6);
-}
-
 .hover\:text-gray-600:hover {
   --tw-text-opacity: 1;
   color: rgb(75 85 99 / var(--tw-text-opacity, 1));
@@ -1985,14 +1967,14 @@ html {
   color: rgb(229 229 229 / var(--tw-text-opacity, 1));
 }
 
-.hover\:text-white:hover {
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
-}
-
 .hover\:text-red-600:hover {
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity, 1));
+}
+
+.hover\:text-white:hover {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
 .hover\:underline:hover {

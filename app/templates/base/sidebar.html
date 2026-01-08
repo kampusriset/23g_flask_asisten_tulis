@@ -233,6 +233,25 @@
         })();
     </script>
 
+    <script>
+        document.querySelectorAll(".note-link").forEach(link => {
+            link.addEventListener("click", async (e) => {
+                if (!isDirty) return; // gak ada perubahan
+
+                e.preventDefault();
+
+                // trigger autoSave
+                hiddenInput.value = editor.innerHTML;
+
+                await autoSave(); // pastikan selesai
+
+                // pindah halaman
+                window.location.href = link.href;
+            });
+        });
+
+    </script>
+
 </body>
 
 </html>
