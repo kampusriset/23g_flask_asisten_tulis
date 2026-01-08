@@ -77,9 +77,116 @@ def note_suggest(note_id):
         return jsonify({'suggestion': ''})
 
 
+@notes_bp.route('/<int:note_id>/summarize', methods=['POST'])
+def note_summarize(note_id):
+    if not session.get('user_id'):
+        return jsonify({'summary': ''}), 401
+
+    data = request.get_json() or {}
+    text = data.get('text', '').strip()
+
+    if len(text) < 20:
+        return jsonify({'summary': ''})
+
+    payload = {
+        "contents": [
+            {
+                "parts": [
+                    {
+                        "text": (
+                            "Ringkas catatan berikut menjadi versi singkat, jelas, "
+                            "dan mudah dibaca. Jangan menambah informasi baru.\n\n"
+                            f"Catatan:\n{text}\n\nRingkasan:"
+                        )
+                    }
+                ]
+            }
+        ],
+        "generationConfig": {
+            "temperature": 0.3,
+            "maxOutputTokens": 1000,
+            "topP": 0.9
+        }
+    }
+
+    try:
+        response = requests.post(GEMINI_API_URL, json=payload, timeout=15)
+        response.raise_for_status()
+        result = response.json()
+
+        summary = ""
+        candidates = result.get("candidates", [])
+        if candidates:
+            parts = candidates[0].get("content", {}).get("parts", [])
+            if parts:
+                summary = parts[0].get("text", "").strip()
+
+        return jsonify({'summary': summary})
+
+    except Exception as e:
+        print("Gemini Summarize ERROR:", e)
+        return jsonify({'summary': ''})
+
+
+@notes_bp.route('/<int:note_id>/summarize-bullet', methods=['POST'])
+def note_summarize_bullet(note_id):
+    if not session.get('user_id'):
+        return jsonify({'summary': ''}), 401
+
+    data = request.get_json() or {}
+    text = data.get('text', '').strip()
+
+    if len(text) < 20:
+        return jsonify({'summary': ''})
+
+    payload = {
+        "contents": [
+            {
+                "parts": [
+                    {
+                        "text": (
+                            "Ringkas catatan berikut menjadi bullet point.\n"
+                            "- Gunakan 4 sampai 7 poin\n"
+                            "- Setiap poin singkat dan jelas\n"
+                            "- Jangan menambah informasi baru\n"
+                            "- Jangan pakai paragraf\n\n"
+                            f"Catatan:\n{text}\n\n"
+                            "Bullet point:"
+                        )
+                    }
+                ]
+            }
+        ],
+        "generationConfig": {
+            "temperature": 0.25,
+            "maxOutputTokens": 1000,
+            "topP": 0.9
+        }
+    }
+
+    try:
+        response = requests.post(GEMINI_API_URL, json=payload, timeout=15)
+        response.raise_for_status()
+        result = response.json()
+
+        summary = ""
+        candidates = result.get("candidates", [])
+        if candidates:
+            parts = candidates[0].get("content", {}).get("parts", [])
+            if parts:
+                summary = parts[0].get("text", "").strip()
+
+        return jsonify({'summary': summary})
+
+    except Exception as e:
+        print("Gemini Bullet ERROR:", e)
+        return jsonify({'summary': ''})
+
 # --------------------------
 # AUTH GUARD
 # --------------------------
+
+
 def require_login():
     if not session.get("user_id"):
         return redirect(url_for("auth_bp.login"))

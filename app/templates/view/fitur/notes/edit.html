@@ -52,7 +52,39 @@
                     type="submit">
                     <i class="fi fi-rr-trash mr-2"></i> Hapus
                 </button>
+                <div class="flex items-center gap-3 mt-3">
+                    <button type="button" id="summarizeBtn"
+                        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        Ringkas AI
+                    </button>
+                </div>
+                <div class="flex items-center gap-3 mt-3">
+                    <button type="button" id="bulletBtn"
+                        class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                        Bullet AI
+                    </button>
+                </div>
             </form>
+            <!-- MODAL RINGKASAN -->
+            <div id="summaryModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+                <div class="bg-white rounded-lg max-w-xl w-full p-5">
+                    <h3 class="text-lg font-bold mb-2">Ringkasan AI</h3>
+
+                    <div id="summaryResult"
+                        class="whitespace-pre-wrap text-gray-800 border rounded p-3 mb-4 min-h-[120px]">
+                    </div>
+
+                    <div class="flex justify-end gap-2">
+                        <button id="cancelSummary" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">
+                            Batalkan
+                        </button>
+                        <button id="applySummary" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                            Terapkan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -80,6 +112,100 @@
 </style>
 
 <script>
+    const bulletBtn = document.getElementById("bulletBtn");
+
+    bulletBtn.addEventListener("click", async () => {
+        const content = editor.innerText.trim();
+        if (content.length < 20) {
+            alert("Catatan terlalu pendek buat dibuat bullet point");
+            return;
+        }
+
+        summaryResult.innerText = "Sedang membuat bullet point...";
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+
+        try {
+            const res = await fetch(`/notes/{{ note.id }}/summarize-bullet`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: content })
+            });
+
+            const data = await res.json();
+            summaryText = data.summary || "";
+            summaryResult.innerText = summaryText || "Gagal bikin bullet point";
+
+        } catch (err) {
+            summaryResult.innerText = "Error AI";
+        }
+    });
+</script>
+
+
+<script>
+    const summarizeBtn = document.getElementById("summarizeBtn");
+    const modal = document.getElementById("summaryModal");
+    const summaryResult = document.getElementById("summaryResult");
+    const cancelSummary = document.getElementById("cancelSummary");
+    const applySummary = document.getElementById("applySummary");
+
+    let summaryText = "";
+
+    summarizeBtn.addEventListener("click", async () => {
+        const content = editor.innerText.trim();
+        if (content.length < 20) {
+            alert("Catatan terlalu pendek buat diringkas");
+            return;
+        }
+
+        summaryResult.innerText = "Sedang meringkas catatanmu...";
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+
+        try {
+            const res = await fetch(`/notes/{{ note.id }}/summarize`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: content })
+            });
+
+            const data = await res.json();
+            summaryText = data.summary || "";
+            summaryResult.innerText = summaryText || "Gagal meringkas";
+
+        } catch (err) {
+            summaryResult.innerText = "Error AI";
+        }
+    });
+
+    cancelSummary.addEventListener("click", () => {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+        summaryText = "";
+    });
+
+    applySummary.addEventListener("click", () => {
+        if (!summaryText) return;
+
+        // ganti isi editor
+        editor.innerText = summaryText;
+        syncGhost();
+
+        // set hidden input
+        hiddenInput.value = summaryText;
+
+        // tutup modal
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+
+        // AUTO SAVE 🔥
+        document.getElementById("saveForm").submit();
+    });
+</script>
+
+
+<script>
     const editor = document.getElementById("editor");
     const ghost = document.getElementById("ghost");
     const hiddenInput = document.getElementById("contentHidden");
@@ -87,6 +213,62 @@
     let suggestion = "";
     let debounceTimer = null;
     let lastText = "";
+
+    let isDirty = false;
+    let autoSaveTimer = null;
+    const AUTO_SAVE_DELAY = 3000; // 3 detik (bebas Bang mau 2–5)
+
+    function markDirty() {
+        isDirty = true;
+        showSaving();
+
+        clearTimeout(autoSaveTimer);
+        autoSaveTimer = setTimeout(() => {
+            autoSave();
+        }, AUTO_SAVE_DELAY);
+    }
+
+    editor.addEventListener("input", () => {
+        syncGhost();
+        markDirty();
+    });
+
+
+
+    async function autoSave() {
+        if (!isDirty) return;
+
+        hiddenInput.value = editor.innerText;
+
+        try {
+            await fetch(`/notes/{{ note.id }}`, {
+                method: "POST",
+                body: new FormData(document.getElementById("saveForm"))
+            });
+
+            isDirty = false;
+            showSaved();
+
+        } catch (err) {
+            showSaveError();
+            console.error("Auto-save error", err);
+        }
+    }
+
+
+    window.addEventListener("beforeunload", (e) => {
+        if (isDirty) {
+            hiddenInput.value = editor.innerText;
+
+            navigator.sendBeacon(
+                `/notes/{{ note.id }}`,
+                new URLSearchParams(new FormData(saveForm))
+            );
+        }
+    });
+
+
+
 
     /* --------------------
        helper
@@ -114,6 +296,7 @@
             editor.innerText += suggestion;
             clearSuggestion();
             moveCursorToEnd(editor);
+            markDirty();
             return;
         }
 
