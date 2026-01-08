@@ -26,11 +26,13 @@ def create_app():
     from app.controllers.recycle import recycle_bp
     from app.controllers.profile import profile_bp
     from app.controllers.search import search_bp
+    from app.controllers.ai import ai_bp
 
     app.register_blueprint(gemini_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(notes_bp)
+    app.register_blueprint(ai_bp)
     app.register_blueprint(inbox_bp)                # ← TAMBAHAN
     app.register_blueprint(rapat_bp)
     app.register_blueprint(recycle_bp)

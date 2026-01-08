@@ -1,210 +1,161 @@
 {% extends "base/sidebar.html" %}
 
 {% block content %}
-<h2 style="margin-top: 30px;"> AI Assistant</h2>
-<p>Interaksi AI — ketik prompt Anda, klik Kirim, dan lihat balasan.</p>
+<div class="max-w-6xl mx-auto px-6 py-10">
 
-<!-- Preset quick prompts (5 boxes) -->
-<div class="mt-3 container">
-    <h6 class="mb-2">Prompt Cepat</h6>
-    <div class="row g-2 justify-content-center">
-        <div class="col-6 col-md-2">
-            <div class="card preset-box preset-template h-100 text-center p-2" data-prompt="Ringkas: " data-mode="summary" role="button" tabindex="0" aria-label="AI Ringkasan" style="cursor:pointer;">
-                <div class="card-body py-2">
-                    <i class="fi fi-rr-list" style="font-size:20px"></i>
-                    <div class="small mt-1">AI Ringkasan</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-2">
-            <div class="card preset-box preset-template h-100 text-center p-2" data-prompt="Terjemah: " data-mode="translate" role="button" tabindex="0" aria-label="AI Translate" style="cursor:pointer;">
-                <div class="card-body py-2">
-                    <i class="fi fi-rr-translate" style="font-size:20px"></i>
-                    <div class="small mt-1">AI Translate</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-2">
-            <div class="card preset-box preset-template h-100 text-center p-2" data-prompt="Perbaiki tata bahasa: " data-mode="grammar" role="button" tabindex="0" aria-label="AI Grammar" style="cursor:pointer;">
-                <div class="card-body py-2">
-                    <i class="fi fi-rr-edit" style="font-size:20px"></i>
-                    <div class="small mt-1">AI Grammar</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-2">
-            <div class="card preset-box empty h-100 text-center p-2" role="button" tabindex="0" aria-label="Kotak kosong 1" style="cursor:pointer; border:1px dashed #ced4da;">
-                <div class="card-body py-2">
-                    <i class="fi fi-rr-plus" style="font-size:20px"></i>
-                    <div class="small mt-1 text-muted">Kosong</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-2">
-            <div class="card preset-box empty h-100 text-center p-2" role="button" tabindex="0" aria-label="Kotak kosong 2" style="cursor:pointer; border:1px dashed #ced4da;">
-                <div class="card-body py-2">
-                    <i class="fi fi-rr-plus" style="font-size:20px"></i>
-                    <div class="small mt-1 text-muted">Kosong</div>
-                </div>
-            </div>
-        </div>
+    <!-- HEADER -->
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold text-gray-900">AI Tools</h1>
+        <p class="text-gray-500 mt-1">
+            Pilih alat AI untuk membantu menulis, meringkas, menerjemahkan, dan lainnya.
+        </p>
     </div>
-</div>
 
-<div class="card mt-3 mx-auto" style="max-width: 900px; width: 100%; margin-bottom:140px;">
-    <div class="card-body">
-        <style>
-            /* Chat message layout: user (right) and AI (left) */
-            #chat{min-height:220px; max-height:480px; overflow:auto; border:1px solid #eee; padding:18px; border-radius:6px; background:#fafafa; width:100%}
-            #chat .message{margin-bottom:10px; display:flex; width:100%;}
-            #chat .message .bubble{padding:10px 12px; border-radius:12px; max-width:75%; word-break:break-word}
-            /* Left (AI) aligned */
-            #chat .message.ai{justify-content:flex-start}
-            #chat .message.ai .bubble{background:#e9ecef; color:#212529; border-bottom-left-radius:6px; margin-right:auto}
-            /* Right (User) aligned */
-            #chat .message.user{justify-content:flex-end}
-            #chat .message.user .bubble{background:#0d6efd; color:#fff; border-bottom-right-radius:6px; margin-left:auto}
-            #chat .message.system{justify-content:center}
-            #chat .who{font-weight:600; font-size:0.85rem; margin-bottom:4px}
-        </style>
+    <!-- AI TOOLS GRID -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
 
-        <div id="chat">
-            <!-- Messages akan muncul di sini -->
-        </div>
-
-        <div class="input-group mt-3 d-flex align-items-center flex-nowrap" style="gap:0.5rem;">
-            <div id="prompt-wrapper" class="flex-grow-1">
-                <!-- Stable comment form: always use textarea so layout doesn't change -->
-                <textarea id="prompt_textarea" class="form-control" rows="4" placeholder="Tulis komentar atau perintah... (Ctrl+Enter untuk mengirim)"></textarea>
+        <!-- RINGKAS -->
+        <div class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 hover:shadow-md transition"
+            data-mode="summary">
+            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-blue-100 text-blue-600 mb-3">
+                <i class="fi fi-rr-list text-xl"></i>
             </div>
-            <button id="sendBtn" class="btn btn-primary">Kirim</button>
+            <h3 class="font-semibold text-gray-900">Ringkasan</h3>
+            <p class="text-sm text-gray-500 mt-1">
+                Ringkas catatan panjang jadi padat & jelas.
+            </p>
         </div>
 
-        <div id="status" class="mt-2 text-muted small">Status: siap</div>
-    </div>
-    <div class="card-footer text-muted small">
-        <strong>Catatan:</strong> Server menggunakan **Gemini (Google Generative)** masih dalam tahap pengembangan.
-        <div class="mt-1">Provider tersedia:
-            {% if gemini_available %}
-                <span class="badge bg-success">Gemini</span>
-            {% else %}
-                <span class="text-muted">(tidak ada)</span>
-            {% endif %}
+        <!-- MODAL RINGKASAN -->
+        <div id="summaryModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40">
+
+            <div class="bg-white rounded-xl w-full max-w-2xl p-6 shadow-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-gray-900">
+                        AI Ringkasan
+                    </h2>
+                    <button id="closeSummaryModal" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+                </div>
+
+                <!-- INPUT -->
+                <textarea id="summaryInput"
+                    class="w-full border rounded-lg p-3 text-sm focus:ring focus:ring-blue-200 focus:outline-none"
+                    rows="6" placeholder="Tempel atau tulis teks yang mau diringkas..."></textarea>
+
+                <!-- ACTION -->
+                <div class="flex justify-end mt-4">
+                    <button id="summaryBtn"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+                        Ringkas
+                    </button>
+                </div>
+
+                <!-- RESULT -->
+                <div class="mt-5">
+                    <h3 class="text-sm font-medium text-gray-700 mb-1">Hasil Ringkasan</h3>
+                    <div id="summaryResult"
+                        class="min-h-[80px] whitespace-pre-wrap text-sm text-gray-800 border rounded-lg p-3 bg-gray-50">
+                    </div>
+                </div>
+            </div>
         </div>
+
+
+        <!-- TRANSLATE -->
+        <div class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 hover:shadow-md transition"
+            data-mode="translate">
+            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-green-100 text-green-600 mb-3">
+                <i class="fi fi-rr-document text-xl"></i>
+            </div>
+            <h3 class="font-semibold text-gray-900">Translate</h3>
+            <p class="text-sm text-gray-500 mt-1">
+                Terjemahkan teks ke berbagai bahasa.
+            </p>
+        </div>
+
+        <!-- GRAMMAR -->
+        <div class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 hover:shadow-md transition"
+            data-mode="grammar">
+            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-purple-100 text-purple-600 mb-3">
+                <i class="fi fi-rr-edit text-xl"></i>
+            </div>
+            <h3 class="font-semibold text-gray-900">Grammar</h3>
+            <p class="text-sm text-gray-500 mt-1">
+                Perbaiki tata bahasa & ejaan otomatis.
+            </p>
+        </div>
+
+        <!-- PLACEHOLDER -->
+        <div
+            class="cursor-pointer rounded-xl border border-dashed border-gray-300 bg-gray-50 p-4 text-center hover:bg-gray-100 transition">
+            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-gray-200 text-gray-500 mb-3 mx-auto">
+                <i class="fi fi-rr-plus text-xl"></i>
+            </div>
+            <h3 class="font-semibold text-gray-600">Coming Soon</h3>
+            <p class="text-sm text-gray-400 mt-1">
+                Tool AI berikutnya.
+            </p>
+        </div>
+
     </div>
+
+    <!-- PROVIDER INFO -->
+    <div class="mt-10 text-sm text-gray-500">
+        <span class="font-medium text-gray-700">Provider:</span>
+        {% if gemini_available %}
+        <span class="inline-flex items-center px-2 py-1 ml-2 rounded bg-green-100 text-green-700 text-xs">
+            Gemini
+        </span>
+        {% else %}
+        <span class="ml-2 text-gray-400">(tidak tersedia)</span>
+        {% endif %}
+    </div>
+
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function(){
-    const promptInput = document.getElementById('prompt_textarea');
-    const sendBtn = document.getElementById('sendBtn');
-    const chat = document.getElementById('chat');
-    const status = document.getElementById('status');
+    document.addEventListener("DOMContentLoaded", () => {
+        const summaryCard = document.querySelector('[data-mode="summary"]');
+        const modal = document.getElementById("summaryModal");
+        const closeBtn = document.getElementById("closeSummaryModal");
+        const summaryBtn = document.getElementById("summaryBtn");
+        const input = document.getElementById("summaryInput");
+        const result = document.getElementById("summaryResult");
 
-    function appendMessage(who, text){
-        // who: 'Anda' | 'AI' | 'System'
-        const msg = document.createElement('div');
-        const cls = (who === 'Anda') ? 'user' : (who === 'AI' ? 'ai' : 'system');
-        msg.className = 'message ' + cls;
-
-        const bubble = document.createElement('div');
-        bubble.className = 'bubble';
-        const safe = DOMPurify ? DOMPurify.sanitize(text) : text;
-        bubble.innerHTML = `<div class="who">${who}</div><div>${safe}</div>`;
-
-        msg.appendChild(bubble);
-        chat.appendChild(msg);
-        chat.scrollTop = chat.scrollHeight;
-    }
-
-    // Stable prompt helpers — always use textarea
-    const promptTextarea = document.getElementById('prompt_textarea');
-    const promptWrapper = document.getElementById('prompt-wrapper');
-
-    function getPromptValue(){
-        return promptTextarea.value.trim();
-    }
-
-    function setPromptValue(v){
-        promptTextarea.value = v || '';
-    }
-
-    function clearPrompt(){
-        promptTextarea.value = '';
-    }
-
-    async function sendPrompt(){
-        const prompt = getPromptValue();
-        if(!prompt) return;
-        appendMessage('Anda', prompt);
-        clearPrompt();
-        sendBtn.disabled = true;
-        status.textContent = 'Mengirim...';
-
-        try{
-            const res = await fetch('/ai/query', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt })
-            });
-            if(!res.ok){
-                const err = await res.json().catch(()=>({message:res.statusText}));
-                appendMessage('System', 'Error: ' + (err.message || JSON.stringify(err)));
-            } else {
-                const data = await res.json();
-                appendMessage('AI', data.reply || '(tidak ada balasan)');
-                if(data.provider){
-                    status.textContent = `Selesai (via ${data.provider})`;
-                } else {
-                    status.textContent = 'Selesai';
-                }
-            }
-        } catch(e){
-            appendMessage('System', 'Gagal menghubungi server: '+e.message);
-        } finally{
-            sendBtn.disabled = false;
-            status.textContent = 'Siap';
-            promptInput.focus();
-        }
-    }
-
-    // Kirim saat tombol diklik
-    sendBtn.addEventListener('click', sendPrompt);
-    // Pada textarea: kirim saat Ctrl+Enter (atau Cmd+Enter)
-    promptTextarea.addEventListener('keydown', function(e){ if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)){ e.preventDefault(); sendPrompt(); } });
-
-    // Preset prompt boxes -> klik untuk isi/template/kirim (form tetap stabil)
-    document.querySelectorAll('.preset-box').forEach(box => {
-        box.addEventListener('click', () => {
-            const p = box.getAttribute('data-prompt');
-
-            if (box.classList.contains('preset-template')) {
-                // populate textarea only (do not change layout)
-                setPromptValue(p || '');
-                promptTextarea.focus();
-                status.textContent = p ? 'Template dimuat — lengkapi prompt lalu tekan Ctrl+Enter untuk Kirim' : 'Kotak kosong — isi prompt lalu tekan Ctrl+Enter untuk Kirim';
-                return;
-            }
-
-            if (!p) {
-                // empty placeholder: fokuskan textarea
-                promptTextarea.focus();
-                status.textContent = 'Kotak kosong — isi prompt lalu tekan Ctrl+Enter untuk Kirim';
-                return;
-            }
-
-            // otherwise fill textarea and send
-            setPromptValue(p);
-            sendPrompt();
+        // buka modal
+        summaryCard.addEventListener("click", () => {
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+            input.focus();
         });
-        // keyboard support
-        box.addEventListener('keypress', (e) => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); box.click(); } });
+
+        // tutup modal
+        closeBtn.addEventListener("click", () => {
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+        });
+
+        // klik ringkas
+        summaryBtn.addEventListener("click", async () => {
+            const text = input.value.trim();
+            if (!text) return;
+
+            result.textContent = "⏳ Merangkum...";
+
+            try {
+                const res = await fetch("/ai/summarize", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text })
+                });
+
+                const data = await res.json();
+                result.textContent = data.summary || "Gagal membuat ringkasan.";
+            } catch (err) {
+                result.textContent = "Terjadi kesalahan.";
+            }
+        });
     });
-});
 </script>
 
-<!-- DOMPurify untuk sanitasi simple jika tersedia (tidak wajib) -->
-<script>if(typeof DOMPurify === 'undefined'){window.DOMPurify = null;}</script>
-
-<!-- Fixed send widget removed per request (no fixed bottom-right comment form) -->
 {% endblock %}
