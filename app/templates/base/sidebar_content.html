@@ -54,19 +54,6 @@
     </ul>
 </aside>
 
-
-<h6 class="uppercase text-gray-400 mt-10 px-3 text-sm font-semibold">Team Workspace</h6>
-<ul class="flex flex-col mb-3">
-    <li>
-        <a href="/not-available" class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
-                class="fi fi-rr-house-building mr-2"></i> Proyek</a>
-    </li>
-    <li>
-        <a href="/not-available" class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
-                class="fi fi-rr-plus-small mr-2"></i> Tambah Proyek</a>
-    </li>
-</ul>
-
 <h6 class="uppercase text-gray-400 mt-6 px-3 text-sm font-semibold">Lainnya</h6>
 
 <aside id="sidebar">
@@ -75,6 +62,14 @@
             <a href="/not-available" class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800"> <i
                     class="fi fi-rr-settings mr-2"></i> Pengaturan</a>
         </li>
+        <li>
+            <a href="{{ url_for('activity_bp.activity') }}"
+                class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800">
+                <i class="fi fi-rr-chart-histogram mr-2"></i>
+                Activity
+            </a>
+        </li>
+
         <li>
             <a href="{{ url_for('recycle_bp.index') }}"
                 class="flex items-center text-white py-2 px-3 rounded hover:bg-gray-800">

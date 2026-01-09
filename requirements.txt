@@ -8,3 +8,7 @@ Werkzeug
 pymysql
 flask-migrate
 flask-socketio
+openpyxl
+reportlab
+
+

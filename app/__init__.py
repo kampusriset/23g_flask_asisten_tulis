@@ -27,6 +27,7 @@ def create_app():
     from app.controllers.profile import profile_bp
     from app.controllers.search import search_bp
     from app.controllers.ai import ai_bp
+    from app.controllers.activity import activity_bp
 
     app.register_blueprint(gemini_bp)
     app.register_blueprint(auth_bp)
@@ -38,6 +39,7 @@ def create_app():
     app.register_blueprint(recycle_bp)
     app.register_blueprint(profile_bp)
     app.register_blueprint(search_bp)
+    app.register_blueprint(activity_bp)
 
     @app.context_processor
     def inject_notes():

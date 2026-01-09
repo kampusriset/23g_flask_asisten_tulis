@@ -822,10 +822,6 @@ body {
   margin-top: 2rem;
 }
 
-.mb-10 {
-  margin-bottom: 2.5rem;
-}
-
 .block {
   display: block;
 }
@@ -880,10 +876,6 @@ body {
 
 .h-\[600px\] {
   height: 600px;
-}
-
-.h-screen {
-  height: 100vh;
 }
 
 .h-full {
@@ -1461,6 +1453,11 @@ body {
   background-color: rgb(24 24 27 / var(--tw-bg-opacity, 1));
 }
 
+.bg-emerald-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(5 150 105 / var(--tw-bg-opacity, 1));
+}
+
 .bg-gradient-to-r {
   background-image: linear-gradient(to right, var(--tw-gradient-stops));
 }
@@ -1633,6 +1630,11 @@ body {
   line-height: 1;
 }
 
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
 .text-lg {
   font-size: 1.125rem;
   line-height: 1.75rem;
@@ -1651,11 +1653,6 @@ body {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
-}
-
-.text-base {
-  font-size: 1rem;
-  line-height: 1.5rem;
 }
 
 .font-bold {
@@ -1938,6 +1935,10 @@ body {
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 }
 
+.\[delay\:500ms\] {
+  delay: 500ms;
+}
+
 /* test tailwind */
 
 .text-red-test {
@@ -2154,10 +2155,6 @@ html {
 
   .md\:grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .md\:grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .md\:text-6xl {
