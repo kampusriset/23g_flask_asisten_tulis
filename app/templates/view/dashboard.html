@@ -115,6 +115,209 @@
             </div>
             {% endif %}
         </div>
+
+
+
+        <div class="mt-12 space-y-8">
+
+            <div class="flex flex-wrap gap-3 mb-6">
+
+                <select id="filterType" class="bg-zinc-900 text-gray-200 border border-zinc-700
+               rounded-lg px-4 py-2 text-sm
+               focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="weekly">Mingguan</option>
+                    <option value="monthly">Bulanan</option>
+                    <option value="yearly">Tahunan</option>
+                </select>
+
+                <select id="yearSelect" class="bg-zinc-900 text-gray-200 border border-zinc-700
+               rounded-lg px-4 py-2 text-sm
+               focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    {% for y in range(2022, 2031) %}
+                    <option value="{{ y }}">{{ y }}</option>
+                    {% endfor %}
+                </select>
+
+                <select id="monthSelect" class="bg-zinc-900 text-gray-200 border border-zinc-700
+               rounded-lg px-4 py-2 text-sm
+               focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    {% for m in range(1,13) %}
+                    <option value="{{ m }}">{{ m }}</option>
+                    {% endfor %}
+                </select>
+
+            </div>
+
+            <!-- GRAFIK CATATAN -->
+            <div class="bg-zinc-900 rounded-2xl p-6">
+                <i class="fi fi-rr-document mr-2"> </i>
+                <h2 class="text-base text-gray-300 mb-5">
+                    Catatan (7 Hari Terakhir)
+                </h2>
+                <canvas id="notesChart" height="260"></canvas>
+            </div>
+
+            <!-- GRAFIK RAPAT -->
+            <div class="bg-zinc-900 rounded-2xl p-6">
+                <i class="fi fi-rr-users-alt mr-2"> </i>
+                <h2 class="text-base text-gray-300 mb-5">
+                    Rapat (7 Hari Terakhir)
+                </h2>
+                <canvas id="rapatChart" height="260"></canvas>
+            </div>
+
+        </div>
+
+
+
     </div>
 </div>
+
+
+
+<script>
+    async function loadChart(filter = "weekly") {
+        const year = document.getElementById("yearSelect").value;
+        const month = document.getElementById("monthSelect").value;
+
+        const res = await fetch(
+            `/dashboard/chart-data?filter=${filter}&year=${year}&month=${month}`
+        );
+
+        const data = await res.json();
+
+        notesChart.data.labels = data.labels;
+        notesChart.data.datasets[0].data = data.notes;
+        notesChart.update();
+
+        rapatChart.data.labels = data.labels;
+        rapatChart.data.datasets[0].data = data.rapat;
+        rapatChart.update();
+    }
+
+    document.getElementById("filterType").addEventListener("change", e => {
+        loadChart(e.target.value);
+    });
+
+    document.getElementById("yearSelect").addEventListener("change", () => {
+        loadChart(filterType.value);
+    });
+
+    document.getElementById("monthSelect").addEventListener("change", () => {
+        loadChart(filterType.value);
+    });
+
+    document.getElementById('filterType').addEventListener('change', e => {
+        const month = document.getElementById('monthSelect');
+        month.classList.toggle('hidden', e.target.value === 'yearly');
+    });
+
+    const filterType = document.getElementById('filterType');
+    const yearSelect = document.getElementById('yearSelect');
+    const monthSelect = document.getElementById('monthSelect');
+
+    function updateFilterVisibility() {
+        const type = filterType.value;
+
+        if (type === 'weekly') {
+            // Mingguan → sembunyikan tahun & bulan
+            yearSelect.classList.add('hidden');
+            monthSelect.classList.add('hidden');
+        }
+        else if (type === 'monthly') {
+            // Bulanan → tampilkan tahun & bulan
+            yearSelect.classList.remove('hidden');
+            monthSelect.classList.remove('hidden');
+        }
+        else if (type === 'yearly') {
+            // Tahunan → tampilkan tahun, sembunyikan bulan
+            yearSelect.classList.remove('hidden');
+            monthSelect.classList.add('hidden');
+        }
+    }
+
+    // init saat page load
+    updateFilterVisibility();
+
+    // event change
+    filterType.addEventListener('change', updateFilterVisibility);
+
+</script>
+
+<script>
+    loadChart('weekly'); // default saat halaman dibuka
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const notesChart = new Chart(
+        document.getElementById('notesChart'),
+        {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Catatan',
+                    data: [],
+                    backgroundColor: 'rgba(52,211,153,0.5)'
+                }]
+            }
+        }
+    );
+
+    const rapatChart = new Chart(
+        document.getElementById('rapatChart'),
+        {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Rapat',
+                    data: [],
+                    borderColor: '#60a5fa',
+                    fill: false
+                }]
+            }
+        }
+    );
+</script>
+
+
+<script>
+    const rapatCtx = document.getElementById('rapatChart').getContext('2d');
+
+    new Chart(rapatCtx, {
+        type: 'line',
+        data: {
+            labels: chartLabels,
+            datasets: [{
+                label: 'Rapat',
+                data: rapatData,
+                borderColor: '#60a5fa',
+                backgroundColor: 'rgba(96,165,250,0.2)',
+                tension: 0.4,
+                fill: true,
+                pointRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { precision: 0 }
+                }
+            }
+        }
+    });
+</script>
+
+
+
+
+
+
+
 {% endblock %}

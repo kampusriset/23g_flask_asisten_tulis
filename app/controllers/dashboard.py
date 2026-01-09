@@ -1,5 +1,8 @@
+from flask import jsonify, request
+from sqlalchemy import func, extract
 from sqlalchemy import desc
 from flask import Blueprint, render_template, session, redirect, url_for
+import calendar
 from app.models.user import User
 from app.models.notes import Note
 from app.models.rapat import Rapat
@@ -57,6 +60,146 @@ def dashboard():
         greeting=greeting,
         title="Beranda"
     )
+
+
+@dashboard_bp.route("/dashboard/chart-data")
+def chart_data():
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"error": "unauthorized"}), 401
+
+    filter_type = request.args.get("filter", "weekly")
+    year = int(request.args.get("year", datetime.now().year))
+    month = int(request.args.get("month", datetime.now().month))
+
+    labels = []
+    notes_data = []
+    rapat_data = []
+
+    # ======================
+    # WEEKLY (7 hari)
+    # ======================
+    if filter_type == "weekly":
+        today = date.today()
+        start_date = today - timedelta(days=6)
+
+        labels = [
+            (start_date + timedelta(days=i)).strftime("%d %b")
+            for i in range(7)
+        ]
+
+        notes = (
+            Note.query
+            .filter(
+                Note.user_id == user_id,
+                Note.deleted_at.is_(None),
+                func.date(Note.created_at) >= start_date
+            )
+            .with_entities(func.date(Note.created_at), func.count())
+            .group_by(func.date(Note.created_at))
+            .all()
+        )
+
+        rapats = (
+            Rapat.query
+            .filter(
+                Rapat.user_id == user_id,
+                func.date(Rapat.created_at) >= start_date
+            )
+            .with_entities(func.date(Rapat.created_at), func.count())
+            .group_by(func.date(Rapat.created_at))
+            .all()
+        )
+
+        notes_dict = {d.strftime("%d %b"): c for d, c in notes}
+        rapat_dict = {d.strftime("%d %b"): c for d, c in rapats}
+
+        notes_data = [notes_dict.get(l, 0) for l in labels]
+        rapat_data = [rapat_dict.get(l, 0) for l in labels]
+
+    # ======================
+    # MONTHLY (per hari)
+    # ======================
+    elif filter_type == "monthly":
+        days_in_month = calendar.monthrange(year, month)[1]
+        labels = [str(i) for i in range(1, days_in_month + 1)]
+
+        notes = (
+            Note.query
+            .filter(
+                Note.user_id == user_id,
+                extract("year", Note.created_at) == year,
+                extract("month", Note.created_at) == month,
+                Note.deleted_at.is_(None)
+            )
+            .with_entities(extract("day", Note.created_at), func.count())
+            .group_by(extract("day", Note.created_at))
+            .all()
+        )
+
+        rapats = (
+            Rapat.query
+            .filter(
+                Rapat.user_id == user_id,
+                extract("year", Rapat.created_at) == year,
+                extract("month", Rapat.created_at) == month
+            )
+            .with_entities(extract("day", Rapat.created_at), func.count())
+            .group_by(extract("day", Rapat.created_at))
+            .all()
+        )
+
+        notes_dict = {int(d): c for d, c in notes}
+        rapat_dict = {int(d): c for d, c in rapats}
+
+        notes_data = [notes_dict.get(i, 0)
+                      for i in range(1, days_in_month + 1)]
+        rapat_data = [rapat_dict.get(i, 0)
+                      for i in range(1, days_in_month + 1)]
+
+    # ======================
+    # YEARLY (per bulan)
+    # ======================
+    elif filter_type == "yearly":
+        labels = [
+            "Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
+            "Jul", "Agu", "Sep", "Okt", "Nov", "Des"
+        ]
+
+        notes = (
+            Note.query
+            .filter(
+                Note.user_id == user_id,
+                extract("year", Note.created_at) == year,
+                Note.deleted_at.is_(None)
+            )
+            .with_entities(extract("month", Note.created_at), func.count())
+            .group_by(extract("month", Note.created_at))
+            .all()
+        )
+
+        rapats = (
+            Rapat.query
+            .filter(
+                Rapat.user_id == user_id,
+                extract("year", Rapat.created_at) == year
+            )
+            .with_entities(extract("month", Rapat.created_at), func.count())
+            .group_by(extract("month", Rapat.created_at))
+            .all()
+        )
+
+        notes_dict = {int(m): c for m, c in notes}
+        rapat_dict = {int(m): c for m, c in rapats}
+
+        notes_data = [notes_dict.get(i, 0) for i in range(1, 13)]
+        rapat_data = [rapat_dict.get(i, 0) for i in range(1, 13)]
+
+    return jsonify({
+        "labels": labels,
+        "notes": notes_data,
+        "rapat": rapat_data
+    })
 
 
 # --------------------------

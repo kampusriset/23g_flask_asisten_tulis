@@ -15,6 +15,14 @@ class Rapat(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('rapats', lazy=True))
 
+    # ⏱️ TIMESTAMP
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow
+    )
+
     # 🗑️ SOFT DELETE
     deleted_at = db.Column(db.DateTime, nullable=True)
 
