@@ -28,6 +28,11 @@ def create_app():
     from app.controllers.search import search_bp
     from app.controllers.ai import ai_bp
     from app.controllers.activity import activity_bp
+    from app.controllers.admin.admin import admin_auth
+    from app.controllers.admin.dashboard import admin_dashboard_bp
+    from app.commands.seed_admin import seed_admin
+    from app.controllers.admin.admin_crud import admin_crud_bp
+    from app.controllers.admin.user_crud import admin_user_bp
 
     app.register_blueprint(gemini_bp)
     app.register_blueprint(auth_bp)
@@ -40,6 +45,11 @@ def create_app():
     app.register_blueprint(profile_bp)
     app.register_blueprint(search_bp)
     app.register_blueprint(activity_bp)
+    app.register_blueprint(admin_auth)
+    app.register_blueprint(admin_dashboard_bp)
+    app.cli.add_command(seed_admin)
+    app.register_blueprint(admin_crud_bp)
+    app.register_blueprint(admin_user_bp)
 
     @app.context_processor
     def inject_notes():
@@ -54,8 +64,22 @@ def create_app():
     # HOME ROUTE
     @app.route("/")
     def home():
+        # kalau admin sudah login
+        if session.get('admin_id'):
+            return redirect("/admin/dashboard")
+
+        # kalau user biasa sudah login
         if session.get('user_id'):
             return redirect("/dashboard")
+
+        # belum login sama sekali
         return render_template("home/landingpage.html")
+
+    # ADMIN HOME ROUTE
+    @app.route("/admin")
+    def admin_home():
+        if session.get('admin_id'):
+            return redirect("/admin/dashboard")
+        return redirect("/admin/login")
 
     return app

@@ -1,182 +1,182 @@
-{% extends "base/sidebar.html" %}
+{% extends "base/layout.html" %}
 {% block content %}
 
 <style>
-/* ===== PROFILE PAGE ===== */
-.profile-container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 16px;
-}
+    /* ===== PROFILE PAGE ===== */
+    .profile-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 16px;
+    }
 
-.profile-header {
-    margin-bottom: 32px;
-}
+    .profile-header {
+        margin-bottom: 32px;
+    }
 
-.profile-header h2 {
-    font-size: 28px;
-    font-weight: 700;
-    color: #017de5;
-    margin-bottom: 4px;
-}
+    .profile-header h2 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #017de5;
+        margin-bottom: 4px;
+    }
 
-.profile-header p {
-    color: #666;
-    font-size: 14px;
-}
+    .profile-header p {
+        color: #666;
+        font-size: 14px;
+    }
 
-/* ===== CARD ===== */
-.card {
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 24px;
-}
+    /* ===== CARD ===== */
+    .card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
 
-/* ===== PROFILE TOP ===== */
-.profile-top {
-    display: flex;
-    gap: 24px;
-    align-items: center;
-    flex-wrap: wrap;
-}
+    /* ===== PROFILE TOP ===== */
+    .profile-top {
+        display: flex;
+        gap: 24px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
 
-.avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 1px solid #dbeafe;
-    flex-shrink: 0;
-}
+    .avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 1px solid #dbeafe;
+        flex-shrink: 0;
+    }
 
-.avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+    .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
-.profile-info {
-    flex: 1;
-}
+    .profile-info {
+        flex: 1;
+    }
 
-.profile-info h3 {
-    font-size: 22px;
-    font-weight: 600;
-    color: #1f2937;
-}
+    .profile-info h3 {
+        font-size: 22px;
+        font-weight: 600;
+        color: #1f2937;
+    }
 
-.profile-info p {
-    color: #6b7280;
-    font-size: 14px;
-    margin-top: 4px;
-}
+    .profile-info p {
+        color: #6b7280;
+        font-size: 14px;
+        margin-top: 4px;
+    }
 
-.badges {
-    margin-top: 12px;
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
+    .badges {
+        margin-top: 12px;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
 
-.badge {
-    font-size: 12px;
-    padding: 4px 10px;
-    border-radius: 999px;
-}
+    .badge {
+        font-size: 12px;
+        padding: 4px 10px;
+        border-radius: 999px;
+    }
 
-.badge-active {
-    background: #dcfce7;
-    color: #15803d;
-}
+    .badge-active {
+        background: #dcfce7;
+        color: #15803d;
+    }
 
-.badge-id {
-    background: #f3f4f6;
-    color: #4b5563;
-}
+    .badge-id {
+        background: #f3f4f6;
+        color: #4b5563;
+    }
 
-.joined {
-    margin-top: 14px;
-    font-size: 13px;
-    color: #6b7280;
-}
+    .joined {
+        margin-top: 14px;
+        font-size: 13px;
+        color: #6b7280;
+    }
 
-/* ===== INFO GRID ===== */
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-}
+    /* ===== INFO GRID ===== */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
 
-.info-item p:first-child {
-    font-size: 13px;
-    color: #6b7280;
-}
+    .info-item p:first-child {
+        font-size: 13px;
+        color: #6b7280;
+    }
 
-.info-item p:last-child {
-    font-size: 14px;
-    font-weight: 500;
-    color: #1f2937;
-    margin-top: 4px;
-}
+    .info-item p:last-child {
+        font-size: 14px;
+        font-weight: 500;
+        color: #1f2937;
+        margin-top: 4px;
+    }
 
-/* ===== ACTIONS ===== */
-.actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
+    /* ===== ACTIONS ===== */
+    .actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
 
-.btn-primary {
-    background: #017de5;
-    color: #fff;
-    padding: 10px 16px;
-    border-radius: 12px;
-    font-size: 14px;
-    text-decoration: none;
-    font-weight: 500;
-}
+    .btn-primary {
+        background: #017de5;
+        color: #fff;
+        padding: 10px 16px;
+        border-radius: 12px;
+        font-size: 14px;
+        text-decoration: none;
+        font-weight: 500;
+    }
 
-.btn-primary:hover {
-    opacity: 0.9;
-}
+    .btn-primary:hover {
+        opacity: 0.9;
+    }
 
-.btn-secondary {
-    background: #e0f2fe;
-    color: #017de5;
-    padding: 10px 16px;
-    border-radius: 12px;
-    font-size: 14px;
-    text-decoration: none;
-    font-weight: 500;
-}
+    .btn-secondary {
+        background: #e0f2fe;
+        color: #017de5;
+        padding: 10px 16px;
+        border-radius: 12px;
+        font-size: 14px;
+        text-decoration: none;
+        font-weight: 500;
+    }
 
-.btn-secondary:hover {
-    background: #bae6fd;
-}
+    .btn-secondary:hover {
+        background: #bae6fd;
+    }
 
-/* ===== NO USER ===== */
-.no-user {
-    text-align: center;
-    padding: 40px;
-}
+    /* ===== NO USER ===== */
+    .no-user {
+        text-align: center;
+        padding: 40px;
+    }
 
-.no-user h2 {
-    font-size: 22px;
-    font-weight: 700;
-    color: #017de5;
-    margin-bottom: 8px;
-}
+    .no-user h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #017de5;
+        margin-bottom: 8px;
+    }
 
-.no-user p {
-    color: #6b7280;
-}
+    .no-user p {
+        color: #6b7280;
+    }
 </style>
 
 <div class="profile-container">
 
-{% if user %}
+    {% if user %}
     <!-- HEADER -->
     <div class="profile-header">
         <h2>Profil</h2>
@@ -187,10 +187,8 @@
     <div class="card">
         <div class="profile-top">
             <div class="avatar">
-                <img
-                    src="{{ url_for('static', filename=user.profile_pic) if user.profile_pic else url_for('static', filename='img/default-profile.png') }}"
-                    alt="Foto Profil"
-                />
+                <img src="{{ url_for('static', filename=user.profile_pic) if user.profile_pic else url_for('static', filename='img/default-profile.png') }}"
+                    alt="Foto Profil" />
             </div>
 
             <div class="profile-info">
@@ -250,12 +248,12 @@
         </div>
     </div>
 
-{% else %}
+    {% else %}
     <div class="card no-user">
         <h2>Tidak ada data user</h2>
         <p>Silakan login untuk melihat profil kamu.</p>
     </div>
-{% endif %}
+    {% endif %}
 
 </div>
 

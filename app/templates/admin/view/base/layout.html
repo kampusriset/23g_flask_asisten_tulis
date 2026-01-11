@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Admin Panel{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.css') }}">
+</head>
+
+<body class="bg-gray-100">
+
+    {% include 'admin/view/base/sidebar.html' %}
+
+    <div class="ml-64 min-h-screen">
+        <header class="bg-white shadow px-6 py-4">
+            {% block header %}{% endblock %}
+        </header>
+
+        <main class="p-6">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+</body>
+
+</html>
