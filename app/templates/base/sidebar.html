@@ -133,7 +133,9 @@
     </div>
 
     {# AI chat partial included here #}
+    {% block ai_chat %}
     {% include 'base/ai_chat.html' %}
+    {% endblock %}
 
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <script>

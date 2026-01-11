@@ -1,60 +1,77 @@
 {% extends "base/sidebar.html" %}
 
-{% block content %}
-<div class="max-w-6xl mx-auto px-6 py-10">
+{% block ai_chat %}{% endblock %}
 
-    <!-- HEADER -->
-    <div class="mb-8">
-        <h1 class="text-2xl font-bold text-gray-900">AI Tools</h1>
-        <p class="text-gray-500 mt-1">
-            Pilih alat AI untuk membantu menulis, meringkas, menerjemahkan, dan lainnya.
-        </p>
-    </div>
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div class="max-w-6xl mx-auto px-6 py-10">
+
+        <!-- HEADER -->
+        <div class="mb-12">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                    <i class="fi fi-rr-sparkles text-white text-xl"></i>
+                </div>
+                <h1 class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">AI Tools</h1>
+            </div>
+            <p class="text-gray-600 mt-2 text-lg">
+                Pilih alat AI untuk membantu menulis, meringkas, menerjemahkan, dan lainnya.
+            </p>
+        </div>
 
     <!-- AI TOOLS GRID -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
 
         <!-- RINGKAS -->
-        <div class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 hover:shadow-md transition"
+        <div class="group cursor-pointer rounded-2xl border-2 border-gray-200 bg-white p-6 hover:shadow-xl hover:border-blue-400 transition-all duration-300 hover:-translate-y-1"
             data-mode="summary">
-            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-blue-100 text-blue-600 mb-3">
-                <i class="fi fi-rr-list text-xl"></i>
+            <div class="flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-blue-100 to-blue-50 text-blue-600 mb-4 group-hover:scale-110 transition-transform duration-300">
+                <i class="fi fi-rr-list text-2xl"></i>
             </div>
-            <h3 class="font-semibold text-gray-900">Ringkasan</h3>
-            <p class="text-sm text-gray-500 mt-1">
+            <h3 class="font-bold text-gray-900 text-lg">Ringkasan</h3>
+            <p class="text-sm text-gray-600 mt-2">
                 Ringkas catatan panjang jadi padat & jelas.
             </p>
         </div>
 
         <!-- MODAL RINGKASAN -->
-        <div id="summaryModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40">
+        <div id="summaryModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
 
-            <div class="bg-white rounded-xl w-full max-w-2xl p-6 shadow-lg">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-semibold text-gray-900">
-                        AI Ringkasan
-                    </h2>
-                    <button id="closeSummaryModal" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+            <div class="bg-white rounded-2xl w-full max-w-2xl p-8 shadow-2xl animate-in fade-in zoom-in-95 duration-300">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                            <i class="fi fi-rr-list text-blue-600"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-900">
+                            AI Ringkasan
+                        </h2>
+                    </div>
+                    <button id="closeSummaryModal" class="text-gray-400 hover:text-gray-600 hover:bg-gray-100 w-8 h-8 rounded-lg flex items-center justify-center transition text-2xl">&times;</button>
                 </div>
 
                 <!-- INPUT -->
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Teks yang Ingin Diringkas</label>
                 <textarea id="summaryInput"
-                    class="w-full border rounded-lg p-3 text-sm focus:ring focus:ring-blue-200 focus:outline-none"
+                    class="w-full border-2 border-gray-200 rounded-xl p-4 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none transition resize-none"
                     rows="6" placeholder="Tempel atau tulis teks yang mau diringkas..."></textarea>
 
                 <!-- ACTION -->
-                <div class="flex justify-end mt-4">
+                <div class="flex justify-end mt-6 gap-3">
+                    <button id="closeSummaryModal2" class="px-6 py-2 border-2 border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition">
+                        Batal
+                    </button>
                     <button id="summaryBtn"
-                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+                        class="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:from-blue-700 hover:to-blue-600 font-semibold transition shadow-lg hover:shadow-xl">
                         Ringkas
                     </button>
                 </div>
 
                 <!-- RESULT -->
-                <div class="mt-5">
-                    <h3 class="text-sm font-medium text-gray-700 mb-1">Hasil Ringkasan</h3>
+                <div class="mt-8">
+                    <h3 class="text-sm font-bold text-gray-700 mb-3">Hasil Ringkasan</h3>
                     <div id="summaryResult"
-                        class="min-h-[80px] whitespace-pre-wrap text-sm text-gray-800 border rounded-lg p-3 bg-gray-50">
+                        class="min-h-[120px] whitespace-pre-wrap text-sm text-gray-800 border-2 border-gray-200 rounded-xl p-4 bg-blue-50">
                     </div>
                 </div>
             </div>
@@ -62,36 +79,42 @@
 
 
         <!-- TRANSLATE -->
-        <div class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 hover:shadow-md transition"
+        <div class="group cursor-pointer rounded-2xl border-2 border-gray-200 bg-white p-6 hover:shadow-xl hover:border-green-400 transition-all duration-300 hover:-translate-y-1"
             data-mode="translate">
-            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-green-100 text-green-600 mb-3">
-                <i class="fi fi-rr-document text-xl"></i>
+            <div class="flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-green-100 to-green-50 text-green-600 mb-4 group-hover:scale-110 transition-transform duration-300">
+                <i class="fi fi-rr-document text-2xl"></i>
             </div>
-            <h3 class="font-semibold text-gray-900">Translate</h3>
-            <p class="text-sm text-gray-500 mt-1">
+            <h3 class="font-bold text-gray-900 text-lg">Translate</h3>
+            <p class="text-sm text-gray-600 mt-2">
                 Terjemahkan teks ke berbagai bahasa.
             </p>
         </div>
 
         <!-- MODAL TRANSLATE -->
-        <div id="translateModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40">
-            <div class="bg-white rounded-xl w-full max-w-2xl p-6 shadow-lg">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-semibold text-gray-900">
-                        AI Translate
-                    </h2>
-                    <button id="closeTranslateModal" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+        <div id="translateModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div class="bg-white rounded-2xl w-full max-w-2xl p-8 shadow-2xl animate-in fade-in zoom-in-95 duration-300">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                            <i class="fi fi-rr-document text-green-600"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-900">
+                            AI Translate
+                        </h2>
+                    </div>
+                    <button id="closeTranslateModal" class="text-gray-400 hover:text-gray-600 hover:bg-gray-100 w-8 h-8 rounded-lg flex items-center justify-center transition text-2xl">&times;</button>
                 </div>
 
                 <!-- INPUT -->
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Teks yang Ingin Diterjemahkan</label>
                 <textarea id="translateInput"
-                    class="w-full border rounded-lg p-3 text-sm focus:ring focus:ring-green-200 focus:outline-none"
+                    class="w-full border-2 border-gray-200 rounded-xl p-4 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent focus:outline-none transition resize-none"
                     rows="6" placeholder="Tempel atau tulis teks yang mau diterjemahkan..."></textarea>
 
                 <!-- LANGUAGE OPTIONS -->
-                <div class="mt-4 mb-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Bahasa Tujuan:</label>
-                    <select id="targetLangSelect" name="targetLang" class="w-full border rounded-lg p-2 text-sm focus:ring focus:ring-green-200 focus:outline-none">
+                <div class="mt-6 mb-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-3">Pilih Bahasa Tujuan:</label>
+                    <select id="targetLangSelect" name="targetLang" class="w-full border-2 border-gray-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent focus:outline-none transition bg-white">
                         <option value="en">English</option>
                         <option value="id">Indonesian</option>
                         <option value="ar">Arabic</option>
@@ -111,67 +134,80 @@
                 </div>
 
                 <!-- ACTION -->
-                <div class="flex justify-end mt-4">
+                <div class="flex justify-end mt-6 gap-3">
+                    <button id="closeTranslateModal2" class="px-6 py-2 border-2 border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition">
+                        Batal
+                    </button>
                     <button id="translateBtn"
-                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">
+                        class="px-6 py-2 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-lg hover:from-green-700 hover:to-green-600 font-semibold transition shadow-lg hover:shadow-xl">
                         Translate
                     </button>
                 </div>
 
                 <!-- RESULT -->
-                <div class="mt-5">
-                    <h3 class="text-sm font-medium text-gray-700 mb-1">Hasil Terjemahan</h3>
+                <div class="mt-8">
+                    <h3 class="text-sm font-bold text-gray-700 mb-3">Hasil Terjemahan</h3>
                     <div id="translateResult"
-                        class="min-h-[80px] whitespace-pre-wrap text-sm text-gray-800 border rounded-lg p-3 bg-gray-50">
+                        class="min-h-[120px] whitespace-pre-wrap text-sm text-gray-800 border-2 border-gray-200 rounded-xl p-4 bg-green-50">
                     </div>
                 </div>
             </div>
         </div
 
         <!-- GRAMMAR -->
-        <div class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 hover:shadow-md transition"
+        <div class="group cursor-pointer rounded-2xl border-2 border-gray-200 bg-white p-6 hover:shadow-xl hover:border-purple-400 transition-all duration-300 hover:-translate-y-1"
             data-mode="grammar">
-            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-purple-100 text-purple-600 mb-3">
-                <i class="fi fi-rr-edit text-xl"></i>
+            <div class="flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-purple-100 to-purple-50 text-purple-600 mb-4 group-hover:scale-110 transition-transform duration-300">
+                <i class="fi fi-rr-edit text-2xl"></i>
             </div>
-            <h3 class="font-semibold text-gray-900">Grammar</h3>
-            <p class="text-sm text-gray-500 mt-1">
+            <h3 class="font-bold text-gray-900 text-lg">Grammar</h3>
+            <p class="text-sm text-gray-600 mt-2">
                 Perbaiki tata bahasa & ejaan otomatis.
             </p>
         </div>
 
         <!-- MODAL GRAMMAR -->
-        <div id="grammarModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40">
-            <div class="bg-white rounded-xl w-full max-w-2xl p-6 shadow-lg">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-semibold text-purple-700 flex items-center gap-2">
-                        <i class="fi fi-rr-edit text-2xl"></i> Grammar Checker
-                    </h2>
-                    <button id="closeGrammarModal" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+        <div id="grammarModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div class="bg-white rounded-2xl w-full max-w-2xl p-8 shadow-2xl animate-in fade-in zoom-in-95 duration-300">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
+                            <i class="fi fi-rr-edit text-purple-600"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-900">
+                            Grammar Checker
+                        </h2>
+                    </div>
+                    <button id="closeGrammarModal" class="text-gray-400 hover:text-gray-600 hover:bg-gray-100 w-8 h-8 rounded-lg flex items-center justify-center transition text-2xl">&times;</button>
                 </div>
 
-                <div class="mb-3 text-xs text-purple-600 bg-purple-50 rounded p-2">
+                <div class="mb-6 text-sm text-purple-700 bg-purple-100 rounded-xl p-4 border border-purple-200">
+                    <p class="font-semibold mb-1">💡 Tips:</p>
                     Masukkan teks yang ingin dicek dan diperbaiki tata bahasanya. Hasil akan menampilkan versi yang sudah diperbaiki, bukan terjemahan.
                 </div>
 
                 <!-- INPUT -->
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Teks yang Ingin Dicek</label>
                 <textarea id="grammarInput"
-                    class="w-full border border-purple-300 rounded-lg p-3 text-sm focus:ring focus:ring-purple-200 focus:outline-none"
+                    class="w-full border-2 border-purple-200 rounded-xl p-4 text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent focus:outline-none transition resize-none"
                     rows="6" placeholder="Contoh: Saya sudah makan pagi kemarin."></textarea>
 
                 <!-- ACTION -->
-                <div class="flex justify-end mt-4">
+                <div class="flex justify-end mt-6 gap-3">
+                    <button id="closeGrammarModal2" class="px-6 py-2 border-2 border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 font-semibold transition">
+                        Batal
+                    </button>
                     <button id="grammarBtn"
-                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-purple-700 text-sm">
+                        class="px-6 py-2 bg-gradient-to-r from-purple-600 to-purple-500 text-white rounded-lg hover:from-purple-700 hover:to-purple-600 font-semibold transition shadow-lg hover:shadow-xl">
                         Cek Grammar
                     </button>
                 </div>
 
                 <!-- RESULT -->
-                <div class="mt-5">
-                    <h3 class="text-sm font-bold text-purple-700 mb-1">Hasil Grammar Checker</h3>
+                <div class="mt-8">
+                    <h3 class="text-sm font-bold text-gray-700 mb-3">Hasil Grammar Checker</h3>
                     <div id="grammarResult"
-                        class="min-h-[80px] whitespace-pre-wrap text-sm text-purple-900 border border-purple-200 rounded-lg p-3 bg-purple-50">
+                        class="min-h-[120px] whitespace-pre-wrap text-sm text-gray-800 border-2 border-purple-200 rounded-xl p-4 bg-purple-50">
                     </div>
                 </div>
             </div>
@@ -179,12 +215,12 @@
 
         <!-- PLACEHOLDER -->
         <div
-            class="cursor-pointer rounded-xl border border-dashed border-gray-300 bg-gray-50 p-4 text-center hover:bg-gray-100 transition">
-            <div class="flex items-center justify-center w-12 h-12 rounded-lg bg-gray-200 text-gray-500 mb-3 mx-auto">
-                <i class="fi fi-rr-plus text-xl"></i>
+            class="group cursor-pointer rounded-2xl border-2 border-dashed border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100 p-6 hover:bg-gray-100 hover:border-gray-400 transition-all duration-300 hover:-translate-y-1">
+            <div class="flex items-center justify-center w-14 h-14 rounded-xl bg-gray-200 text-gray-500 mb-4 mx-auto group-hover:scale-110 transition-transform duration-300">
+                <i class="fi fi-rr-plus text-2xl"></i>
             </div>
-            <h3 class="font-semibold text-gray-600">Coming Soon</h3>
-            <p class="text-sm text-gray-400 mt-1">
+            <h3 class="font-bold text-gray-700 text-lg text-center">Coming Soon</h3>
+            <p class="text-sm text-gray-500 mt-2 text-center">
                 Tool AI berikutnya.
             </p>
         </div>
@@ -192,41 +228,60 @@
     </div>
 
     <!-- PROVIDER INFO -->
-    <div class="mt-10 text-sm text-gray-500">
-        <span class="font-medium text-gray-700">Provider:</span>
-        {% if gemini_available %}
-        <span class="inline-flex items-center px-2 py-1 ml-2 rounded bg-green-100 text-green-700 text-xs">
-            Gemini
-        </span>
-        {% else %}
-        <span class="ml-2 text-gray-400">(tidak tersedia)</span>
-        {% endif %}
+    <div class="mt-16 p-6 rounded-2xl border-2 border-gray-200 bg-gradient-to-r from-slate-50 to-slate-100">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-bold text-gray-700 mb-2">AI Provider</p>
+                <p class="text-xs text-gray-600">Engine yang digunakan untuk semua fitur AI</p>
+            </div>
+            {% if gemini_available %}
+            <span class="inline-flex items-center px-4 py-2 rounded-xl bg-gradient-to-r from-green-100 to-green-50 text-green-700 text-sm font-bold border border-green-200">
+                <i class="fi fi-rr-check-circle mr-2"></i> Gemini
+            </span>
+            {% else %}
+            <span class="inline-flex items-center px-4 py-2 rounded-xl bg-gray-100 text-gray-600 text-sm font-semibold">
+                <i class="fi fi-rr-alert mr-2"></i> Tidak Tersedia
+            </span>
+            {% endif %}
+        </div>
     </div>
 
+</div>
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
+        // Reusable modal functions
+        const openModal = (modal, input) => {
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+            input.focus();
+        };
+        
+        const closeModal = (modal) => {
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+        };
+
         // Summary
         const summaryCard = document.querySelector('[data-mode="summary"]');
         const summaryModal = document.getElementById("summaryModal");
         const closeSummaryBtn = document.getElementById("closeSummaryModal");
+        const closeSummaryBtn2 = document.getElementById("closeSummaryModal2") || closeSummaryBtn;
         const summaryBtn = document.getElementById("summaryBtn");
         const summaryInput = document.getElementById("summaryInput");
         const summaryResult = document.getElementById("summaryResult");
 
-        summaryCard.addEventListener("click", () => {
-            summaryModal.classList.remove("hidden");
-            summaryModal.classList.add("flex");
-            summaryInput.focus();
-        });
-        closeSummaryBtn.addEventListener("click", () => {
-            summaryModal.classList.add("hidden");
-            summaryModal.classList.remove("flex");
-        });
+        summaryCard.addEventListener("click", () => openModal(summaryModal, summaryInput));
+        closeSummaryBtn.addEventListener("click", () => closeModal(summaryModal));
+        closeSummaryBtn2.addEventListener("click", () => closeModal(summaryModal));
+        
         summaryBtn.addEventListener("click", async () => {
             const text = summaryInput.value.trim();
-            if (!text) return;
+            if (!text) {
+                summaryResult.textContent = "⚠️ Masukkan teks terlebih dahulu.";
+                return;
+            }
             summaryResult.textContent = "⏳ Merangkum...";
             try {
                 const res = await fetch("/ai/summarize", {
@@ -237,7 +292,7 @@
                 const data = await res.json();
                 summaryResult.textContent = data.summary || "Gagal membuat ringkasan.";
             } catch (err) {
-                summaryResult.textContent = "Terjadi kesalahan.";
+                summaryResult.textContent = "❌ Terjadi kesalahan.";
             }
         });
 
@@ -245,23 +300,22 @@
         const translateCard = document.querySelector('[data-mode="translate"]');
         const translateModal = document.getElementById("translateModal");
         const closeTranslateBtn = document.getElementById("closeTranslateModal");
+        const closeTranslateBtn2 = document.getElementById("closeTranslateModal2") || closeTranslateBtn;
         const translateBtn = document.getElementById("translateBtn");
         const translateInput = document.getElementById("translateInput");
         const translateResult = document.getElementById("translateResult");
 
-        translateCard.addEventListener("click", () => {
-            translateModal.classList.remove("hidden");
-            translateModal.classList.add("flex");
-            translateInput.focus();
-        });
-        closeTranslateBtn.addEventListener("click", () => {
-            translateModal.classList.add("hidden");
-            translateModal.classList.remove("flex");
-        });
+        translateCard.addEventListener("click", () => openModal(translateModal, translateInput));
+        closeTranslateBtn.addEventListener("click", () => closeModal(translateModal));
+        closeTranslateBtn2.addEventListener("click", () => closeModal(translateModal));
+        
         translateBtn.addEventListener("click", async () => {
             const text = translateInput.value.trim();
             const lang = document.getElementById("targetLangSelect").value;
-            if (!text) return;
+            if (!text) {
+                translateResult.textContent = "⚠️ Masukkan teks terlebih dahulu.";
+                return;
+            }
             translateResult.textContent = "⏳ Menerjemahkan...";
             try {
                 const res = await fetch("/ai/translate", {
@@ -272,29 +326,29 @@
                 const data = await res.json();
                 translateResult.textContent = data.translation || "Gagal menerjemahkan.";
             } catch (err) {
-                translateResult.textContent = "Terjadi kesalahan.";
+                translateResult.textContent = "❌ Terjadi kesalahan.";
             }
         });
+        
         // Grammar
         const grammarCard = document.querySelector('[data-mode="grammar"]');
         const grammarModal = document.getElementById("grammarModal");
         const closeGrammarBtn = document.getElementById("closeGrammarModal");
+        const closeGrammarBtn2 = document.getElementById("closeGrammarModal2") || closeGrammarBtn;
         const grammarBtn = document.getElementById("grammarBtn");
         const grammarInput = document.getElementById("grammarInput");
         const grammarResult = document.getElementById("grammarResult");
 
-        grammarCard.addEventListener("click", () => {
-            grammarModal.classList.remove("hidden");
-            grammarModal.classList.add("flex");
-            grammarInput.focus();
-        });
-        closeGrammarBtn.addEventListener("click", () => {
-            grammarModal.classList.add("hidden");
-            grammarModal.classList.remove("flex");
-        });
+        grammarCard.addEventListener("click", () => openModal(grammarModal, grammarInput));
+        closeGrammarBtn.addEventListener("click", () => closeModal(grammarModal));
+        closeGrammarBtn2.addEventListener("click", () => closeModal(grammarModal));
+        
         grammarBtn.addEventListener("click", async () => {
             const text = grammarInput.value.trim();
-            if (!text) return;
+            if (!text) {
+                grammarResult.textContent = "⚠️ Masukkan teks terlebih dahulu.";
+                return;
+            }
             grammarResult.textContent = "⏳ Memeriksa...";
             try {
                 const res = await fetch("/ai/grammar", {
@@ -305,8 +359,15 @@
                 const data = await res.json();
                 grammarResult.textContent = data.grammar || "Gagal memperbaiki grammar.";
             } catch (err) {
-                grammarResult.textContent = "Terjadi kesalahan.";
+                grammarResult.textContent = "❌ Terjadi kesalahan.";
             }
+        });
+
+        // Close modal when clicking outside
+        [summaryModal, translateModal, grammarModal].forEach(modal => {
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) closeModal(modal);
+            });
         });
     });
 </script>

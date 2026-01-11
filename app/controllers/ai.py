@@ -3,10 +3,12 @@ import requests
 import os
 from flask import Blueprint, request, jsonify, session
 
+# Load environment variables first
+load_dotenv()
+
 # 🔑 Gemini API key + endpoint
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 GEMINI_API_URL = f'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}'
-load_dotenv()
 
 ai_bp = Blueprint("ai_bp", __name__, url_prefix="/ai")
 
