@@ -73,6 +73,61 @@
             </p>
         </div>
 
+        <!-- MODAL TRANSLATE -->
+        <div id="translateModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40">
+            <div class="bg-white rounded-xl w-full max-w-2xl p-6 shadow-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-gray-900">
+                        AI Translate
+                    </h2>
+                    <button id="closeTranslateModal" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+                </div>
+
+                <!-- INPUT -->
+                <textarea id="translateInput"
+                    class="w-full border rounded-lg p-3 text-sm focus:ring focus:ring-green-200 focus:outline-none"
+                    rows="6" placeholder="Tempel atau tulis teks yang mau diterjemahkan..."></textarea>
+
+                <!-- LANGUAGE OPTIONS -->
+                <div class="mt-4 mb-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Bahasa Tujuan:</label>
+                    <select id="targetLangSelect" name="targetLang" class="w-full border rounded-lg p-2 text-sm focus:ring focus:ring-green-200 focus:outline-none">
+                        <option value="en">English</option>
+                        <option value="id">Indonesian</option>
+                        <option value="ar">Arabic</option>
+                        <option value="zh">Chinese</option>
+                        <option value="ja">Japanese</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="es">Spanish</option>
+                        <option value="ru">Russian</option>
+                        <option value="ko">Korean</option>
+                        <option value="it">Italian</option>
+                        <option value="tr">Turkish</option>
+                        <option value="th">Thai</option>
+                        <option value="ms">Malay</option>
+                        <option value="pt">Portuguese</option>
+                    </select>
+                </div>
+
+                <!-- ACTION -->
+                <div class="flex justify-end mt-4">
+                    <button id="translateBtn"
+                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm">
+                        Translate
+                    </button>
+                </div>
+
+                <!-- RESULT -->
+                <div class="mt-5">
+                    <h3 class="text-sm font-medium text-gray-700 mb-1">Hasil Terjemahan</h3>
+                    <div id="translateResult"
+                        class="min-h-[80px] whitespace-pre-wrap text-sm text-gray-800 border rounded-lg p-3 bg-gray-50">
+                    </div>
+                </div>
+            </div>
+        </div
+
         <!-- GRAMMAR -->
         <div class="group cursor-pointer rounded-xl border border-gray-200 bg-white p-4 hover:shadow-md transition"
             data-mode="grammar">
@@ -83,6 +138,43 @@
             <p class="text-sm text-gray-500 mt-1">
                 Perbaiki tata bahasa & ejaan otomatis.
             </p>
+        </div>
+
+        <!-- MODAL GRAMMAR -->
+        <div id="grammarModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40">
+            <div class="bg-white rounded-xl w-full max-w-2xl p-6 shadow-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-purple-700 flex items-center gap-2">
+                        <i class="fi fi-rr-edit text-2xl"></i> Grammar Checker
+                    </h2>
+                    <button id="closeGrammarModal" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+                </div>
+
+                <div class="mb-3 text-xs text-purple-600 bg-purple-50 rounded p-2">
+                    Masukkan teks yang ingin dicek dan diperbaiki tata bahasanya. Hasil akan menampilkan versi yang sudah diperbaiki, bukan terjemahan.
+                </div>
+
+                <!-- INPUT -->
+                <textarea id="grammarInput"
+                    class="w-full border border-purple-300 rounded-lg p-3 text-sm focus:ring focus:ring-purple-200 focus:outline-none"
+                    rows="6" placeholder="Contoh: Saya sudah makan pagi kemarin."></textarea>
+
+                <!-- ACTION -->
+                <div class="flex justify-end mt-4">
+                    <button id="grammarBtn"
+                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-purple-700 text-sm">
+                        Cek Grammar
+                    </button>
+                </div>
+
+                <!-- RESULT -->
+                <div class="mt-5">
+                    <h3 class="text-sm font-bold text-purple-700 mb-1">Hasil Grammar Checker</h3>
+                    <div id="grammarResult"
+                        class="min-h-[80px] whitespace-pre-wrap text-sm text-purple-900 border border-purple-200 rounded-lg p-3 bg-purple-50">
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- PLACEHOLDER -->
@@ -115,44 +207,105 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
+        // Summary
         const summaryCard = document.querySelector('[data-mode="summary"]');
-        const modal = document.getElementById("summaryModal");
-        const closeBtn = document.getElementById("closeSummaryModal");
+        const summaryModal = document.getElementById("summaryModal");
+        const closeSummaryBtn = document.getElementById("closeSummaryModal");
         const summaryBtn = document.getElementById("summaryBtn");
-        const input = document.getElementById("summaryInput");
-        const result = document.getElementById("summaryResult");
+        const summaryInput = document.getElementById("summaryInput");
+        const summaryResult = document.getElementById("summaryResult");
 
-        // buka modal
         summaryCard.addEventListener("click", () => {
-            modal.classList.remove("hidden");
-            modal.classList.add("flex");
-            input.focus();
+            summaryModal.classList.remove("hidden");
+            summaryModal.classList.add("flex");
+            summaryInput.focus();
         });
-
-        // tutup modal
-        closeBtn.addEventListener("click", () => {
-            modal.classList.add("hidden");
-            modal.classList.remove("flex");
+        closeSummaryBtn.addEventListener("click", () => {
+            summaryModal.classList.add("hidden");
+            summaryModal.classList.remove("flex");
         });
-
-        // klik ringkas
         summaryBtn.addEventListener("click", async () => {
-            const text = input.value.trim();
+            const text = summaryInput.value.trim();
             if (!text) return;
-
-            result.textContent = "⏳ Merangkum...";
-
+            summaryResult.textContent = "⏳ Merangkum...";
             try {
                 const res = await fetch("/ai/summarize", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ text })
                 });
-
                 const data = await res.json();
-                result.textContent = data.summary || "Gagal membuat ringkasan.";
+                summaryResult.textContent = data.summary || "Gagal membuat ringkasan.";
             } catch (err) {
-                result.textContent = "Terjadi kesalahan.";
+                summaryResult.textContent = "Terjadi kesalahan.";
+            }
+        });
+
+        // Translate
+        const translateCard = document.querySelector('[data-mode="translate"]');
+        const translateModal = document.getElementById("translateModal");
+        const closeTranslateBtn = document.getElementById("closeTranslateModal");
+        const translateBtn = document.getElementById("translateBtn");
+        const translateInput = document.getElementById("translateInput");
+        const translateResult = document.getElementById("translateResult");
+
+        translateCard.addEventListener("click", () => {
+            translateModal.classList.remove("hidden");
+            translateModal.classList.add("flex");
+            translateInput.focus();
+        });
+        closeTranslateBtn.addEventListener("click", () => {
+            translateModal.classList.add("hidden");
+            translateModal.classList.remove("flex");
+        });
+        translateBtn.addEventListener("click", async () => {
+            const text = translateInput.value.trim();
+            const lang = document.getElementById("targetLangSelect").value;
+            if (!text) return;
+            translateResult.textContent = "⏳ Menerjemahkan...";
+            try {
+                const res = await fetch("/ai/translate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text, target_lang: lang })
+                });
+                const data = await res.json();
+                translateResult.textContent = data.translation || "Gagal menerjemahkan.";
+            } catch (err) {
+                translateResult.textContent = "Terjadi kesalahan.";
+            }
+        });
+        // Grammar
+        const grammarCard = document.querySelector('[data-mode="grammar"]');
+        const grammarModal = document.getElementById("grammarModal");
+        const closeGrammarBtn = document.getElementById("closeGrammarModal");
+        const grammarBtn = document.getElementById("grammarBtn");
+        const grammarInput = document.getElementById("grammarInput");
+        const grammarResult = document.getElementById("grammarResult");
+
+        grammarCard.addEventListener("click", () => {
+            grammarModal.classList.remove("hidden");
+            grammarModal.classList.add("flex");
+            grammarInput.focus();
+        });
+        closeGrammarBtn.addEventListener("click", () => {
+            grammarModal.classList.add("hidden");
+            grammarModal.classList.remove("flex");
+        });
+        grammarBtn.addEventListener("click", async () => {
+            const text = grammarInput.value.trim();
+            if (!text) return;
+            grammarResult.textContent = "⏳ Memeriksa...";
+            try {
+                const res = await fetch("/ai/grammar", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text })
+                });
+                const data = await res.json();
+                grammarResult.textContent = data.grammar || "Gagal memperbaiki grammar.";
+            } catch (err) {
+                grammarResult.textContent = "Terjadi kesalahan.";
             }
         });
     });
