@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-white">
+<!-- <html lang="en" class="h-full bg-white"> -->
+    <html lang="en"
+    class="h-full {% if dark_mode %}bg-gray-900{% else %}bg-white{% endif %}">
+
 
 <head>
     <meta charset="UTF-8">
@@ -50,7 +53,10 @@
 </head>
 
 
-<body class="h-full bg-white antialiased overflow-hidden">
+<body
+    class="h-full antialiased overflow-hidden
+    {% if dark_mode %}bg-gray-900 text-gray-100{% else %}bg-white text-gray-900{% endif %}">
+
 
 
 
@@ -125,7 +131,10 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 bg-white overflow-y-auto p-6">
+        <main
+    class="flex-1 overflow-y-auto p-6
+    {% if dark_mode %}bg-gray-900{% else %}bg-white{% endif %}">
+
             {% block content %}{% endblock %}
         </main>
 

@@ -1,6 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: "class",   // ← INI YANG DISELIPKAN
+
   content: ["./app/templates/**/*.html", "./app/static/**/*.js"],
+
   theme: {
     extend: {
       fontFamily: {
@@ -8,5 +11,6 @@ module.exports = {
       },
     },
   },
+
   plugins: [],
 };

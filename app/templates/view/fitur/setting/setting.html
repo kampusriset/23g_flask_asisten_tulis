@@ -1,0 +1,60 @@
+{% extends "base/layout.html" %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto mt-10 px-4">
+
+    <div class="mb-8">
+        <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+            Pengaturan
+        </h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            Kelola preferensi akun dan sistem Anda
+        </p>
+    </div>
+
+    <form method="POST">
+        <div
+            class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl divide-y dark:divide-gray-700">
+
+            <!-- Preferences -->
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+                    Preferensi
+                </h2>
+
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Mode Gelap
+                        </p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                            Aktifkan tampilan gelap
+                        </p>
+                    </div>
+
+                    <label class="inline-flex items-center cursor-pointer">
+                        <input type="checkbox" name="dark_mode"
+                               class="sr-only peer"
+                               {% if dark_mode %}checked{% endif %}>
+                        <div
+                            class="w-11 h-6 bg-gray-200 dark:bg-gray-700 rounded-full peer peer-checked:bg-gray-900
+                                   after:content-[''] after:absolute after:top-0.5 after:left-[2px]
+                                   after:bg-white after:h-5 after:w-5 after:rounded-full
+                                   after:transition-all peer-checked:after:translate-x-full relative">
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="p-6 flex justify-end bg-gray-50 dark:bg-gray-800 rounded-b-xl">
+                <button type="submit"
+                    class="px-6 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700 transition">
+                    Simpan Perubahan
+                </button>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+{% endblock %}
