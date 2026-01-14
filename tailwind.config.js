@@ -2,7 +2,8 @@
 module.exports = {
   darkMode: "class",   // ← INI YANG DISELIPKAN
 
-  content: ["./app/templates/**/*.html", "./app/static/**/*.js"],
+  content: ["./app/**/*.html", "./app/**/*.js"],
+
 
   theme: {
     extend: {

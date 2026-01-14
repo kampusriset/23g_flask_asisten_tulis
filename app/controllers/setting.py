@@ -1,12 +1,12 @@
 from flask import Blueprint, render_template, request, redirect, session
-from app import db
+from app.extensions import db
 from app.models.setting import UserSetting
 from app.models.user import User
 
 setting_bp = Blueprint("setting", __name__, url_prefix="/setting")
 
 
-@setting_bp.route("/", methods=["GET", "POST"])
+@setting_bp.route("/", methods=["GET"])
 def index():
     user_id = session.get("user_id")
     if not user_id:
@@ -14,19 +14,32 @@ def index():
 
     setting = UserSetting.query.filter_by(user_id=user_id).first()
     if not setting:
-        setting = UserSetting(user_id=user_id)
+        setting = UserSetting(user_id=user_id, dark_mode=False)
         db.session.add(setting)
         db.session.commit()
-
-    if request.method == "POST":
-        setting.dark_mode = "dark_mode" in request.form
-        db.session.commit()
-        return redirect("/setting")
 
     user = User.query.get(user_id)
 
     return render_template(
         "view/fitur/setting/setting.html",
         user=user,
-        setting=setting
+        dark_mode=setting.dark_mode
     )
+
+
+@setting_bp.route("/toggle-dark", methods=["POST"])
+def toggle_dark():
+    user_id = session.get("user_id")
+    if not user_id:
+        return "", 401
+
+    setting = UserSetting.query.filter_by(user_id=user_id).first()
+
+    if not setting:
+        setting = UserSetting(user_id=user_id, dark_mode=True)
+        db.session.add(setting)
+    else:
+        setting.dark_mode = not setting.dark_mode
+
+    db.session.commit()
+    return "", 204
