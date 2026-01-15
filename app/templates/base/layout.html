@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <!-- <html lang="en" class="h-full bg-white"> -->
-    <html lang="en"
-    class="h-full {% if dark_mode %}bg-gray-900{% else %}bg-white{% endif %}">
+<html lang="en" class="h-full {% if dark_mode %}dark bg-gray-900{% else %}bg-white{% endif %}">
 
 
 <head>
@@ -53,8 +52,7 @@
 </head>
 
 
-<body
-    class="h-full antialiased overflow-hidden
+<body class="h-full antialiased overflow-hidden
     {% if dark_mode %}bg-gray-900 text-gray-100{% else %}bg-white text-gray-900{% endif %}">
 
 
@@ -69,7 +67,7 @@
     {% endfor %}
 
     {% if note_messages %}
-    <div id="note-toast" class="fixed top-6 right-6 z-[9999] bg-white border border-gray-300
+    <div id="note-toast" class="fixed top-6 right-6 z-[9999] bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700
             shadow-lg rounded-xl px-6 py-4 flex items-start gap-3 animate-toast-in">
 
         <div class="text-xl">
@@ -81,8 +79,8 @@
         </div>
 
         <div>
-            <p class="font-semibold text-gray-800">Catatan</p>
-            <p class="text-sm text-gray-600">{{ note_messages[0][1] }}</p>
+            <p class="font-semibold text-gray-800 dark:text-gray-100">Catatan</p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">{{ note_messages[0][1] }}</p>
         </div>
     </div>
 
@@ -131,9 +129,7 @@
         </aside>
 
         <!-- Main Content -->
-        <main
-    class="flex-1 overflow-y-auto p-6
-    {% if dark_mode %}bg-gray-900{% else %}bg-white{% endif %}">
+        <main class="flex-1 overflow-y-auto p-6 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
 
             {% block content %}{% endblock %}
         </main>
@@ -145,6 +141,9 @@
     {% block ai_chat %}
     {% include 'base/ai_chat.html' %}
     {% endblock %}
+
+    {# Dark mode toggle partial #}
+    {% include 'base/dark_mode_toggle.html' %}
 
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <script>

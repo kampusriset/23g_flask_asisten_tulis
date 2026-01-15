@@ -9,12 +9,12 @@
 {% endfor %}
 
 {% if detail_messages %}
-<div id="detail-toast" class="fixed top-6 right-6 z-[9999] bg-white border border-blue-300
+<div id="detail-toast" class="fixed top-6 right-6 z-[9999] bg-white dark:bg-gray-800 border border-blue-300 dark:border-blue-600
          shadow-lg rounded-xl px-6 py-4 flex items-start gap-3 animate-toast-in">
   <div class="text-blue-600 text-xl">✏️</div>
   <div>
-    <p class="font-semibold text-gray-800">Rapat</p>
-    <p class="text-sm text-gray-600">{{ detail_messages[0] }}</p>
+    <p class="font-semibold text-gray-800 dark:text-gray-100">Rapat</p>
+    <p class="text-sm text-gray-600 dark:text-gray-400">{{ detail_messages[0] }}</p>
   </div>
 </div>
 
@@ -28,43 +28,45 @@
 {% endif %}
 
 <div class="max-w-4xl mx-auto my-8 px-4">
-  <div class="bg-white shadow rounded overflow-hidden">
-    <div class="flex items-center justify-between px-6 py-4 border-b">
-      <h3 class="text-lg font-semibold text-gray-800">Detail Rapat</h3>
+  <div class="bg-white dark:bg-gray-800 shadow rounded overflow-hidden">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Detail Rapat</h3>
       <div class="flex items-center gap-2">
         <a href="{{ url_for('rapat_bp.rapat') }}"
-          class="px-3 py-1.5 border rounded text-sm text-gray-700 hover:bg-gray-50">&larr; Kembali</a>
+          class="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">&larr;
+          Kembali</a>
         <button id="openEditModal"
-          class="px-3 py-1.5 border rounded text-sm text-gray-700 hover:bg-gray-50">Edit</button>
+          class="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Edit</button>
         <button id="openDeleteModal"
-          class="px-3 py-1.5 border rounded text-sm text-red-600 hover:bg-red-50">Hapus</button>
+          class="px-3 py-1.5 border border-red-300 dark:border-red-600 rounded text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20">Hapus</button>
       </div>
     </div>
 
     <div class="px-6 py-6">
       <dl class="grid grid-cols-1 sm:grid-cols-3 gap-y-3 gap-x-6 text-sm">
         <div>
-          <dt class="text-gray-500">Topik Rapat</dt>
-          <dd class="font-semibold text-gray-800">{{ rapat.topik }}</dd>
+          <dt class="text-gray-500 dark:text-gray-400">Topik Rapat</dt>
+          <dd class="font-semibold text-gray-800 dark:text-gray-100">{{ rapat.topik }}</dd>
         </div>
 
         <div>
-          <dt class="text-gray-500">Tanggal</dt>
-          <dd class="text-gray-700">{{ rapat.tanggal.strftime('%d %b %Y') if rapat.tanggal else '-' }}</dd>
+          <dt class="text-gray-500 dark:text-gray-400">Tanggal</dt>
+          <dd class="text-gray-700 dark:text-gray-300">{{ rapat.tanggal.strftime('%d %b %Y') if rapat.tanggal else '-'
+            }}</dd>
         </div>
 
         <div class="sm:col-span-3">
-          <dt class="text-gray-500">Catatan</dt>
-          <dd class="text-gray-800">{{ rapat.catatan or '-' }}</dd>
+          <dt class="text-gray-500 dark:text-gray-400">Catatan</dt>
+          <dd class="text-gray-800 dark:text-gray-100">{{ rapat.catatan or '-' }}</dd>
         </div>
 
         <div class="sm:col-span-3">
-          <dt class="text-gray-500">Peserta</dt>
+          <dt class="text-gray-500 dark:text-gray-400">Peserta</dt>
           <dd class="mt-2">
             {% if peserta_list and peserta_list|length > 0 %}
             <ul class="list-disc list-inside space-y-1">
               {% for peserta in peserta_list %}
-              <li class="text-gray-700">{{ peserta }}</li>
+              <li class="text-gray-700 dark:text-gray-300">{{ peserta }}</li>
               {% endfor %}
             </ul>
             {% else %}
@@ -79,48 +81,61 @@
 
 <!-- Edit Modal -->
 <div id="editModal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
-  <div class="bg-white rounded shadow-lg w-full max-w-2xl mx-4">
-    <div class="flex items-center justify-between px-5 py-3 border-b">
-      <h5 class="text-lg font-semibold">Edit Rapat</h5>
-      <button id="closeEditModal" class="text-gray-600">✕</button>
+  <div class="bg-white dark:bg-gray-800 rounded shadow-lg w-full max-w-2xl mx-4">
+    <div class="flex items-center justify-between px-5 py-3 border-b border-gray-200 dark:border-gray-700">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Edit Rapat</h5>
+      <button id="closeEditModal" class="text-gray-600 dark:text-gray-400">✕</button>
     </div>
     <form method="post" action="{{ url_for('rapat_bp.edit_rapat', id=rapat.id) }}">
       <div class="p-5 space-y-4">
         <div>
-          <label for="edit-topik" class="block text-sm font-medium text-gray-700 mb-1">Topik Rapat</label>
-          <input type="text" class="w-full border rounded px-3 py-2" id="edit-topik" name="topik"
-            value="{{ rapat.topik }}" required>
+          <label for="edit-topik" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Topik
+            Rapat</label>
+          <input type="text"
+            class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded px-3 py-2"
+            id="edit-topik" name="topik" value="{{ rapat.topik }}" required>
         </div>
         <div>
-          <label for="edit-tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Rapat</label>
-          <input type="date" class="w-full border rounded px-3 py-2" id="edit-tanggal" name="tanggal"
-            value="{{ rapat.tanggal.strftime('%Y-%m-%d') if rapat.tanggal else '' }}" required>
+          <label for="edit-tanggal" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tanggal
+            Rapat</label>
+          <input type="date"
+            class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded px-3 py-2"
+            id="edit-tanggal" name="tanggal" value="{{ rapat.tanggal.strftime('%Y-%m-%d') if rapat.tanggal else '' }}"
+            required>
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Peserta</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Peserta</label>
           <div id="edit-peserta-container">
             {% for peserta in peserta_list %}
-            <input type="text" name="peserta[]" class="w-full border rounded px-3 py-2 mb-2" value="{{ peserta }}"
-              required>
+            <input type="text" name="peserta[]"
+              class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded px-3 py-2 mb-2"
+              value="{{ peserta }}" required>
             {% endfor %}
             {% if peserta_list|length == 0 %}
-            <input type="text" name="peserta[]" class="w-full border rounded px-3 py-2 mb-2" placeholder="Nama peserta"
-              required>
+            <input type="text" name="peserta[]"
+              class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded px-3 py-2 mb-2"
+              placeholder="Nama peserta" required>
             {% endif %}
           </div>
           <button type="button" id="edit-tambah-peserta"
-            class="inline-flex items-center gap-2 px-3 py-1.5 border rounded text-sm text-gray-700 hover:bg-gray-50">Tambah
+            class="inline-flex items-center gap-2 px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Tambah
             Peserta</button>
         </div>
         <div>
-          <label for="edit-catatan" class="block text-sm font-medium text-gray-700 mb-1">Catatan Rapat</label>
-          <textarea class="w-full border rounded px-3 py-2" id="edit-catatan" name="catatan" rows="4"
+          <label for="edit-catatan" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Catatan
+            Rapat</label>
+          <textarea
+            class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded px-3 py-2"
+            id="edit-catatan" name="catatan" rows="4"
             placeholder="Tuliskan catatan rapat di sini...">{{ rapat.catatan }}</textarea>
         </div>
       </div>
-      <div class="flex justify-end gap-2 px-5 py-3 border-t">
-        <button type="button" id="cancelEdit" class="px-4 py-2 border rounded text-gray-700">Batal</button>
-        <button type="submit" class="px-4 py-2 bg-gray-900 text-white rounded">Simpan Perubahan</button>
+      <div class="flex justify-end gap-2 px-5 py-3 border-t border-gray-200 dark:border-gray-700">
+        <button type="button" id="cancelEdit"
+          class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Batal</button>
+        <button type="submit"
+          class="px-4 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded hover:bg-gray-800 dark:hover:bg-gray-600">Simpan
+          Perubahan</button>
       </div>
     </form>
   </div>
@@ -128,16 +143,18 @@
 
 <!-- Delete Modal -->
 <div id="deleteModal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
-  <div class="bg-white rounded shadow-lg w-full max-w-md mx-4">
-    <div class="px-5 py-4 border-b">
-      <h5 class="text-lg font-semibold text-red-600">Konfirmasi Hapus Rapat</h5>
+  <div class="bg-white dark:bg-gray-800 rounded shadow-lg w-full max-w-md mx-4">
+    <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-700">
+      <h5 class="text-lg font-semibold text-red-600 dark:text-red-400">Konfirmasi Hapus Rapat</h5>
     </div>
     <div class="p-5">
-      <p class="text-gray-700 mb-4">Yakin Mau Menghapus Rapat ini?</p>
+      <p class="text-gray-700 dark:text-gray-300 mb-4">Yakin Mau Menghapus Rapat ini?</p>
       <div class="flex justify-end gap-2">
-        <button id="cancelDelete" class="px-4 py-2 border rounded text-gray-700">Batal</button>
+        <button id="cancelDelete"
+          class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Batal</button>
         <form method="post" action="{{ url_for('rapat_bp.delete_rapat', id=rapat.id) }}">
-          <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded">Hapus</button>
+          <button type="submit"
+            class="px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded hover:bg-red-700 dark:hover:bg-red-600">Hapus</button>
         </form>
       </div>
     </div>

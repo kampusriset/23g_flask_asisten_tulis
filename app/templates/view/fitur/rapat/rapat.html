@@ -9,12 +9,12 @@
 {% endfor %}
 
 {% if rapat_messages %}
-<div id="rapat-toast" class="fixed top-6 right-6 z-[9999] bg-white border border-gray-300
+<div id="rapat-toast" class="fixed top-6 right-6 z-[9999] bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700
          shadow-lg rounded-xl px-6 py-4 flex items-start gap-3 animate-toast-in">
   <div class="text-green-600 text-xl">📅</div>
   <div>
-    <p class="font-semibold text-gray-800">Rapat</p>
-    <p class="text-sm text-gray-600">{{ rapat_messages[0] }}</p>
+    <p class="font-semibold text-gray-800 dark:text-gray-100">Rapat</p>
+    <p class="text-sm text-gray-600 dark:text-gray-400">{{ rapat_messages[0] }}</p>
   </div>
 </div>
 
@@ -33,49 +33,56 @@
 
     <!-- Form Rapat -->
     <div class="lg:col-span-5">
-      <div class="flex items-center justify-between mb-4 border-b pb-2">
-        <h1 class="text-lg font-semibold text-gray-800">Form Rapat Baru</h1>
-        <span class="text-sm text-gray-500">{{ current_date }}</span>
+      <div class="flex items-center justify-between mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">
+        <h1 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Form Rapat Baru</h1>
+        <span class="text-sm text-gray-500 dark:text-gray-400">{{ current_date }}</span>
       </div>
 
-      <div class="bg-white shadow rounded">
+      <div class="bg-white dark:bg-gray-800 shadow rounded">
         <div class="p-6">
           <form id="form-rapat" action="{{ url_for('rapat_bp.create_rapat') }}" method="post">
             <!-- Judul -->
             <div class="mb-4">
-              <label for="judul" class="block text-sm font-medium text-gray-700 mb-1">Judul Rapat</label>
+              <label for="judul" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Judul
+                Rapat</label>
               <input type="text"
-                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="judul"
-                name="judul" placeholder="Masukkan judul rapat" required>
+                class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                id="judul" name="judul" placeholder="Masukkan judul rapat" required>
             </div>
             <!-- Tanggal -->
             <div class="mb-4">
-              <label for="tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Rapat</label>
+              <label for="tanggal" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tanggal
+                Rapat</label>
               <input type="date"
-                class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" id="tanggal"
-                name="tanggal" required>
+                class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                id="tanggal" name="tanggal" required>
             </div>
             <!-- Peserta -->
             <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Peserta</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Peserta</label>
               <div id="peserta-container" class="mb-2">
-                <input type="text" name="peserta[]" class="w-full border rounded px-3 py-2 mb-2"
+                <input type="text" name="peserta[]"
+                  class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded px-3 py-2 mb-2"
                   placeholder="Nama peserta" required>
               </div>
               <button type="button" id="tambah-peserta"
-                class="inline-flex items-center gap-2 px-3 py-1.5 border rounded text-sm text-gray-700 hover:bg-gray-50">Tambah
+                class="inline-flex items-center gap-2 px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Tambah
                 Peserta</button>
             </div>
             <!-- Catatan -->
             <div class="mb-4">
-              <label for="catatan" class="block text-sm font-medium text-gray-700 mb-1">Catatan Rapat</label>
-              <textarea class="w-full border rounded px-3 py-2 focus:outline-none" id="catatan" name="catatan" rows="5"
-                placeholder="Tuliskan catatan rapat di sini..."></textarea>
+              <label for="catatan" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Catatan
+                Rapat</label>
+              <textarea
+                class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded px-3 py-2 focus:outline-none"
+                id="catatan" name="catatan" rows="5" placeholder="Tuliskan catatan rapat di sini..."></textarea>
             </div>
             <!-- Action -->
             <div class="flex justify-end gap-2">
-              <button type="reset" class="px-4 py-2 border rounded text-gray-700 hover:bg-gray-50">Reset</button>
-              <button type="submit" class="px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-800">Simpan</button>
+              <button type="reset"
+                class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Reset</button>
+              <button type="submit"
+                class="px-4 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded hover:bg-gray-800 dark:hover:bg-gray-600">Simpan</button>
             </div>
           </form>
         </div>
@@ -84,25 +91,26 @@
 
     <!-- Daftar Rapat -->
     <div class="lg:col-span-7">
-      <div class="flex items-center justify-between mb-3 border-b pb-2">
-        <h2 class="text-md font-medium text-gray-800 mb-0">Daftar Rapat</h2>
+      <div class="flex items-center justify-between mb-3 border-b border-gray-200 dark:border-gray-700 pb-2">
+        <h2 class="text-md font-medium text-gray-800 dark:text-gray-100 mb-0">Daftar Rapat</h2>
       </div>
 
       {% if daftar_rapat and daftar_rapat|length > 0 %}
-      <div class="bg-white shadow rounded overflow-hidden">
+      <div class="bg-white dark:bg-gray-800 shadow rounded overflow-hidden">
         <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead class="bg-gray-50 dark:bg-gray-700">
               <tr>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">No</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Topik</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Tanggal</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Jumlah Peserta</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Catatan</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500">Aksi</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">No</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Topik</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Tanggal</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Jumlah Peserta</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Catatan</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400">Aksi</th>
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-100 text-sm text-gray-700">
+            <tbody
+              class="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700 text-sm text-gray-700 dark:text-gray-300">
               {% for rapat in daftar_rapat %}
               <tr>
                 <td class="px-4 py-3">{{ loop.index }}</td>
@@ -112,7 +120,7 @@
                 <td class="px-4 py-3 truncate max-w-xs">{{ rapat.catatan or '-' }}</td>
                 <td class="px-4 py-3">
                   <a href="{{ url_for('rapat_bp.detail_rapat', id=rapat.id) }}"
-                    class="inline-flex items-center px-3 py-1.5 border border-blue-600 text-blue-600 rounded text-sm hover:bg-blue-50">Detail</a>
+                    class="inline-flex items-center px-3 py-1.5 border border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 rounded text-sm hover:bg-blue-50 dark:hover:bg-blue-900/30">Detail</a>
                 </td>
               </tr>
               {% endfor %}
@@ -121,7 +129,8 @@
         </div>
       </div>
       {% else %}
-      <div class="bg-white shadow rounded p-6 text-center text-gray-600 border border-dashed">
+      <div
+        class="bg-white dark:bg-gray-800 shadow rounded p-6 text-center text-gray-600 dark:text-gray-400 border border-dashed border-gray-300 dark:border-gray-600">
         Belum ada rapat yang tercatat. Silakan tambahkan rapat baru melalui form di atas.
       </div>
       {% endif %}

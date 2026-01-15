@@ -23,21 +23,22 @@
 
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-semibold text-gray-900">Inbox</h1>
-        <span class="text-sm text-gray-500">
+        <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">Inbox</h1>
+        <span class="text-sm text-gray-500 dark:text-gray-400">
             {{ messages|length }} pesan
         </span>
     </div>
 
     <!-- Inbox List -->
-    <div class="bg-white border border-gray-200 rounded-xl divide-y overflow-hidden">
+    <div
+        class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl divide-y dark:divide-gray-700 overflow-hidden">
 
         {% for msg in messages %}
         <a href="{{ url_for('inbox.read', id=msg.id) }}" class="group flex gap-4 px-5 py-4 transition
            {% if not msg.is_read %}
-                bg-blue-50/60
+                bg-blue-50/60 dark:bg-blue-900/20
            {% else %}
-                hover:bg-gray-50
+                hover:bg-gray-50 dark:hover:bg-gray-700
            {% endif %}">
 
             <!-- Status dot -->
@@ -50,18 +51,19 @@
             <!-- Content -->
             <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between">
-                    <h2 class="font-medium text-gray-900 truncate">
+                    <h2 class="font-medium text-gray-900 dark:text-gray-100 truncate">
                         {{ msg.title }}
                     </h2>
                     <div class="flex items-center gap-3 ml-4 whitespace-nowrap">
 
-                        <span class="text-xs text-gray-400">
+                        <span class="text-xs text-gray-400 dark:text-gray-500">
                             {{ msg.created_at.strftime('%d %b %Y %H:%M') }}
                         </span>
 
                         <form method="post" action="{{ url_for('inbox.delete', id=msg.id) }}"
                             onsubmit="return confirm('Hapus pesan ini?')">
-                            <button type="submit" class="text-gray-400 hover:text-red-600 transition">
+                            <button type="submit"
+                                class="text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition">
                                 <i class="fi fi-rr-trash text-sm"></i>
                             </button>
                         </form>
@@ -70,13 +72,13 @@
 
                 </div>
 
-                <p class="text-sm text-gray-600 mt-1 truncate">
+                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1 truncate">
                     {{ msg.message }}
                 </p>
             </div>
         </a>
         {% else %}
-        <div class="py-16 text-center text-gray-500">
+        <div class="py-16 text-center text-gray-500 dark:text-gray-400">
             Tidak ada pesan masuk
         </div>
         {% endfor %}

@@ -7,7 +7,7 @@
 
 <!-- Popup -->
 <div id="ai-chat-popup"
-    class="fixed right-8 bottom-28 w-96 max-w-full bg-white rounded-xl shadow-lg hidden flex-col z-50 overflow-hidden">
+    class="fixed right-8 bottom-28 w-96 max-w-full bg-white dark:bg-gray-800 rounded-xl shadow-lg hidden flex-col z-50 overflow-hidden">
     <div class="px-4 py-3 bg-blue-600 text-white font-semibold flex items-center justify-between">
         <div class="flex items-center gap-2">
             <i class="fi fi-rr-comment"></i>
@@ -22,17 +22,17 @@
         </div>
     </div>
 
-    <div class="p-3 overflow-auto flex flex-col gap-3 bg-gray-50" style="height:340px;" id="chat-body">
+    <div class="p-3 overflow-auto flex flex-col gap-3 bg-gray-50 dark:bg-gray-700" style="height:340px;" id="chat-body">
         <div class="flex justify-start">
-            <div class="bg-gray-100 text-gray-800 px-3 py-2 rounded-lg max-w-[80%]">
+            <div class="bg-gray-100 dark:bg-gray-600 text-gray-800 dark:text-gray-100 px-3 py-2 rounded-lg max-w-[80%]">
                 <em>Halo! Ada yang bisa dibantu?</em>
             </div>
         </div>
     </div>
 
-    <div class="border-t p-3 bg-white flex items-center gap-2">
+    <div class="border-t dark:border-gray-600 p-3 bg-white dark:bg-gray-800 flex items-center gap-2">
         <input type="text" id="chat-input"
-            class="flex-1 border border-gray-200 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
+            class="flex-1 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-500"
             placeholder="Tulis pesan..." aria-label="Tulis pesan" />
         <button id="chat-send"
             class="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-4 py-2 shadow">Kirim</button>
@@ -55,7 +55,7 @@
         const bubble = document.createElement('div');
         bubble.className = from === 'user'
             ? 'bg-blue-600 text-white px-3 py-2 rounded-lg rounded-br-none max-w-[80%]'
-            : 'bg-white border border-gray-200 text-gray-900 px-3 py-2 rounded-lg rounded-bl-none max-w-[80%]';
+            : 'bg-white dark:bg-gray-600 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 px-3 py-2 rounded-lg rounded-bl-none max-w-[80%]';
         bubble.innerHTML = text;
         wrapper.appendChild(bubble);
         return wrapper;

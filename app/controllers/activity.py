@@ -73,7 +73,10 @@ def activity():
     # RAPAT
     # -------------------
     if activity_type in ["all", "rapat"]:
-        rapat_query = Rapat.query.filter(Rapat.user_id == user_id)
+        rapat_query = Rapat.query.filter(
+            Rapat.user_id == user_id,
+            Rapat.deleted_at.is_(None)
+        )
 
         if q:
             rapat_query = rapat_query.filter(Rapat.topik.ilike(f"%{q}%"))

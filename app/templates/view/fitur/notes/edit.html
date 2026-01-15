@@ -19,7 +19,7 @@
             <!-- JUDUL -->
             <div class="mb-4">
                 <input type="text" name="title"
-                    class="w-full bg-transparent border-b border-gray-200 text-2xl font-bold py-2 focus:outline-none focus:border-b-2 focus:border-blue-500"
+                    class="w-full bg-transparent border-b border-gray-200 dark:border-gray-700 text-2xl font-bold py-2 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-b-2 focus:border-blue-500"
                     placeholder="Judul catatan baru..." value="{{ note.title }}">
             </div>
 
@@ -28,11 +28,12 @@
 
                 <!-- GHOST SUGGESTION -->
                 <div id="ghost"
-                    class="absolute inset-0 text-gray-400 whitespace-pre-wrap pointer-events-none bg-transparent"></div>
+                    class="absolute inset-0 text-gray-400 dark:text-gray-600 whitespace-pre-wrap pointer-events-none bg-transparent">
+                </div>
 
                 <!-- EDITOR ASLI -->
                 <div id="editor" contenteditable="true"
-                    class="relative min-h-[300px] bg-transparent outline-none whitespace-pre-wrap editable-div text-gray-800"
+                    class="relative min-h-[300px] bg-transparent outline-none whitespace-pre-wrap editable-div text-gray-800 dark:text-gray-100"
                     data-placeholder="Tulis apapun disini...">{{ note.content }}</div>
 
                 <input type="hidden" name="content" id="contentHidden">
@@ -68,11 +69,11 @@
             </form>
             <!-- MODAL RINGKASAN -->
             <div id="summaryModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-                <div class="bg-white rounded-lg max-w-xl w-full p-5">
-                    <h3 class="text-lg font-bold mb-2">Ringkasan AI</h3>
+                <div class="bg-white dark:bg-gray-800 rounded-lg max-w-xl w-full p-5">
+                    <h3 class="text-lg font-bold mb-2 text-gray-900 dark:text-gray-100">Ringkasan AI</h3>
 
                     <div id="summaryResult"
-                        class="whitespace-pre-wrap text-gray-800 border rounded p-3 mb-4 min-h-[120px]">
+                        class="whitespace-pre-wrap text-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded p-3 mb-4 min-h-[120px] bg-gray-50 dark:bg-gray-700">
                     </div>
 
                     <div class="flex justify-end gap-2">

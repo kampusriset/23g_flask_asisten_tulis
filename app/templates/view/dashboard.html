@@ -11,14 +11,14 @@
 {% if login_messages %}
 
 
-<div id="login-toast" class="fixed top-6 right-6 z-[9999] bg-white border border-green-400
+<div id="login-toast" class="fixed top-6 right-6 z-[9999] bg-white dark:bg-gray-800 border border-green-400 dark:border-green-600
             shadow-lg rounded-xl px-6 py-4 flex items-start gap-3
             animate-toast-in">
 
     <div class="text-green-500 text-xl">✔</div>
     <div>
-        <p class="font-semibold text-gray-800">Login Berhasil</p>
-        <p class="text-sm text-gray-600">{{ login_messages[0] }}</p>
+        <p class="font-semibold text-gray-800 dark:text-gray-100">Login Berhasil</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">{{ login_messages[0] }}</p>
     </div>
 </div>
 
@@ -35,10 +35,10 @@
 <div class="p-6 text-gray-200 mt-6">
     {% if greeting %}
     <div class="mb-12 text-center">
-        <h1 class="text-2xl font-semibold text-black">
+        <h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">
             {{ greeting }}
         </h1>
-        <div class="mt-2 text-sm text-gray-400">
+        <div class="mt-2 text-sm text-gray-400 dark:text-gray-500">
             Semoga harimu menyenangkan ✨
         </div>
     </div>
@@ -46,7 +46,7 @@
 
     <div class="mx-auto w-full max-w-4xl">
         <div class="flex items-center justify-between mb-4">
-            <div class="text-sm text-gray-400">Catatan Saya</div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">Catatan Saya</div>
             <!-- tombol tambah kini menjadi kartu 'Catatan Baru' di dalam grid -->
         </div>
 
@@ -55,21 +55,22 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 justify-center">
             <!-- New note card (first item) -->
             <a href="{{ url_for('notes_bp.new_note') }}"
-                class="block rounded-xl bg-zinc-800 hover:bg-zinc-700 transition p-4 overflow-hidden flex flex-col justify-center items-center text-center"
+                class="block rounded-xl bg-gray-800 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 transition p-4 overflow-hidden flex flex-col justify-center items-center text-center"
                 style="aspect-ratio:1 / 1;">
                 <div class="text-3xl text-white font-bold">+</div>
-                <div class="mt-2 text-sm text-gray-300">Catatan Baru</div>
+                <div class="mt-2 text-sm text-gray-300 dark:text-gray-200">Catatan Baru</div>
             </a>
 
             {% for note in notes %}
             <a href="{{ url_for('notes_bp.edit', note_id=note.id) }}"
-                class="block rounded-xl bg-zinc-800 hover:bg-zinc-700 transition p-4 overflow-hidden flex flex-col justify-between"
+                class="block rounded-xl bg-gray-800 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 transition p-4 overflow-hidden flex flex-col justify-between"
                 style="aspect-ratio:1 / 1;">
                 <div class="font-medium text-white truncate"><i class="fi fi-rr-document mr-2"></i>{{ note.title.strip()
                     if note.title and note.title.strip()
                     else
                     'Catatan Baru' }}</div>
-                <div class="mt-2 text-xs text-gray-400">{{ note.updated_at.strftime('%d %b %Y, %H:%M') if
+                <div class="mt-2 text-xs text-gray-400 dark:text-gray-500">{{ note.updated_at.strftime('%d %b %Y,
+                    %H:%M') if
                     note.updated_at
                     else (note.created_at.strftime('%d %b %Y, %H:%M') if note.created_at else '') }}</div>
             </a>
@@ -78,10 +79,10 @@
         {% else %}
         <div class="grid place-items-center">
             <a href="{{ url_for('notes_bp.new_note') }}"
-                class="block rounded-xl bg-zinc-800 hover:bg-zinc-700 transition p-4 overflow-hidden flex flex-col justify-center items-center text-center"
+                class="block rounded-xl bg-gray-800 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 transition p-4 overflow-hidden flex flex-col justify-center items-center text-center"
                 style="width:220px;aspect-ratio:1 / 1;">
                 <div class="text-3xl text-white font-bold">+</div>
-                <div class="mt-2 text-sm text-gray-300">Catatan Baru</div>
+                <div class="mt-2 text-sm text-gray-300 dark:text-gray-200">Catatan Baru</div>
             </a>
         </div>
         {% endif %}
@@ -89,9 +90,10 @@
         <!-- Rapat Section -->
         <div class="mt-8">
             <div class="flex items-center justify-between mb-4">
-                <div class="text-sm text-gray-400">Rapat Saya</div>
+                <div class="text-sm text-gray-500 dark:text-gray-400">Rapat Saya</div>
                 <div>
-                    <a href="{{ url_for('rapat_bp.rapat') }}" class="text-sm text-gray-400 hover:underline">Lihat
+                    <a href="{{ url_for('rapat_bp.rapat') }}"
+                        class="text-sm text-gray-500 dark:text-gray-400 hover:underline">Lihat
                         semua</a>
                 </div>
             </div>
@@ -100,16 +102,17 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {% for r in rapats %}
                 <a href="{{ url_for('rapat_bp.detail_rapat', id=r.id) }}"
-                    class="block rounded-lg bg-zinc-800 hover:bg-zinc-700 p-4">
+                    class="block rounded-lg bg-gray-800 dark:bg-gray-700 hover:bg-gray-700 dark:hover:bg-gray-600 p-4">
                     <div class="font-medium text-white truncate"><i class="fi fi-rr-users-alt mr-2"></i>{{ r.topik }}
                     </div>
-                    <div class="mt-2 text-xs text-gray-400">{{ r.tanggal.strftime('%d %b %Y') if r.tanggal else '' }}
+                    <div class="mt-2 text-xs text-gray-400 dark:text-gray-500">{{ r.tanggal.strftime('%d %b %Y') if
+                        r.tanggal else '' }}
                     </div>
                 </a>
                 {% endfor %}
             </div>
             {% else %}
-            <div class="rounded-xl bg-zinc-800 p-4 text-gray-400 text-center">
+            <div class="rounded-xl bg-gray-800 dark:bg-gray-700 p-4 text-gray-400 dark:text-gray-500 text-center">
                 Belum ada rapat. <a href="{{ url_for('rapat_bp.rapat') }}" class="text-blue-400 hover:underline">Buat
                     atau lihat rapat</a>
             </div>
@@ -122,7 +125,7 @@
 
             <div class="flex flex-wrap gap-3 mb-6">
 
-                <select id="filterType" class="bg-zinc-900 text-gray-200 border border-zinc-700
+                <select id="filterType" class="bg-gray-800 dark:bg-gray-700 text-gray-100 border border-gray-700 dark:border-gray-600
                rounded-lg px-4 py-2 text-sm
                focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     <option value="weekly">Mingguan</option>
@@ -130,7 +133,7 @@
                     <option value="yearly">Tahunan</option>
                 </select>
 
-                <select id="yearSelect" class="bg-zinc-900 text-gray-200 border border-zinc-700
+                <select id="yearSelect" class="bg-gray-800 dark:bg-gray-700 text-gray-100 border border-gray-700 dark:border-gray-600
                rounded-lg px-4 py-2 text-sm
                focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     {% for y in range(2022, 2031) %}
@@ -138,7 +141,7 @@
                     {% endfor %}
                 </select>
 
-                <select id="monthSelect" class="bg-zinc-900 text-gray-200 border border-zinc-700
+                <select id="monthSelect" class="bg-gray-800 dark:bg-gray-700 text-gray-100 border border-gray-700 dark:border-gray-600
                rounded-lg px-4 py-2 text-sm
                focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     {% for m in range(1,13) %}

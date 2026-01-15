@@ -25,6 +25,16 @@
         font-size: 14px;
     }
 
+    /* Dark mode overrides */
+    :root.dark .profile-header p {
+        color: #9ca3af;
+    }
+
+    :root.dark .card {
+        background: #1f2937;
+        border-color: #374151;
+    }
+
     /* ===== CARD ===== */
     .card {
         background: #fff;
@@ -71,6 +81,32 @@
         color: #6b7280;
         font-size: 14px;
         margin-top: 4px;
+    }
+
+    /* Dark mode text */
+    :root.dark .profile-info h3 {
+        color: #f3f4f6;
+    }
+
+    :root.dark .profile-info p {
+        color: #9ca3af;
+    }
+
+    :root.dark .info-item p:first-child {
+        color: #9ca3af;
+    }
+
+    :root.dark .info-item p:last-child {
+        color: #f3f4f6;
+    }
+
+    :root.dark .joined {
+        color: #9ca3af;
+    }
+
+    :root.dark .badge-id {
+        background: #374151;
+        color: #d1d5db;
     }
 
     .badges {
@@ -154,6 +190,16 @@
 
     .btn-secondary:hover {
         background: #bae6fd;
+    }
+
+    /* Dark mode buttons */
+    :root.dark .btn-secondary {
+        background: #0c4a6e;
+        color: #7dd3fc;
+    }
+
+    :root.dark .btn-secondary:hover {
+        background: #0369a1;
     }
 
     /* ===== NO USER ===== */

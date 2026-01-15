@@ -47,9 +47,10 @@ def dashboard():
             [0].split('.')[0].capitalize() if user and user.username else "")
     greeting = f"{greet}, {name}" if name else greet
 
-    # Ambil daftar rapat terbaru (maks 6) sesuai user yang login
+    # Ambil daftar rapat terbaru (maks 6) sesuai user yang login, exclude soft deleted
     rapats = Rapat.query.filter(
-        Rapat.user_id == user_id
+        Rapat.user_id == user_id,
+        Rapat.deleted_at == None
     ).order_by(desc(Rapat.tanggal)).limit(6).all()
 
     return render_template(
@@ -104,6 +105,7 @@ def chart_data():
             Rapat.query
             .filter(
                 Rapat.user_id == user_id,
+                Rapat.deleted_at.is_(None),
                 func.date(Rapat.created_at) >= start_date
             )
             .with_entities(func.date(Rapat.created_at), func.count())
@@ -141,6 +143,7 @@ def chart_data():
             Rapat.query
             .filter(
                 Rapat.user_id == user_id,
+                Rapat.deleted_at.is_(None),
                 extract("year", Rapat.created_at) == year,
                 extract("month", Rapat.created_at) == month
             )
@@ -182,6 +185,7 @@ def chart_data():
             Rapat.query
             .filter(
                 Rapat.user_id == user_id,
+                Rapat.deleted_at.is_(None),
                 extract("year", Rapat.created_at) == year
             )
             .with_entities(extract("month", Rapat.created_at), func.count())

@@ -24,12 +24,21 @@
         font-size: 14px;
     }
 
+    :root.dark .profile-header p {
+        color: #999;
+    }
+
     .card {
         background: #fff;
         border: 1px solid #e5e7eb;
         border-radius: 16px;
         padding: 24px;
         margin-bottom: 24px;
+    }
+
+    :root.dark .card {
+        background: #1f2937;
+        border-color: #374151;
     }
 
     .form-group {
@@ -44,6 +53,10 @@
         margin-bottom: 7px;
     }
 
+    :root.dark .form-group label {
+        color: #d1d5db;
+    }
+
     .form-group input[type="text"],
     .form-group input[type="email"],
     .form-group input[type="file"] {
@@ -54,6 +67,16 @@
         font-size: 14px;
         outline: none;
         transition: border-color 0.2s;
+        background: #fff;
+        color: #000;
+    }
+
+    :root.dark .form-group input[type="text"],
+    :root.dark .form-group input[type="email"],
+    :root.dark .form-group input[type="file"] {
+        background: #374151;
+        color: #fff;
+        border-color: #4b5563;
     }
 
     .form-group input:focus {
@@ -70,6 +93,10 @@
         border-radius: 50%;
         object-fit: cover;
         border: 1.5px solid #e5e7eb;
+    }
+
+    :root.dark .profile-pic-preview img {
+        border-color: #4b5563;
     }
 
     .actions {
@@ -108,8 +135,17 @@
         transition: background 0.18s;
     }
 
+    :root.dark .btn-secondary {
+        background: #4b5563;
+        color: #d1d5db;
+    }
+
     .btn-secondary:hover {
         background: #e5e7eb;
+    }
+
+    :root.dark .btn-secondary:hover {
+        background: #5a6572;
     }
 
     /* === TOAST CONTAINER === */
@@ -139,16 +175,31 @@
         animation: toastIn .4s ease-out forwards;
     }
 
+    :root.dark .toast-message {
+        background: #374151;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, .4);
+    }
+
     /* SUCCESS */
     .toast-message.success {
         border-left: 5px solid #22c55e;
         color: #166534;
     }
 
+    :root.dark .toast-message.success {
+        color: #86efac;
+        border-left-color: #16a34a;
+    }
+
     /* ERROR */
     .toast-message.error {
         border-left: 5px solid #dc2626;
         color: #7f1d1d;
+    }
+
+    :root.dark .toast-message.error {
+        color: #fca5a5;
+        border-left-color: #991b1b;
     }
 
     /* ICON */

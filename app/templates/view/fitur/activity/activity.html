@@ -3,21 +3,24 @@
 
 <div class="max-w-6xl mx-auto">
 
-    <h1 class="text-xl font-semibold text-gray-800 mb-6">Activity</h1>
+    <h1 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-6">Activity</h1>
 
     <!-- FILTER -->
     <form method="get" class="flex gap-3 mb-4">
-        <select name="type" class="px-3 py-2 rounded bg-zinc-800 text-white">
+        <select name="type"
+            class="px-3 py-2 rounded bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-100 border border-gray-700 dark:border-gray-600">
             <option value="all" {% if activity_type=='all' %}selected{% endif %}>Semua</option>
             <option value="note" {% if activity_type=='note' %}selected{% endif %}>Catatan</option>
             <option value="rapat" {% if activity_type=='rapat' %}selected{% endif %}>Rapat</option>
         </select>
 
         <input type="text" name="q" placeholder="Cari judul / topik" value="{{ q }}"
-            class="px-3 py-2 rounded bg-zinc-800 text-white">
+            class="px-3 py-2 rounded bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-100 border border-gray-700 dark:border-gray-600">
 
-        <input type="date" name="start_date" value="{{ start_date }}" class="px-3 py-2 rounded bg-zinc-800 text-white">
-        <input type="date" name="end_date" value="{{ end_date }}" class="px-3 py-2 rounded bg-zinc-800 text-white">
+        <input type="date" name="start_date" value="{{ start_date }}"
+            class="px-3 py-2 rounded bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-100 border border-gray-700 dark:border-gray-600">
+        <input type="date" name="end_date" value="{{ end_date }}"
+            class="px-3 py-2 rounded bg-gray-800 dark:bg-gray-700 text-white dark:text-gray-100 border border-gray-700 dark:border-gray-600">
 
     </form>
 
@@ -43,16 +46,16 @@
     <div class="flex justify-center gap-2 mb-6">
         {% for p in range(1, total_pages + 1) %}
         <a href="?page={{ p }}&q={{ q }}&start_date={{ start_date }}&end_date={{ end_date }}&type={{ activity_type }}"
-            class="px-3 py-1 rounded {% if p == page %}bg-indigo-600 text-white{% else %}bg-zinc-800 text-gray-300{% endif %}">
+            class="px-3 py-1 rounded {% if p == page %}bg-indigo-600 text-white{% else %}bg-gray-800 dark:bg-gray-700 text-gray-300 dark:text-gray-400{% endif %}">
             {{ p }}
         </a>
         {% endfor %}
     </div>
 
     <!-- TABLE -->
-    <div class="overflow-x-auto bg-white rounded-xl shadow" id="activityTable">
+    <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-xl shadow" id="activityTable">
         <table class="w-full text-sm">
-            <thead class="bg-gray-100 text-gray-600">
+            <thead class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
                 <tr>
                     <th class="p-3 text-left">Tipe</th>
                     <th class="p-3 text-left">Judul</th>
@@ -62,15 +65,17 @@
             </thead>
             <tbody>
                 {% for a in activities %}
-                <tr class="border-t">
-                    <td class="p-3">{{ a.type }}</td>
-                    <td class="p-3">{{ a.title }}</td>
-                    <td class="p-3">{{ a.date.strftime('%d %b %Y') }}</td>
+                <tr class="border-t border-gray-200 dark:border-gray-700">
+                    <td class="p-3 text-gray-900 dark:text-gray-100">{{ a.type }}</td>
+                    <td class="p-3 text-gray-900 dark:text-gray-100">{{ a.title }}</td>
+                    <td class="p-3 text-gray-900 dark:text-gray-100">{{ a.date.strftime('%d %b %Y') }}</td>
                     <td class="p-3">
                         {% if a.type == "Catatan" %}
-                        <a href="{{ url_for('activity_bp.export_note_pdf', id=a.id) }}" class="text-blue-600">PDF</a>
+                        <a href="{{ url_for('activity_bp.export_note_pdf', id=a.id) }}"
+                            class="text-blue-600 dark:text-blue-400 hover:underline">PDF</a>
                         {% else %}
-                        <a href="{{ url_for('activity_bp.export_rapat_pdf', id=a.id) }}" class="text-blue-600">PDF</a>
+                        <a href="{{ url_for('activity_bp.export_rapat_pdf', id=a.id) }}"
+                            class="text-blue-600 dark:text-blue-400 hover:underline">PDF</a>
                         {% endif %}
                     </td>
                 </tr>

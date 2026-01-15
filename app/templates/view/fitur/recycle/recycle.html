@@ -10,14 +10,14 @@
 
 {% if recycle_messages %}
 
-<div id="recycle-toast" class="fixed top-6 right-6 z-[9999] bg-white border border-red-400
+<div id="recycle-toast" class="fixed top-6 right-6 z-[9999] bg-white dark:bg-gray-800 border border-red-400 dark:border-red-600
             shadow-lg rounded-xl px-6 py-4 flex items-start gap-3
             animate-toast-in">
 
     <div class="text-red-500 text-xl">🗑️</div>
     <div>
-        <p class="font-semibold text-gray-800">Recycle Bin</p>
-        <p class="text-sm text-gray-600">{{ recycle_messages[0] }}</p>
+        <p class="font-semibold text-gray-800 dark:text-gray-100">Recycle Bin</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">{{ recycle_messages[0] }}</p>
     </div>
 </div>
 
@@ -33,7 +33,7 @@
 <div class="max-w-4xl mx-auto py-6 px-4">
 
     <div class="flex items-center justify-between mb-4">
-        <h4 class="text-lg font-semibold text-gray-800">
+        <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-100">
             <i class="fi fi-rr-trash mr-2"></i> Recycle Bin
         </h4>
 
@@ -48,26 +48,27 @@
     </div>
 
     {% if not deleted_notes and not deleted_rapats %}
-    <div class="bg-gray-50 border border-gray-200 text-gray-600 rounded p-6 text-center">
+    <div
+        class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 rounded p-6 text-center">
         Recycle bin kosong ✨
     </div>
     {% endif %}
 
     {# ================= NOTES ================= #}
     {% if deleted_notes %}
-    <h5 class="text-sm font-semibold text-gray-600 mt-6 mb-2">
+    <h5 class="text-sm font-semibold text-gray-600 dark:text-gray-400 mt-6 mb-2">
         Catatan
     </h5>
 
-    <div class="bg-white shadow rounded divide-y divide-gray-100">
+    <div class="bg-white dark:bg-gray-800 shadow rounded divide-y divide-gray-100 dark:divide-gray-700">
         {% for note in deleted_notes %}
-        <div class="flex items-center justify-between px-4 py-3 hover:bg-gray-50">
+        <div class="flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700">
 
             <div>
-                <strong class="block text-gray-800">
+                <strong class="block text-gray-800 dark:text-gray-100">
                     {{ note.title or "Tanpa Judul" }}
                 </strong>
-                <div class="text-sm text-gray-500">
+                <div class="text-sm text-gray-500 dark:text-gray-400">
                     Dihapus: {{ note.deleted_at.strftime("%d %b %Y %H:%M") }}
                 </div>
             </div>
@@ -96,19 +97,19 @@
 
     {# ================= RAPAT ================= #}
     {% if deleted_rapats %}
-    <h5 class="text-sm font-semibold text-gray-600 mt-8 mb-2">
+    <h5 class="text-sm font-semibold text-gray-600 dark:text-gray-400 mt-8 mb-2">
         <i class="fi fi-rr-meeting mr-1"></i> Rapat
     </h5>
 
-    <div class="bg-white shadow rounded divide-y divide-gray-100">
+    <div class="bg-white dark:bg-gray-800 shadow rounded divide-y divide-gray-100 dark:divide-gray-700">
         {% for rapat in deleted_rapats %}
-        <div class="flex items-center justify-between px-4 py-3 hover:bg-gray-50">
+        <div class="flex items-center justify-between px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700">
 
             <div>
-                <strong class="block text-gray-800">
+                <strong class="block text-gray-800 dark:text-gray-100">
                     {{ rapat.topik }}
                 </strong>
-                <div class="text-sm text-gray-500">
+                <div class="text-sm text-gray-500 dark:text-gray-400">
                     Dihapus: {{ rapat.deleted_at.strftime("%d %b %Y %H:%M") }}
                 </div>
             </div>
