@@ -27,7 +27,7 @@ def login():
             session['admin_username'] = admin.username
             return redirect('/admin/dashboard')
 
-        flash('Username atau password salah')
+        flash('Username atau password salah', 'login_error')
 
     return render_template('admin/auth/login.html')
 

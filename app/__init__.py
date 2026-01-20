@@ -32,6 +32,7 @@ def create_app():
     from app.controllers.admin.user_crud import admin_user_bp
     from app.commands.seed_admin import seed_admin
     from app.models.notes import Note
+    from app.controllers.admin.inbox_push import admin_inbox_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
@@ -50,8 +51,10 @@ def create_app():
     app.register_blueprint(admin_crud_bp)
     app.register_blueprint(admin_user_bp)
     app.cli.add_command(seed_admin)
+    app.register_blueprint(admin_inbox_bp)
 
     # SIDEBAR NOTES
+
     @app.context_processor
     def inject_notes():
         if session.get("user_id"):
@@ -88,6 +91,8 @@ def create_app():
     def admin_home():
         if session.get("admin_id"):
             return redirect("/admin/dashboard")
+        if session.get("user_id"):
+            return redirect("/dashboard")
         return redirect("/admin/login")
 
     return app

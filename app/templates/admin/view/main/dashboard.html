@@ -9,7 +9,61 @@
 {% endblock %}
 
 {% block content %}
-<p class="text-gray-600 mb-6">
-    Ini dashboard admin versi simpel dulu.
-</p>
+
+<!-- WIDGET -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+
+    <div class="bg-white p-5 rounded shadow">
+        <p class="text-sm text-gray-500">Total User</p>
+        <p class="text-3xl font-bold mt-1">
+            {{ total_users or 0 }}
+        </p>
+
+    </div>
+
+
+    <div class="bg-white p-5 rounded shadow">
+        <p class="text-sm text-gray-500">Status Sistem</p>
+        <p class="text-green-600 font-semibold mt-2">
+            Aktif
+        </p>
+    </div>
+
+</div>
+
+<div class="bg-white p-6 rounded shadow">
+    <h2 class="font-semibold mb-4">
+        User Baru (7 Hari Terakhir)
+    </h2>
+
+    <canvas id="userChart" height="100"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('userChart');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ days | tojson }},
+        datasets: [{
+            label: 'User Baru',
+            data: {{ user_counts | tojson }},
+        tension: 0.4,
+        fill: false
+            }]
+        },
+        options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false }
+        }
+    }
+    });
+</script>
+
+
+
 {% endblock %}

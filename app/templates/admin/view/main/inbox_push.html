@@ -1,0 +1,61 @@
+{% extends 'admin/view/base/layout.html' %}
+
+{% block title %}Push Inbox{% endblock %}
+
+{% block header %}
+<h1 class="text-xl font-semibold">Push Event / Update</h1>
+{% endblock %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="mb-4 px-4 py-3 rounded
+            {% if category == 'success' %}
+                bg-green-100 text-green-700
+            {% elif category == 'error' %}
+                bg-red-100 text-red-700
+            {% else %}
+                bg-gray-100 text-gray-700
+            {% endif %}
+        ">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<form method="POST" class="bg-white p-6 rounded shadow space-y-4">
+
+
+    <form method="POST" class="bg-white p-6 rounded shadow space-y-4">
+
+        <div>
+            <label class="block text-sm mb-1">Judul</label>
+            <input name="title" required class="w-full border px-3 py-2 rounded">
+        </div>
+
+        <div>
+            <label class="block text-sm mb-1">Pesan</label>
+            <textarea name="message" rows="5" required class="w-full border px-3 py-2 rounded"></textarea>
+        </div>
+
+        <div>
+            <label class="block text-sm mb-1">Kirim ke</label>
+            <select name="target" class="w-full border px-3 py-2 rounded">
+                <option value="all">Semua User</option>
+                {% for u in users %}
+                <option value="{{ u.id }}">
+                    {{ u.username }} ({{ u.email }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button class="bg-blue-600 text-white px-6 py-2 rounded">
+            Kirim
+        </button>
+    </form>
+
+    {% endblock %}
