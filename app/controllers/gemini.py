@@ -27,8 +27,27 @@ def ai_chat():
         return jsonify({'error': 'User not logged in'}), 401
 
     payload = {
-        "contents": [{"parts": [{"text": user_message}]}]
+        "contents": [
+            {
+                "role": "user",
+                "parts": [
+                    {
+                        "text": f"""
+Kamu adalah AI yang menjawab dengan sangat singkat, padat, dan langsung ke inti.
+Jawaban maksimal 2–3 kalimat.
+Jangan basa-basi.
+Jawab hanya sesuai pertanyaan.
+Hemat token.
+
+Pertanyaan:
+{user_message}
+"""
+                    }
+                ]
+            }
+        ]
     }
+
     try:
         response = requests.post(GEMINI_API_URL, json=payload)
         response.raise_for_status()
@@ -107,10 +126,12 @@ def ai_query():
         response = requests.post(GEMINI_API_URL, json=payload)
         response.raise_for_status()
         result = response.json()
-        ai_text = result.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', 'Maaf, tidak ada respons.')
+        ai_text = result.get('candidates', [{}])[0].get('content', {}).get(
+            'parts', [{}])[0].get('text', 'Maaf, tidak ada respons.')
 
         # simpan ke riwayat
-        chat = ChatHistory(user_id=user_id, user_input=prompt, ai_output=ai_text)
+        chat = ChatHistory(
+            user_id=user_id, user_input=prompt, ai_output=ai_text)
         db.session.add(chat)
         db.session.commit()
 
