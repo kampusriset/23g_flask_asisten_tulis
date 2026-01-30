@@ -23,7 +23,8 @@ def index():
     return render_template(
         "view/fitur/setting/setting.html",
         user=user,
-        dark_mode=setting.dark_mode
+        dark_mode=setting.dark_mode,
+        ai_provider=setting.ai_provider
     )
 
 
@@ -43,3 +44,22 @@ def toggle_dark():
 
     db.session.commit()
     return "", 204
+
+
+@setting_bp.route("/set-ai-provider", methods=["POST"])
+def set_ai_provider():
+    user_id = session.get("user_id")
+    if not user_id:
+        return "", 401
+
+    data = request.get_json()
+    provider = data.get("provider")
+
+    if provider not in ["gemini", "openai", "groq", "deepseek"]:
+        return {"error": "Invalid provider"}, 400
+
+    setting = UserSetting.query.filter_by(user_id=user_id).first()
+    setting.ai_provider = provider
+
+    db.session.commit()
+    return {"success": True}

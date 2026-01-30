@@ -33,6 +33,7 @@ def create_app():
     from app.commands.seed_admin import seed_admin
     from app.models.notes import Note
     from app.controllers.admin.inbox_push import admin_inbox_bp
+    from app.models.setting import UserSetting
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)

@@ -13,6 +13,8 @@
   </div>
 
   <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl">
+
+    <!-- ================== TAMPILAN ================== -->
     <div class="p-6">
       <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
         Preferensi Tampilan
@@ -28,36 +30,58 @@
           </p>
         </div>
 
-        <!-- TOGGLE -->
         <label class="relative inline-flex items-center cursor-pointer">
-          <input
-            type="checkbox"
-            id="darkToggle"
-            class="absolute opacity-0 w-0 h-0 peer"
-            {% if dark_mode %}checked{% endif %}
-          >
+          <input type="checkbox" id="darkToggle" class="absolute opacity-0 w-0 h-0 peer" {% if dark_mode %}checked{%
+            endif %}>
 
-          <span
-            class="w-11 h-6 bg-gray-300 dark:bg-gray-700 rounded-full
-                   peer-checked:bg-gray-900
-                   transition-colors
-                   after:content-['']
-                   after:absolute after:top-0.5 after:left-0.5
-                   after:w-5 after:h-5
-                   after:bg-white after:rounded-full
-                   after:transition-transform
-                   peer-checked:after:translate-x-5">
-          </span>
+          <div class="w-11 h-6 bg-gray-300 dark:bg-gray-700 rounded-full
+           peer-checked:bg-gray-900 transition
+           after:content-['']
+           after:absolute after:top-0.5 after:left-0.5
+           after:w-5 after:h-5 after:bg-white
+           after:rounded-full after:transition-transform
+           peer-checked:after:translate-x-5">
+          </div>
         </label>
+
       </div>
     </div>
+
+    <!-- ================== AI PROVIDER ================== -->
+    <div class="border-t border-gray-200 dark:border-gray-700 p-6">
+      <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+        AI Provider
+      </h2>
+
+      <select id="aiProvider" class="w-full max-w-sm px-3 py-2 rounded-lg border
+               dark:bg-gray-800 dark:border-gray-700
+               text-sm focus:outline-none focus:ring-2 focus:ring-gray-400">
+        <option value="gemini" {% if ai_provider=="gemini" %}selected{% endif %}>Gemini</option>
+        <option value="openai" {% if ai_provider=="openai" %}selected{% endif %}>ChatGPT (OpenAI)</option>
+        <option value="groq" {% if ai_provider=="groq" %}selected{% endif %}>Groq</option>
+        <option value="deepseek" {% if ai_provider=="deepseek" %}selected{% endif %}>DeepSeek</option>
+      </select>
+
+      <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
+        Provider ini akan digunakan untuk semua fitur AI.
+      </p>
+    </div>
+
   </div>
 </div>
 
 <script>
-document.getElementById("darkToggle").addEventListener("change", () => {
-  fetch("/setting/toggle-dark", { method: "POST" })
-    .then(() => location.reload());
-});
+  document.getElementById("darkToggle").addEventListener("change", () => {
+    fetch("/setting/toggle-dark", { method: "POST" })
+      .then(() => location.reload());
+  });
+
+  document.getElementById("aiProvider").addEventListener("change", (e) => {
+    fetch("/setting/set-ai-provider", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ provider: e.target.value })
+    });
+  });
 </script>
 {% endblock %}

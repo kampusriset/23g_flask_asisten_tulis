@@ -1,193 +1,19 @@
 from dotenv import load_dotenv
-import requests
 import os
 from flask import Blueprint, render_template, request, redirect, url_for, session, jsonify, flash
 from app.models.notes import Note
+from app.models.setting import UserSetting
 from app import db
+from app.ai_engine import call_ai, note_suggest_prompt, note_summarize_prompt, note_summarize_bullet_prompt
 
+load_dotenv()
 
 notes_bp = Blueprint("notes_bp", __name__, url_prefix="/notes")
 
 
-load_dotenv()
-
-
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
-GEMINI_API_URL = f'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}'
-
-
-@notes_bp.route('/<int:note_id>/suggest', methods=['POST'])
-def note_suggest(note_id):
-    if not session.get('user_id'):
-        return jsonify({'suggestion': ''}), 401
-
-    data = request.get_json() or {}
-    text = data.get('text', '').strip()
-
-    if len(text) < 3:
-        return jsonify({'suggestion': ''})
-
-    last_words = text.split()[-3:]  # ambil 1–3 kata terakhir
-    context = " ".join(last_words)
-
-    payload = {
-        "contents": [
-            {
-                "parts": [
-                    {
-                        "text": (
-                            "Lanjutkan teks berikut dengan 1 atau 2 kata saja.\n"
-                            "Contoh jawaban yang benar:\n"
-                            "- dan\n"
-                            "- sehingga\n"
-                            "- untuk itu\n\n"
-                            f"Teks:\n{context}\n\n"
-                            "Jawaban:"
-                        )
-                    }
-                ]
-            }
-        ],
-        "generationConfig": {
-            "temperature": 0.25,
-            "maxOutputTokens": 100,
-            "topP": 0.9
-        }
-    }
-
-    try:
-        response = requests.post(GEMINI_API_URL, json=payload, timeout=10)
-        response.raise_for_status()
-        result = response.json()
-
-        print("Gemini response:", result)
-
-        suggestion = ""
-        candidates = result.get("candidates", [])
-        if candidates:
-            content = candidates[0].get("content", {})
-            parts = content.get("parts")
-
-            if parts and isinstance(parts, list):
-                suggestion = parts[0].get("text", "").strip()
-
-        return jsonify({'suggestion': suggestion})
-
-    except Exception as e:
-        print("Gemini ERROR:", e)
-        return jsonify({'suggestion': ''})
-
-
-@notes_bp.route('/<int:note_id>/summarize', methods=['POST'])
-def note_summarize(note_id):
-    if not session.get('user_id'):
-        return jsonify({'summary': ''}), 401
-
-    data = request.get_json() or {}
-    text = data.get('text', '').strip()
-
-    if len(text) < 20:
-        return jsonify({'summary': ''})
-
-    payload = {
-        "contents": [
-            {
-                "parts": [
-                    {
-                        "text": (
-                            "Ringkas catatan berikut menjadi versi singkat, jelas, "
-                            "dan mudah dibaca. Jangan menambah informasi baru.\n\n"
-                            f"Catatan:\n{text}\n\nRingkasan:"
-                        )
-                    }
-                ]
-            }
-        ],
-        "generationConfig": {
-            "temperature": 0.3,
-            "maxOutputTokens": 1000,
-            "topP": 0.9
-        }
-    }
-
-    try:
-        response = requests.post(GEMINI_API_URL, json=payload, timeout=15)
-        response.raise_for_status()
-        result = response.json()
-
-        summary = ""
-        candidates = result.get("candidates", [])
-        if candidates:
-            parts = candidates[0].get("content", {}).get("parts", [])
-            if parts:
-                summary = parts[0].get("text", "").strip()
-
-        return jsonify({'summary': summary})
-
-    except Exception as e:
-        print("Gemini Summarize ERROR:", e)
-        return jsonify({'summary': ''})
-
-
-@notes_bp.route('/<int:note_id>/summarize-bullet', methods=['POST'])
-def note_summarize_bullet(note_id):
-    if not session.get('user_id'):
-        return jsonify({'summary': ''}), 401
-
-    data = request.get_json() or {}
-    text = data.get('text', '').strip()
-
-    if len(text) < 20:
-        return jsonify({'summary': ''})
-
-    payload = {
-        "contents": [
-            {
-                "parts": [
-                    {
-                        "text": (
-                            "Ringkas catatan berikut menjadi bullet point.\n"
-                            "- Gunakan 4 sampai 7 poin\n"
-                            "- Setiap poin singkat dan jelas\n"
-                            "- Jangan menambah informasi baru\n"
-                            "- Jangan pakai paragraf\n\n"
-                            f"Catatan:\n{text}\n\n"
-                            "Bullet point:"
-                        )
-                    }
-                ]
-            }
-        ],
-        "generationConfig": {
-            "temperature": 0.25,
-            "maxOutputTokens": 1000,
-            "topP": 0.9
-        }
-    }
-
-    try:
-        response = requests.post(GEMINI_API_URL, json=payload, timeout=15)
-        response.raise_for_status()
-        result = response.json()
-
-        summary = ""
-        candidates = result.get("candidates", [])
-        if candidates:
-            parts = candidates[0].get("content", {}).get("parts", [])
-            if parts:
-                summary = parts[0].get("text", "").strip()
-
-        return jsonify({'summary': summary})
-
-    except Exception as e:
-        print("Gemini Bullet ERROR:", e)
-        return jsonify({'summary': ''})
-
-# --------------------------
-# AUTH GUARD
-# --------------------------
-
-
+# =========================
+# HELPERS
+# =========================
 def require_login():
     if not session.get("user_id"):
         return redirect(url_for("auth_bp.login"))
@@ -201,9 +27,67 @@ def get_user_notes(user_id):
     ).order_by(Note.updated_at.desc()).all()
 
 
-# --------------------------
+def get_ai_provider():
+    user_id = session.get("user_id")
+    if not user_id:
+        return "gemini"  # fallback default
+    setting = UserSetting.query.filter_by(user_id=user_id).first()
+    return setting.ai_provider if setting and setting.ai_provider else "gemini"
+
+
+# =========================
+# AI ROUTES
+# =========================
+@notes_bp.route('/<int:note_id>/suggest', methods=['POST'])
+def note_suggest(note_id):
+    if not session.get('user_id'):
+        return jsonify({'suggestion': ''}), 401
+
+    text = (request.get_json() or {}).get('text', '').strip()
+    if len(text) < 3:
+        return jsonify({'suggestion': ''})
+
+    last_words = " ".join(text.split()[-3:])
+    prompt = note_suggest_prompt(last_words)
+    provider = get_ai_provider()
+    suggestion = call_ai(provider, prompt, temperature=0.25, max_tokens=100)
+    return jsonify({'suggestion': suggestion})
+
+
+@notes_bp.route('/<int:note_id>/summarize', methods=['POST'])
+def note_summarize(note_id):
+    if not session.get('user_id'):
+        return jsonify({'summary': ''}), 401
+
+    text = (request.get_json() or {}).get('text', '').strip()
+    if len(text) < 20:
+        return jsonify({'summary': ''})
+
+    prompt = note_summarize_prompt(text)
+    provider = get_ai_provider()
+    summary = call_ai(provider, prompt, temperature=0.3, max_tokens=2000)
+    return jsonify({'summary': summary})
+
+
+@notes_bp.route('/<int:note_id>/summarize-bullet', methods=['POST'])
+def note_summarize_bullet(note_id):
+    if not session.get('user_id'):
+        return jsonify({'summary': ''}), 401
+
+    text = (request.get_json() or {}).get('text', '').strip()
+    if len(text) < 20:
+        return jsonify({'summary': ''})
+
+    prompt = note_summarize_bullet_prompt(text)
+    provider = get_ai_provider()
+    bullet_summary = call_ai(
+        provider, prompt, temperature=0.25, max_tokens=2000)
+    return jsonify({'summary': bullet_summary})
+
+
+# =========================
 # NOTES HOME
-# --------------------------
+# =========================
 @notes_bp.route("/")
 def index():
     check = require_login()
@@ -214,17 +98,14 @@ def index():
     notes = get_user_notes(user_id)
 
     if not notes:
-        return render_template(
-            "view/fitur/notes/empty.html", title="Empty"
-        )
+        return render_template("view/fitur/notes/empty.html", title="Empty")
 
-    # kalau ada → buka catatan terakhir
     return redirect(url_for("notes_bp.edit", note_id=notes[0].id))
 
 
-# --------------------------
+# =========================
 # EDIT / VIEW CATATAN
-# --------------------------
+# =========================
 @notes_bp.route("/<int:note_id>", methods=["GET", "POST"])
 def edit(note_id):
     check = require_login()
@@ -243,22 +124,16 @@ def edit(note_id):
         note.title = request.form.get("title")
         note.content = request.form.get("content")
         db.session.commit()
-
         return redirect(url_for("notes_bp.edit", note_id=note.id))
 
-    # Use note title as browser page title; fallback to 'Catatan' when empty
     page_title = note.title.strip() if getattr(
         note, 'title', None) and note.title.strip() else "Catatan"
-    return render_template(
-        "view/fitur/notes/edit.html",
-        note=note,
-        title=page_title
-    )
+    return render_template("view/fitur/notes/edit.html", note=note, title=page_title)
 
 
-# --------------------------
+# =========================
 # TAMBAH CATATAN BARU
-# --------------------------
+# =========================
 @notes_bp.route("/new")
 def new_note():
     check = require_login()
@@ -273,9 +148,9 @@ def new_note():
     return redirect(url_for("notes_bp.edit", note_id=note.id))
 
 
-# --------------------------
+# =========================
 # HAPUS CATATAN
-# --------------------------
+# =========================
 @notes_bp.route("/<int:note_id>/delete", methods=["POST"])
 def delete(note_id):
     check = require_login()
@@ -288,13 +163,15 @@ def delete(note_id):
         Note.deleted_at.is_(None)
     ).first_or_404()
 
-    note.soft_delete()   # 👈 PINDAH KE RECYCLE BIN
+    note.soft_delete()
     db.session.commit()
     flash("Catatan dipindahkan ke Recycle Bin", "note_delete")
-
     return redirect(url_for("notes_bp.index"))
 
 
+# =========================
+# RECYCLE BIN
+# =========================
 @notes_bp.route("/recycle")
 def trash():
     check = require_login()
@@ -306,7 +183,4 @@ def trash():
         Note.deleted_at.isnot(None)
     ).order_by(Note.deleted_at.desc()).all()
 
-    return render_template(
-        "view/fitur/recycle/recycle.html",
-        deleted_notes=deleted_notes
-    )
+    return render_template("view/fitur/recycle/recycle.html", deleted_notes=deleted_notes)

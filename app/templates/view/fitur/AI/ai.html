@@ -199,14 +199,15 @@
 <!-- PROVIDER INFO -->
 <div class="mt-10 text-sm text-gray-500 dark:text-gray-400">
     <span class="font-medium text-gray-700 dark:text-gray-300">Provider:</span>
-    {% if gemini_available %}
+    {% if active_provider and active_provider != "tidak tersedia" %}
     <span class="inline-flex items-center px-2 py-1 ml-2 rounded bg-green-100 text-green-700 text-xs">
-        Gemini
+        {{ active_provider }}
     </span>
     {% else %}
     <span class="ml-2 text-gray-400">(tidak tersedia)</span>
     {% endif %}
 </div>
+
 
 </div>
 

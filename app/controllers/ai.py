@@ -1,124 +1,109 @@
 from dotenv import load_dotenv
-import requests
 import os
-from flask import Blueprint, request, jsonify, session
+import requests
+from flask import Blueprint, request, jsonify, session, render_template, redirect, url_for
+from app.models.setting import UserSetting
+from app.ai_engine import call_ai
 
-# Load environment variables first
 load_dotenv()
-
-# 🔑 Gemini API key + endpoint
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
-GEMINI_API_URL = f'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}'
 
 ai_bp = Blueprint("ai_bp", __name__, url_prefix="/ai")
 
-# --- GRAMMAR ENDPOINT ---
+
+@ai_bp.route("/", methods=["GET"])
+def ai_page():
+    user_id = session.get("user_id")
+    if not user_id:
+        return redirect(url_for("auth_bp.login"))
+
+    # Ambil provider dari DB
+    setting = UserSetting.query.filter_by(user_id=user_id).first()
+    active_provider = setting.ai_provider.capitalize(
+    ) if setting and setting.ai_provider else "tidak tersedia"
+
+    return render_template(
+        "view/fitur/AI/ai.html",  # pastikan ai.html di templates/fitur/AI/
+        title="AI Tools",
+        active_provider=active_provider
+    )
+
+
+# =========================
+# helper ambil provider
+# =========================
+def get_provider():
+    setting = UserSetting.query.filter_by(
+        user_id=session.get("user_id")
+    ).first()
+
+    return setting.ai_provider if setting else "gemini"
+
+
+# =========================
+# GRAMMAR
+# =========================
 @ai_bp.route("/grammar", methods=["POST"])
 def ai_grammar():
     if not session.get("user_id"):
         return jsonify({"grammar": ""}), 401
 
-    data = request.get_json() or {}
-    text = data.get("text", "").strip()
-    if not text or len(text) < 2:
+    text = (request.get_json() or {}).get("text", "").strip()
+    if len(text) < 2:
         return jsonify({"grammar": ""})
 
-    prompt = (
-        "Cek dan perbaiki grammar, ejaan, dan struktur kalimat pada teks berikut. "
-        "Deteksi bahasa secara otomatis. Jika sudah benar, tampilkan teks aslinya. Jangan terjemahkan ke bahasa lain, hanya perbaiki jika ada kesalahan. "
-        "Jawab hanya dengan hasil perbaikan, tanpa penjelasan atau terjemahan.\n"
-        f"Teks:\n{text}\n\nHasil perbaikan:"
-    )
+    prompt = f"""
+Cek dan perbaiki grammar, ejaan, dan struktur kalimat.
+Deteksi bahasa otomatis.
+Jika sudah benar, tampilkan teks aslinya.
 
-    payload = {
-        "contents": [
-            {
-                "parts": [
-                    {"text": prompt}
-                ]
-            }
-        ],
-        "generationConfig": {
-            "temperature": 0.2,
-            "maxOutputTokens": 800,
-            "topP": 0.9
-        }
-    }
+Jawab hanya hasil akhir, tanpa penjelasan.
 
-    try:
-        response = requests.post(GEMINI_API_URL, json=payload, timeout=15)
-        response.raise_for_status()
-        result = response.json()
+Teks:
+{text}
+"""
 
-        grammar = ""
-        candidates = result.get("candidates", [])
-        if candidates:
-            parts = candidates[0].get("content", {}).get("parts", [])
-            if parts:
-                grammar = parts[0].get("text", "").strip()
+    provider = get_provider()
+    result = call_ai(provider, prompt)
 
-        return jsonify({"grammar": grammar})
+    return jsonify({"grammar": result})
 
-    except Exception as e:
-        print("Gemini AI Grammar ERROR:", e)
-        return jsonify({"grammar": ""})
 
+# =========================
+# SUMMARIZE
+# =========================
 @ai_bp.route("/summarize", methods=["POST"])
 def ai_summarize():
     if not session.get("user_id"):
         return jsonify({"summary": ""}), 401
 
-    data = request.get_json() or {}
-    text = data.get("text", "").strip()
-
+    text = (request.get_json() or {}).get("text", "").strip()
     if len(text) < 20:
         return jsonify({"summary": ""})
 
-    payload = {
-        "contents": [
-            {
-                "parts": [
-                    {
-                        "text": (
-                            "Ringkas teks berikut menjadi ringkasan yang singkat, jelas, "
-                            "dan mudah dipahami.\n"
-                            "- Gunakan bahasa Indonesia\n"
-                            "- Jangan menambah informasi baru\n"
-                            "- Fokus ke inti\n\n"
-                            f"Teks:\n{text}\n\n"
-                            "Ringkasan:"
-                        )
-                    }
-                ]
-            }
-        ],
-        "generationConfig": {
-            "temperature": 0.3,
-            "maxOutputTokens": 800,
-            "topP": 0.9
-        }
-    }
+    prompt = f"""
+Ringkas teks berikut:
 
-    try:
-        response = requests.post(GEMINI_API_URL, json=payload, timeout=15)
-        response.raise_for_status()
-        result = response.json()
+- Bahasa Indonesia
+- Singkat
+- Jelas
+- Fokus inti
+- Jangan menambah informasi baru
 
-        summary = ""
-        candidates = result.get("candidates", [])
-        if candidates:
-            parts = candidates[0].get("content", {}).get("parts", [])
-            if parts:
-                summary = parts[0].get("text", "").strip()
+Teks:
+{text}
 
-        return jsonify({"summary": summary})
+Ringkasan:
+"""
 
-    except Exception as e:
-        print("Gemini AI Tool ERROR:", e)
-        return jsonify({"summary": ""})
+    provider = get_provider()
+    result = call_ai(provider, prompt)
+
+    return jsonify({"summary": result})
 
 
-# --- TRANSLATE ENDPOINT ---
+# =========================
+# TRANSLATE
+# =========================
 @ai_bp.route("/translate", methods=["POST"])
 def ai_translate():
     if not session.get("user_id"):
@@ -126,12 +111,11 @@ def ai_translate():
 
     data = request.get_json() or {}
     text = data.get("text", "").strip()
-    target_lang = data.get("target_lang", "en").strip()
+    target = data.get("target_lang", "en")
 
-    if not text or len(text) < 2:
+    if len(text) < 2:
         return jsonify({"translation": ""})
 
-    # Prompt Gemini untuk translate
     lang_map = {
         "en": "English",
         "id": "Indonesian",
@@ -149,44 +133,23 @@ def ai_translate():
         "ms": "Malay",
         "pt": "Portuguese"
     }
-    lang_name = lang_map.get(target_lang, "English")
 
-    prompt = (
-        f"Terjemahkan teks berikut ke dalam bahasa {lang_name}.\n"
-        "- Jangan ubah makna\n"
-        "- Jawab hanya dengan hasil terjemahan, tanpa penjelasan\n"
-        f"Teks:\n{text}\n\nTerjemahan:"
-    )
+    lang = lang_map.get(target, "English")
 
-    payload = {
-        "contents": [
-            {
-                "parts": [
-                    {"text": prompt}
-                ]
-            }
-        ],
-        "generationConfig": {
-            "temperature": 0.2,
-            "maxOutputTokens": 800,
-            "topP": 0.9
-        }
-    }
+    prompt = f"""
+Terjemahkan teks berikut ke bahasa {lang}.
 
-    try:
-        response = requests.post(GEMINI_API_URL, json=payload, timeout=15)
-        response.raise_for_status()
-        result = response.json()
+- Jangan ubah makna
+- Jangan beri penjelasan
+- Jawab hanya hasil terjemahan
 
-        translation = ""
-        candidates = result.get("candidates", [])
-        if candidates:
-            parts = candidates[0].get("content", {}).get("parts", [])
-            if parts:
-                translation = parts[0].get("text", "").strip()
+Teks:
+{text}
 
-        return jsonify({"translation": translation})
+Terjemahan:
+"""
 
-    except Exception as e:
-        print("Gemini AI Translate ERROR:", e)
-        return jsonify({"translation": ""})
+    provider = get_provider()
+    result = call_ai(provider, prompt)
+
+    return jsonify({"translation": result})

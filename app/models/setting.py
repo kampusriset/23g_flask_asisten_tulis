@@ -15,6 +15,12 @@ class UserSetting(db.Model):
 
     dark_mode = db.Column(db.Boolean, default=False)
 
+    # 🔥 INI PENTING
+    ai_provider = db.Column(
+        db.String(20),
+        default="gemini"
+    )
+
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(
         db.DateTime,
