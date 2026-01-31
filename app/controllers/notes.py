@@ -4,7 +4,13 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from app.models.notes import Note
 from app.models.setting import UserSetting
 from app import db
-from app.ai_engine import call_ai, note_suggest_prompt, note_summarize_prompt, note_summarize_bullet_prompt
+from app.ai_engine import call_ai
+from app.services.note_prompt_service import (
+    note_suggest_prompt,
+    note_summarize_prompt,
+    note_summarize_bullet_prompt
+)
+
 
 load_dotenv()
 

@@ -1,22 +1,22 @@
 # app/ai_engine.py
-import os
 import requests
-from dotenv import load_dotenv
-
-load_dotenv()
+from app.services.ai_key_service import get_api_key
 
 
 def call_ai(provider, prompt, temperature=0.25, max_tokens=2000, top_p=0.9):
-    provider = provider.lower()
+    provider = provider.lower().strip()
 
     try:
         # ================= GEMINI =================
         if provider == "gemini":
-            key = os.getenv("GEMINI_API_KEY")
+            key = get_api_key("gemini")
             if not key:
-                return "Model Gemini belum tersedia."
+                return "Model Gemini belum aktif."
 
-            url = f"https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key={key}"
+            url = (
+                "https://generativelanguage.googleapis.com/v1/models/"
+                f"gemini-2.5-flash:generateContent?key={key}"
+            )
 
             payload = {
                 "contents": [{"parts": [{"text": prompt}]}],
@@ -40,9 +40,9 @@ def call_ai(provider, prompt, temperature=0.25, max_tokens=2000, top_p=0.9):
 
         # ================= OPENAI =================
         elif provider == "openai":
-            key = os.getenv("OPENAI_API_KEY")
+            key = get_api_key("openai")
             if not key:
-                return "Model OpenAI belum tersedia."
+                return "Model OpenAI belum aktif."
 
             headers = {
                 "Authorization": f"Bearer {key}",
@@ -65,9 +65,9 @@ def call_ai(provider, prompt, temperature=0.25, max_tokens=2000, top_p=0.9):
 
         # ================= GROQ =================
         elif provider == "groq":
-            key = os.getenv("GROQ_API_KEY")
+            key = get_api_key("groq")
             if not key:
-                return "Model Groq belum tersedia."
+                return "Model Groq belum aktif."
 
             headers = {
                 "Authorization": f"Bearer {key}",
@@ -90,9 +90,9 @@ def call_ai(provider, prompt, temperature=0.25, max_tokens=2000, top_p=0.9):
 
         # ================= DEEPSEEK =================
         elif provider == "deepseek":
-            key = os.getenv("DEEPSEEK_API_KEY")
+            key = get_api_key("deepseek")
             if not key:
-                return "Model DeepSeek belum tersedia."
+                return "Model DeepSeek belum aktif."
 
             headers = {
                 "Authorization": f"Bearer {key}",
@@ -117,39 +117,4 @@ def call_ai(provider, prompt, temperature=0.25, max_tokens=2000, top_p=0.9):
 
     except Exception as e:
         print(f"call_ai ERROR ({provider}):", e)
-        return "Model AI belum tersedia."
-
-
-# ===========================
-# Helper prompt khusus notes
-# ===========================
-def note_suggest_prompt(text):
-    last_words = text.split()[-3:]
-    context = " ".join(last_words)
-    return (
-        "Lanjutkan teks berikut dengan 1 atau 2 kata saja.\n"
-        "Contoh jawaban yang benar:\n"
-        "- dan\n"
-        "- sehingga\n"
-        "- untuk itu\n\n"
-        f"Teks:\n{context}\n\nJawaban:"
-    )
-
-
-def note_summarize_prompt(text):
-    return (
-        "Ringkas catatan berikut menjadi versi singkat, jelas, "
-        "dan mudah dibaca. Jangan menambah informasi baru.\n\n"
-        f"Catatan:\n{text}\n\nRingkasan:"
-    )
-
-
-def note_summarize_bullet_prompt(text):
-    return (
-        "Ringkas catatan berikut menjadi bullet point.\n"
-        "- Gunakan 4 sampai 7 poin\n"
-        "- Setiap poin singkat dan jelas\n"
-        "- Jangan menambah informasi baru\n"
-        "- Jangan pakai paragraf\n\n"
-        f"Catatan:\n{text}\n\nBullet point:"
-    )
+        return "Terjadi kesalahan saat menghubungi AI."

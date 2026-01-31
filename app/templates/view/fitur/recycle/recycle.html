@@ -38,12 +38,12 @@
         </h4>
 
         {% if deleted_notes or deleted_rapats %}
-        <form method="post" action="{{ url_for('recycle_bp.delete_all') }}"
-            onsubmit="return confirm('Yakin hapus SEMUA data permanen?')">
-            <button class="inline-flex items-center px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700">
-                <i class="fi fi-rr-trash mr-2"></i> Hapus Semua
-            </button>
-        </form>
+        <button type="button" class="btn-delete-all inline-flex items-center px-3 py-1.5
+           bg-red-700 text-white text-sm rounded hover:bg-red-800"
+            data-action="{{ url_for('recycle_bp.delete_all') }}">
+            <i class="fi fi-rr-trash mr-2"></i> Hapus Semua
+        </button>
+
         {% endif %}
     </div>
 
@@ -81,13 +81,15 @@
                     </button>
                 </form>
 
-                <form method="post" action="{{ url_for('recycle_bp.force_delete_note', note_id=note.id) }}"
-                    onsubmit="return confirm('Yakin hapus catatan ini permanen?')">
-                    <button
-                        class="inline-flex items-center px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700">
-                        <i class="fi fi-rr-trash mr-1"></i> Hapus
-                    </button>
-                </form>
+                <button type="button" style="background-color:#dc2626;color:white"
+                    class="px-4 py-2 rounded hover:opacity-90 btn-delete"
+                    data-action="{{ url_for('recycle_bp.force_delete_note', note_id=note.id) }}"
+                    data-label="catatan ini">
+                    Hapus
+                </button>
+
+
+
             </div>
 
         </div>
@@ -122,13 +124,14 @@
                     </button>
                 </form>
 
-                <form method="post" action="{{ url_for('recycle_bp.force_delete_rapat', rapat_id=rapat.id) }}"
-                    onsubmit="return confirm('Yakin hapus rapat ini permanen?')">
-                    <button
-                        class="inline-flex items-center px-3 py-1.5 bg-red-600 text-white text-sm rounded hover:bg-red-700">
-                        <i class="fi fi-rr-trash mr-1"></i> Hapus
-                    </button>
-                </form>
+                <button type="button" style="background-color:#dc2626;color:white"
+                    class="px-4 py-2 rounded hover:opacity-90 btn-delete"
+                    data-action="{{ url_for('recycle_bp.force_delete_rapat', rapat_id=rapat.id) }}"
+                    data-label="rapat ini">
+                    Hapus
+                </button>
+
+
             </div>
 
         </div>
@@ -137,4 +140,84 @@
     {% endif %}
 
 </div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div id="deleteModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-md mx-4">
+        <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-700">
+            <h5 class="text-lg font-semibold text-red-600 dark:text-red-400">
+                Konfirmasi Hapus
+            </h5>
+        </div>
+
+        <div class="p-5">
+            <p id="deleteMessage" class="text-gray-700 dark:text-gray-300 mb-4">
+                Yakin mau menghapus item ini secara permanen?
+            </p>
+
+            <div class="flex justify-end gap-2">
+                <button id="cancelDelete" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded
+                   text-gray-700 dark:text-gray-300
+                   hover:bg-gray-50 dark:hover:bg-gray-700">
+                    Batal
+                </button>
+
+                <form method="POST" id="deleteForm">
+                    <button type="submit" class="px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded
+                     hover:bg-red-700 dark:hover:bg-red-600">
+                        Hapus
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const deleteModal = document.getElementById("deleteModal");
+    const deleteForm = document.getElementById("deleteForm");
+    const deleteMessage = document.getElementById("deleteMessage");
+    const cancelDelete = document.getElementById("cancelDelete");
+
+    // 🔴 delete per item
+    document.querySelectorAll(".btn-delete").forEach(btn => {
+        btn.addEventListener("click", () => {
+            deleteForm.action = btn.dataset.action;
+            deleteMessage.innerText =
+                `Yakin mau menghapus ${btn.dataset.label} secara permanen?`;
+
+            deleteModal.classList.remove("hidden");
+            deleteModal.classList.add("flex");
+        });
+    });
+
+    // 🔥 DELETE ALL
+    document.querySelectorAll(".btn-delete-all").forEach(btn => {
+        btn.addEventListener("click", () => {
+            deleteForm.action = btn.dataset.action;
+            deleteMessage.innerText =
+                "Yakin mau menghapus SEMUA isi recycle bin secara permanen?";
+
+            deleteModal.classList.remove("hidden");
+            deleteModal.classList.add("flex");
+        });
+    });
+
+    cancelDelete.addEventListener("click", () => {
+        deleteModal.classList.add("hidden");
+        deleteModal.classList.remove("flex");
+        deleteForm.action = "";
+    });
+
+    deleteModal.addEventListener("click", (e) => {
+        if (e.target === deleteModal) {
+            deleteModal.classList.add("hidden");
+            deleteModal.classList.remove("flex");
+            deleteForm.action = "";
+        }
+    });
+</script>
+
+
 {% endblock %}

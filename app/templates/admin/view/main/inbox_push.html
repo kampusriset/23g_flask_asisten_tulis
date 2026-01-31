@@ -8,24 +8,6 @@
 
 {% block content %}
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-{% for category, message in messages %}
-<div class="mb-4 px-4 py-3 rounded
-            {% if category == 'success' %}
-                bg-green-100 text-green-700
-            {% elif category == 'error' %}
-                bg-red-100 text-red-700
-            {% else %}
-                bg-gray-100 text-gray-700
-            {% endif %}
-        ">
-    {{ message }}
-</div>
-{% endfor %}
-{% endif %}
-{% endwith %}
-
 <form method="POST" class="bg-white p-6 rounded shadow space-y-4">
 
 

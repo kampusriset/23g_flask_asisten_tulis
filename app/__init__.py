@@ -17,7 +17,7 @@ def create_app():
     from app.controllers.user import auth_bp
     from app.controllers.dashboard import dashboard_bp
     from app.controllers.notes import notes_bp
-    from app.controllers.gemini import gemini_bp
+    from app.controllers.ai_chat import ai_chat_bp
     from app.controllers.inbox import inbox_bp
     from app.controllers.setting import setting_bp
     from app.controllers.rapat_controller import rapat_bp
@@ -34,11 +34,13 @@ def create_app():
     from app.models.notes import Note
     from app.controllers.admin.inbox_push import admin_inbox_bp
     from app.models.setting import UserSetting
+    from app.controllers.admin.admin_ai_key import admin_ai_bp
 
+    app.register_blueprint(admin_ai_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(notes_bp)
-    app.register_blueprint(gemini_bp)
+    app.register_blueprint(ai_chat_bp)
     app.register_blueprint(inbox_bp)
     app.register_blueprint(setting_bp)
     app.register_blueprint(rapat_bp)

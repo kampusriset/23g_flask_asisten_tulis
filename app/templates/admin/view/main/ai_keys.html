@@ -1,0 +1,92 @@
+{% extends "admin/view/base/layout.html" %}
+
+{% block header %}
+<h1 class="text-xl font-semibold">AI Provider API Keys</h1>
+{% endblock %}
+
+{% block content %}
+<div class="p-6">
+    <h1 class="text-2xl font-bold mb-4">AI Provider API Keys</h1>
+
+    <form method="POST" class="bg-white p-4 rounded shadow mb-6 space-y-4">
+        <div>
+            <label class="block mb-1 font-semibold">Provider</label>
+            <select name="provider" class="w-full border px-3 py-2 rounded" required>
+                {% for p in providers %}
+                <option value="{{ p }}">{{ p|upper }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label class="block mb-1 font-semibold">API Key</label>
+            <input type="text" name="api_key" class="w-full border px-3 py-2 rounded" required>
+        </div>
+
+        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Simpan API Key
+        </button>
+    </form>
+
+    <div class="bg-white rounded shadow">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="p-2 text-left">Provider</th>
+                    <th class="p-2">Status</th>
+                    <th class="p-2">Last Update</th>
+                    <th class="p-2">Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for k in keys %}
+                <tr class="border-t">
+                    <td class="p-2 font-semibold">{{ k.provider|upper }}</td>
+
+                    <td class="p-2 text-center">
+                        {% if k.is_active %}
+                        <span class="text-green-600">Active</span>
+                        {% else %}
+                        <span class="text-red-600">Inactive</span>
+                        {% endif %}
+                    </td>
+
+                    <td class="p-2 text-center">
+                        {{ k.updated_at.strftime("%Y-%m-%d %H:%M") if k.updated_at else "-" }}
+                    </td>
+
+                    <!-- ACTION -->
+                    <td class="p-2">
+                        <div class="flex items-center justify-center gap-2">
+                            <!-- Toggle -->
+                            <form method="POST" action="{{ url_for('admin_ai.toggle_ai_key', key_id=k.id) }}">
+                                <button type="submit" class="px-3 py-1 text-xs rounded text-white
+                {% if k.is_active %}
+                    bg-yellow-500 hover:bg-yellow-600
+                {% else %}
+                    bg-green-600 hover:bg-green-700
+                {% endif %}">
+                                    {% if k.is_active %} Nonaktifkan {% else %} Aktifkan {% endif %}
+                                </button>
+                            </form>
+
+                            <!-- Delete -->
+                            <form method="POST" action="{{ url_for('admin_ai.delete_ai_key', key_id=k.id) }}"
+                                onsubmit="return confirm('Yakin hapus API key ini?')">
+                                <button type="submit"
+                                    class="px-3 py-1 text-xs rounded bg-red-600 hover:bg-red-700 text-white">
+                                    Hapus
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+</div>
+{% endblock %}
