@@ -23,8 +23,10 @@
 ## Fitur Utama
 
 - AI Writing Assistant (Saran & Perbaikan Otomatis) | Membantu pengguna untuk menulis lebih rapi, jelas & grammar + strukturnya yang diperbaiki.
-- Summarizer & Translation | Membantu pengguna mengubah catatan panjang menjadi ringkas dengan mengambil poin-poin yang penting, dan bisa menerjemahkan teks ke bahasa lain.
-- Smart Notes Management | Catatan otomatis dikelompokan sesuai topik sehingga bisa dicari menggunakan makna, bukan cuma kata yang sama.
+- Tool Summarizer & Translation | Membantu pengguna mengubah catatan panjang menjadi ringkas dengan mengambil poin-poin yang penting, dan bisa menerjemahkan teks ke bahasa lain.
+- Suggestion note, membantu dalam penulisan catatan agar isi konten sesuai kebutuhan.
+- Dapat mengekspor catatan atau rapat yang sudah dibuat dalam format pdf atau excel.
+- Terintegrasi dengan beberapa model AI (Gemini, GPT, Deepseek & Grok) dapat diubah sesuai kebutuhan.
 
 ---
 
@@ -33,7 +35,7 @@
 - **Flask (Python)**
 - **Gemini API**
 - **Jinja2**
-- **DB PostgreSQL**
+- **DB MySQL**
 
 ---
 
@@ -125,15 +127,39 @@ python app.py
 
 ---
 
-## 🚀 Roadmap Pengembangan
 
-Fitur-fitur yang direncanakan untuk versi selanjutnya:
 
-- ✨ **Mode Penulisan Akademik** (otomatis menyesuaikan gaya ilmiah)
-- 📚 **Template Dokumen** (makalah, laporan, esai, proposal)
-- 🔊 **Text-to-Speech** untuk membaca hasil tulisan
-- 🧠 **Penyimpanan Riwayat AI** agar pengguna bisa melihat versi sebelumnya
-- 🛡️ **Authentication + Multi User**
+
+## Preview Hasil
+
+### Dashboard
+![Dashboard](images/dashboard.png)
+
+### Rapat
+![Rapat](images/rapat.png)
+
+### Profile
+![Profile](images/profile.png)
+
+### AI Tools
+![AI Tools](images/ai.png)
+
+![Ringkas](images/ringkas.png)
+
+### Catatan
+![Catatan](images/catatan.png)
+
+### Activity
+![Activity](images/activity.png)
+
+### Setting
+![Setting](images/setting.png)
+
+![Dark](images/dark.png)
+
+### Admin Panel API Key
+![Key Provider](images/key.png)
+
 
 ---
 
@@ -142,14 +168,4 @@ Fitur-fitur yang direncanakan untuk versi selanjutnya:
 Terima kasih atas kontribusi semua pihak atas project ini
 Kami sangat menghargai issue dan PR/masukkan ❤️
 
----
 
-## 📄 Lisensi
-
-Proyek ini menggunakan **MIT License**, sehingga bebas digunakan, dimodifikasi, dan dikembangkan ulang.
-
-## Image
-
-```bash
-Soon
-```
