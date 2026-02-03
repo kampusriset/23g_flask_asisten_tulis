@@ -63,11 +63,11 @@ def call_ai(provider, prompt, temperature=0.25, max_tokens=2000, top_p=0.9):
             r.raise_for_status()
             return r.json()["choices"][0]["message"]["content"]
 
-        # ================= GROQ =================
-        elif provider == "groq":
-            key = get_api_key("groq")
+        # ================= GROK =================
+        elif provider == "grok":
+            key = get_api_key("grok")
             if not key:
-                return "Model Groq belum aktif."
+                return "Model Grok belum aktif."
 
             headers = {
                 "Authorization": f"Bearer {key}",
@@ -75,12 +75,14 @@ def call_ai(provider, prompt, temperature=0.25, max_tokens=2000, top_p=0.9):
             }
 
             payload = {
-                "model": "llama3-70b-8192",
-                "messages": [{"role": "user", "content": prompt}]
+                "model": "grok-4-1-fast-reasoning",
+                "messages": [{"role": "user", "content": prompt}],
+                "temperature": temperature,
+                "max_tokens": max_tokens
             }
 
             r = requests.post(
-                "https://api.groq.com/openai/v1/chat/completions",
+                "https://api.x.ai/v1/chat/completions",
                 headers=headers,
                 json=payload,
                 timeout=20
