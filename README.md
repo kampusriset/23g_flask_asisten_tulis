@@ -163,6 +163,16 @@ python app.py
 
 ---
 
+
+## 🎥 Demo Video
+
+Klik gambar di bawah untuk melihat demo penggunaan aplikasi secara langsung:
+
+[![Demo Aplikasi](https://img.youtube.com/vi/ID_VIDEO/0.jpg)](https://youtu.be/yyo4zW-AFgI)
+
+Video ini menampilkan alur penggunaan aplikasi, mulai dari dashboard, fitur utama, hingga pengaturan sistem.
+
+
 ## 🤝 Kontribusi
 
 Terima kasih atas kontribusi semua pihak atas project ini
