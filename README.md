@@ -15,7 +15,7 @@ Selain itu, aplikasi ini dilengkapi dengan fitur summarizer dan translation untu
 - **Aksyal Fiqih Ikhtiar** - [Mengerjakan fitur note, menu dashboard, menu activity, admin panel & ai engine]
 - **Andrean Taufik Hidayatullah** - [Mengerjakan fitur inbox, menu setting & dark mode]
 - **Fathih Muhammad Basrowi** - [Mengerjakan fitur ai tools]
-- **Ganang Setya Putra** - [Mengerjakan fitur rapat, ai chatbot, ai tools, landingpage & auth]
+- **Ganang Setya Putra** - [Mengerjakan fitur rapat, ai chatbot bubble, profile, landingpage & auth]
 
 # Link Video Dokumentasi
 Anda dapat menonton video dokumentasi aplikasi melalui tautan berikut:
